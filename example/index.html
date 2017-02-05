@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="jquery-3.1.1.min.js"></script>
+    <script src="../griew.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="test" style="background: #e78d26; padding:10px"></div>
+    <div class="tst" style="background: #edd846"></div>
+    <script>
+        Griew.setLang('fa', {
+            accept: 'تایید',
+            string: 'رشته',
+            order: {
+                ascending: 'ترتیب صعودی',
+                descending: 'ترتیب نزولی',
+                'clear sort': 'حذف ترتیب'
+            }
+        });
+        Griew.setLang('en', {
+            accept: 'Accept',
+            string: 'String'
+        });
+
+        var griew = new Griew();
+
+        griew.view().filters().onshow = function (name, container) {
+            console.log("Show ", name, container);
+        };
+
+        griew.view().filters().onhide = function (name, container) {
+            console.log("Hide ", name, container);
+        };
+
+        griew.view().filters().add('name', '.test', function () {
+            return $('<button type="button">').text('Toggle active').click(function () {
+                griew.view().filters().toggle('family');
+            });
+        });
+
+        griew.view().filters().addString('family', '.tst', true);
+
+        griew.view().filters().show('name');
+
+        griew.view().orders().addDefault('family', '.tst', true);
+        
+
+    </script>
+    <style>
+    .test .active {
+        background: #00ffee;
+    }
+
+    .tst {
+        position: relative;
+    }
+
+    .griew-filter-box {
+        display: none;
+    }
+
+    .griew-filter-box.active {
+        display: block;
+    }
+
+    .griew-filter-string-box {
+        width: 200px;
+        padding: 15px;
+        background: #fff;
+        border: 1px solid #e78d26;
+        position: absolute;
+        margin: 0 auto;
+        left:0;
+        right: 0;
+    }
+
+    .griew-filter-string-operators {
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .griew-filter-string-operand {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 5px;
+    }
+
+    .griew-filter-string-btn-accept {
+        margin-right: 5px;
+        margin-left: 5px;
+        width: calc(50% - 10px);
+        background: #55cc33;
+        border: 1px solid #559933;
+        padding: 5px 0;
+    }
+
+    .griew-filter-string-btn-clear {
+        margin-right: 5px;
+        margin-left: 5px;
+        width: calc(50% - 10px);
+        background: #cc5555;
+        border: 1px solid #995555;
+        padding: 5px 0;
+    }
+    </style>
+</body>
+</html>
