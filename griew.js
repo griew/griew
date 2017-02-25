@@ -1,5 +1,5 @@
 "use strict"
-var Griew = function () {
+    var Griew = function () {
 
     var View = function () {
 
@@ -150,11 +150,10 @@ var Griew = function () {
                  * @param {number} colNumber
                  * @returns {string} HTML
                  */
-                var render = function (name, rowDataOrigin, rowNumber, colNumber) {
+                var render = function (name, rowData, rowNumber, colNumber) {
                     // TODO: validate name and value
                     var renderedColumn = '';
                     var column = _columns[name];
-                    var rowData = Object.assign({}, rowDataOrigin);
                     var data = {};
                     data.value = rowData[name];
 
@@ -635,7 +634,8 @@ var Griew = function () {
         };
 
         this.render = function (data) {
-            _data = data;
+            //clone of data
+            _data = Object.assign({}, data);
             render();
         }
     };
