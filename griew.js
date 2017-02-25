@@ -635,7 +635,7 @@
 
         this.render = function (data) {
             //clone of data
-            _data = Object.assign({}, data);
+            _data = Object.assign([], data);
             render();
         }
     };
