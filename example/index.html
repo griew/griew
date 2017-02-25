@@ -1,14 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
     <script src="jquery-3.1.1.min.js"></script>
     <script src="../griew.js" type="text/javascript"></script>
 </head>
+
 <body>
     <div class="test" style="background: #e78d26; padding:10px"></div>
     <div class="tst" style="background: #edd846"></div>
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>family</th>
+                <th>age</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
     <script>
         Griew.setLang('fa', {
             accept: 'تایید',
@@ -26,86 +39,138 @@
 
         var griew = new Griew();
 
-        griew.view().filters().onshow = function (name, container) {
-            console.log("Show ", name, container);
-        };
+        // griew.view().filters().onshow = function (name, container) {
+        //     console.log("Show ", name, container);
+        // };
 
-        griew.view().filters().onhide = function (name, container) {
-            console.log("Hide ", name, container);
-        };
+        // griew.view().filters().onhide = function (name, container) {
+        //     console.log("Hide ", name, container);
+        // };
 
-        griew.view().filters().add('name', '.test', function () {
-            return $('<button type="button">').text('Toggle active').click(function () {
-                griew.view().filters().toggle('family');
-            });
+        // griew.view().filters().add('name', '.test', function () {
+        //     return $('<button type="button">').text('Toggle active').click(function () {
+        //         griew.view().filters().toggle('family');
+        //     });
+        // });
+
+        // griew.view().filters().addString('family', '.tst', true);
+
+        // griew.view().filters().show('name');
+
+        // griew.view().orders().addDefault('family', '.tst', true);
+        var data = [
+            {
+                id: 1,
+                name: "majid",
+                family: "ataee",
+                age: 31
+            },
+            {
+                id: 2,
+                name: "majid",
+                family: "ataee",
+                age: 31
+            },
+            {
+                id: 3,
+                name: "majid",
+                family: "ataee",
+                age: 31
+            },
+            {
+                id: 4,
+                name: "majid",
+                family: "ataee",
+                age: 31
+            },
+            {
+                id: 5,
+                name: "majid",
+                family: "ataee",
+                age: 31
+            }
+        ];
+        //name, type, order, visibility, template, beforRender, afterRender
+        griew.view().columns().add('id', 'number', 1, true);
+        griew.view().columns().add('name', 'string', 3, false, '<td><i>{ name }</i></td>');
+        griew.view().columns().add('family', 'string', 2, true, null, 
+        function (name, value, template, rowNumber, colNumber) {
+            return '<td><a href="{id}">{family} {name}</a></td>';
+        }, 
+        function (name, html, rowNumber, colNumber) {
+            return html;
+        });
+        griew.view().columns().add('age', 'string', 4, true, null, function (name, data, template) {
+            data.value += 1;
+            return template;
         });
 
-        griew.view().filters().addString('family', '.tst', true);
-
-        griew.view().filters().show('name');
-
-        griew.view().orders().addDefault('family', '.tst', true);
+        griew.view().render(data);
         
-
     </script>
     <style>
-    .test .active {
-        background: #00ffee;
-    }
+        .test .active {
+            background: #00ffee;
+        }
+        
+        .tst {
+            position: relative;
+        }
+        
+        .griew-filter-box {
+            display: none;
+        }
+        
+        .griew-filter-box.active {
+            display: block;
+        }
+        
+        .griew-filter-string-box {
+            width: 200px;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #e78d26;
+            position: absolute;
+            margin: 0 auto;
+            left: 0;
+            right: 0;
+        }
+        
+        .griew-filter-string-operators {
+            display: block;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        
+        .griew-filter-string-operand {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 5px;
+        }
+        
+        .griew-filter-string-btn-accept {
+            margin-right: 5px;
+            margin-left: 5px;
+            width: calc(50% - 10px);
+            background: #55cc33;
+            border: 1px solid #559933;
+            padding: 5px 0;
+        }
+        
+        .griew-filter-string-btn-clear {
+            margin-right: 5px;
+            margin-left: 5px;
+            width: calc(50% - 10px);
+            background: #cc5555;
+            border: 1px solid #995555;
+            padding: 5px 0;
+        }
 
-    .tst {
-        position: relative;
-    }
-
-    .griew-filter-box {
-        display: none;
-    }
-
-    .griew-filter-box.active {
-        display: block;
-    }
-
-    .griew-filter-string-box {
-        width: 200px;
-        padding: 15px;
-        background: #fff;
-        border: 1px solid #e78d26;
-        position: absolute;
-        margin: 0 auto;
-        left:0;
-        right: 0;
-    }
-
-    .griew-filter-string-operators {
-        display: block;
-        width: 100%;
-        margin-bottom: 5px;
-    }
-
-    .griew-filter-string-operand {
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-        margin-bottom: 5px;
-    }
-
-    .griew-filter-string-btn-accept {
-        margin-right: 5px;
-        margin-left: 5px;
-        width: calc(50% - 10px);
-        background: #55cc33;
-        border: 1px solid #559933;
-        padding: 5px 0;
-    }
-
-    .griew-filter-string-btn-clear {
-        margin-right: 5px;
-        margin-left: 5px;
-        width: calc(50% - 10px);
-        background: #cc5555;
-        border: 1px solid #995555;
-        padding: 5px 0;
-    }
+        .griew-column-family {
+            color: #55cc33;
+        }
     </style>
 </body>
+
 </html>

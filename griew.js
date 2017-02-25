@@ -1,10 +1,253 @@
+"use strict"
 var Griew = function () {
 
     var View = function () {
 
+        var Collection = function () {
+
+            var Row = function () {
+                var _className = 'griew-data-row';
+                var _container = 'tbody';
+                var _template = '<tr>{columns}</tr>';
+                var _beforRender = function (item, template) { return template; };
+                var _afterRender = function (html) { return html; };
+
+                /**
+                 * 
+                 * @param {array} columns (visible columns)
+                 * @param {object} data (data row)
+                 * @param {number} number (row number)
+                 * @param {function} renderColumn
+                 * @returns {string} (HTML)
+                 * 
+                 */
+                var render = function (columns, data, rowNumber, renderColumn) {
+                    // TODO: validate data and columns
+                    var renderedColumns = '';
+                    var renderedRow = '';
+                    var index = 0;
+                    var name = '';
+
+                    _template = _beforRender(data, _template, rowNumber);
+
+                    for (; index < columns.length; index++) {
+                        name = columns[index];
+                        renderedColumns += renderColumn(name, data, rowNumber, index + 1);
+                    }
+
+                    renderedRow = parse('columns', renderedColumns, _template);
+                    renderedRow = $(renderedRow).addClass(_className)[0].outerHTML;
+
+                    renderedRow = _afterRender(renderedRow);
+
+                    return renderedRow;
+                };
+
+                Object.defineProperty(this, 'beforRender', {
+                    set: function (callback) {
+                        if (typeof callback === 'function') {
+                            _beforRender = callback;
+                        }
+                    }
+                });
+
+                Object.defineProperty(this, 'afterRender', {
+                    set: function (callback) {
+                        if (typeof callback === 'function') {
+                            _afterRender = callback;
+                        }
+                    }
+                });
+
+                Object.defineProperty(this, 'container', {
+                    set: function (value) {
+                        _container = value;
+                    },
+                    get: function () {
+                        return _container;
+                    },
+                });
+
+                Object.defineProperty(this, 'template', {
+                    set: function (value) {
+                        _template = value;
+                    },
+                    get: function () {
+                        return _template;
+                    },
+                });
+
+                this.render = render;
+            };
+
+            var Columns = function () {
+                var _onshow = function (name) { };
+                var _onhide = function (name) { };
+
+                var _className = 'griew-data-column';
+                var _columns = {};
+
+                var columnClassName = function (name, dot) {
+                    return (dot ? '.' : '') + 'griew-column-' + name;
+                };
+
+                var add = function (name, type, order, visibility, template, beforRender, afterRender) {
+                    _columns[name] = {
+                        name: name,
+                        type: type,
+                        order: order || 1,
+                        visibility: visibility === undefined ? true : visibility,
+                        template: template || '<td>{' + name + '}</td>',
+                        beforRender: beforRender || function (name, data, template, rowNumber, colNumber) { return template; },
+                        afterRender: afterRender || function (name, html, rowNumber, colNumber) { return html; }
+                    };
+                };
+
+                var remove = function (name) {
+                    delete _columns[name];
+                };
+
+                var show = function (name) {
+                    $(_row.getContainer() + ' ' + columnClassName(name, true)).removeClass('griew-column-hide');
+                    _onshow(name);
+                }
+
+                var hide = function (name) {
+                    $(_row.getContainer() + ' ' + columnClassName(name, true)).addClass('griew-column-hide');
+                    _onhide(name);
+                }
+
+                var visibles = function (unorder) {
+                    var order = !unorder;
+                    var columns = [];
+                    var keys = [];
+
+                    for (var key in _columns) {
+                        if (_columns[key].visibility) {
+                            columns.push(_columns[key]);
+                        }
+                    }
+
+                    if (order) {
+                        columns.sort(function (a, b) {
+                            return a.order - b.order;
+                        });
+                    }
+
+                    for (var key in columns) {
+                        if (columns[key].visibility) {
+                            keys.push(columns[key].name);
+                        }
+                    }
+                    return keys;
+                }
+
+                /**
+                 * 
+                 * @param {string} name (column name)
+                 * @param {any} value
+                 * @param {number} rowNumber
+                 * @param {number} colNumber
+                 * @returns {string} HTML
+                 */
+                var render = function (name, rowDataOrigin, rowNumber, colNumber) {
+                    // TODO: validate name and value
+                    var renderedColumn = '';
+                    var column = _columns[name];
+                    var rowData = Object.assign({}, rowDataOrigin);
+                    var data = {};
+                    data.value = rowData[name];
+
+                    var template = column.beforRender(name, data, column.template, rowNumber, colNumber);
+
+                    rowData[name] = data.value;
+
+                    renderedColumn = parse(rowData, template);
+                    renderedColumn = $(renderedColumn).addClass(_className).addClass(columnClassName(name))[0].outerHTML;
+                    renderedColumn = column.afterRender(name, renderedColumn, rowNumber, colNumber);
+
+                    return renderedColumn;
+                };
+
+                Object.defineProperty(this, 'onshow', {
+                    set: function (callback) {
+                        if (typeof callback === 'function') {
+                            _onshow = callback;
+                        }
+                    }
+                });
+
+                Object.defineProperty(this, 'onhide', {
+                    set: function (callback) {
+                        if (typeof callback === 'function') {
+                            _onhide = callback;
+                        }
+                    }
+                });
+
+                this.add = function (name, type, order, visibility, template, beforRender, afterRender) {
+                    //TODO name param maybe string, col object or array of col objects.
+                    add(name, type, order, visibility, template, beforRender, afterRender);
+                };
+
+                this.remove = function (name) {
+                    remove(name);
+                };
+
+                this.show = function (name) {
+                    show(name);
+                };
+
+                this.hide = function (name) {
+                    hide(name);
+                };
+
+                this.visibles = function () {
+                    return visibles();
+                };
+
+                this.render = render;
+            };
+
+            var _row = new Row();
+            var _columns = new Columns;
+
+            var parse = function (name, value, source) {
+                //TODO validation for source
+                var key = new RegExp('[{]{1}[ ]*[a-zA-Z0-9._-]+[ ]*[}]{1}', 'gi');
+                var keyWithName = new RegExp('[{]{1}[ ]*(' + name + '){1}[ ]*[}]{1}', 'gi');
+                if (typeof name === 'string') {
+                    return source.replace(keyWithName, value);
+                }
+                source = value;
+                var value = name;
+                var names = source.match(key) || [];
+                for (var i = 0; i < names.length; i++) {
+                    name = names[i].replace(/[{ }]*/gi, '');
+                    source = parse(name, value[name], source);
+                }
+                return source;
+            };
+
+            var render = function (data) {
+                // TODO: validate data for array
+                var index = 0;
+                var columns = _columns.visibles();
+                var $rowContainer = $(_row.container);
+                $rowContainer.html('');
+                for (; index < data.length; index++) {
+                    $rowContainer.append(_row.render(columns, data[index], index + 1, _columns.render));
+                }
+            };
+
+            this.render = render;
+            this.columns = _columns;
+            this.row = _row;
+        };
+
         var Filter = function () {
-            var _onshow = function (name, container) {};
-            var _onhide = function (name, container) {};
+            var _onshow = function (name, container) { };
+            var _onhide = function (name, container) { };
 
             var _boxClassName = 'griew-filter-box';
 
@@ -178,8 +421,8 @@ var Griew = function () {
         };
 
         var Order = function () {
-            var _onshow = function (name, container) {};
-            var _onhide = function (name, container) {};
+            var _onshow = function (name, container) { };
+            var _onhide = function (name, container) { };
 
             var _boxClassName = 'griew-order-box';
 
@@ -348,15 +591,53 @@ var Griew = function () {
             };
         };
 
+        var _collection = new Collection();
         var _filters = new Filter();
         var _orders = new Order();
+        var _data = [];
+
+        var render = function () {
+            _collection.render(_data);
+        };
 
         this.filters = function () {
             return _filters
         };
+
         this.orders = function () {
             return _orders
         };
+
+        this.row = function () {
+            return {
+                container: function (selector) {
+                    if (selector && typeof selector === 'string') {
+                        _collection.row.container = selector;
+                    }
+                    return _collection.row.container;
+                },
+                template: function (template) {
+                    if (template && typeof template === 'string') {
+                        _collection.row.template = template;
+                    } else {
+                        return _collection.row.template;
+                    }
+                },
+                beforRender: _collection.row.beforRender,
+                afterRender: _collection.row.afterRender,
+            };
+        };
+
+        this.columns = function () {
+            return {
+                add: _collection.columns.add
+            };
+        };
+
+        this.render = function (data) {
+            _data = data;
+            render();
+        }
     };
     //--------------------------------------------------------------------------------------------------------------------------
     var _locale = 'fa';
