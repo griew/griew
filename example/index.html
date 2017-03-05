@@ -12,14 +12,7 @@
     <div class="test" style="background: #e78d26; padding:10px"></div>
     <div class="tst" style="background: #edd846"></div>
     <table>
-        <thead>
-            <tr>
-                <th>id</th>
-                <th>name</th>
-                <th>family</th>
-                <th>age</th>
-            </tr>
-        </thead>
+        <thead></thead>
         <tbody></tbody>
     </table>
     <script>
@@ -91,15 +84,17 @@
             }
         ];
         //name, type, order, visibility, template, beforRender, afterRender
-        griew.view().columns().add('id', 'number', 1, true);
-        griew.view().columns().add('name', 'string', 3, false, '<td><i>{ name }</i></td>');
-        griew.view().columns().add('family', 'string', 2, true, null, 
+        griew.view().columns().add('id', 'number', 1, false);
+        griew.view().columns().add('name', 'string', 2, true, '<td><i>{ name }</i></td>');
+        griew.view().columns().add('family', 'string', 3, true, null, 
         function (name, value, template, rowNumber, colNumber) {
-            return '<td><a href="{id}">{family} {name}</a></td>';
+            //return '<td><a href="{id}">{family} {name}</a></td>';
+            return template;
         }, 
         function (name, html, rowNumber, colNumber) {
             return html;
         });
+
         griew.view().columns().add('age', 'string', 4, true, null, function (name, data, template) {
             data.value += 1;
             return template;

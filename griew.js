@@ -1,5 +1,5 @@
 "use strict"
-    var Griew = function () {
+var Griew = function () {
 
     var View = function () {
 
@@ -150,7 +150,7 @@
                  * @param {number} colNumber
                  * @returns {string} HTML
                  */
-                var render = function (name, rowData, rowNumber, colNumber) {
+                 var render = function (name, rowData, rowNumber, colNumber) {
                     // TODO: validate name and value
                     var renderedColumn = '';
                     var column = _columns[name];
@@ -208,8 +208,67 @@
                 this.render = render;
             };
 
+            var Header = function () {
+                var _rowClassName = 'griew-header-row';
+                var _cellClassName = 'griew-header-cell';
+                var _container = 'thead';
+                var _rowTemplate = '<tr>{cells}</tr>';
+                var _cellTemplate = '<th>{cell-name}</th>';
+
+                var render = function (columns) {
+                    // TODO: validate data and columns
+                    var renderedCells = '';
+                    var renderedCell = '';
+                    var renderedRow = '';
+                    var index = 0;
+                    var name = '';
+
+                    for (; index < columns.length; index++) {
+                        name = columns[index];
+                        renderedCell = parse('cell-name', name, _cellTemplate);
+                        renderedCell = $(renderedCell).addClass(_cellClassName)[0].outerHTML;
+                        renderedCells += renderedCell;
+                    }
+
+                    renderedRow = parse('cells', renderedCells, _rowTemplate);
+                    renderedRow = $(renderedRow).addClass(_rowClassName)[0].outerHTML;
+
+                    return renderedRow;
+                };
+
+                Object.defineProperty(this, 'container', {
+                    set: function (value) {
+                        _container = value;
+                    },
+                    get: function () {
+                        return _container;
+                    },
+                });
+
+                Object.defineProperty(this, 'rowTemplate', {
+                    set: function (value) {
+                        _rowTemplate = value;
+                    },
+                    get: function () {
+                        return _rowTemplate;
+                    },
+                });
+
+                Object.defineProperty(this, 'cellTemplate', {
+                    set: function (value) {
+                        _cellTemplate = value;
+                    },
+                    get: function () {
+                        return _cellTemplate;
+                    },
+                });                
+
+                this.render = render;
+            };
+
             var _row = new Row();
-            var _columns = new Columns;
+            var _columns = new Columns();
+            var _header = new Header();
 
             var parse = function (name, value, source) {
                 //TODO validation for source
@@ -233,7 +292,12 @@
                 var index = 0;
                 var columns = _columns.visibles();
                 var $rowContainer = $(_row.container);
+                var $headerContainer = $(_header.container);
+                
                 $rowContainer.html('');
+
+                $headerContainer.html(_header.render(columns));
+                
                 for (; index < data.length; index++) {
                     $rowContainer.append(_row.render(columns, data[index], index + 1, _columns.render));
                 }
@@ -252,7 +316,7 @@
 
             var filterClassName = function (name, dot) {
                 return (dot ? '.' : '') + 'griew-filter-' + name;
-            };
+            }
 
             var add = function (name, container, content) {
                 var filterBox = $('<div>').addClass(_boxClassName).addClass(filterClassName(name)).append(typeof content === 'function' ? content() : content);
@@ -329,7 +393,7 @@
              * @param {html|function} content
              * @return {undefined}
              */
-            this.add = function (name, container, content) {
+             this.add = function (name, container, content) {
                 add(name, container, content);
             };
 
@@ -340,7 +404,7 @@
              * @param {selector} container
              * @return {undefined}
              */
-            this.remove = function (name, container) {
+             this.remove = function (name, container) {
                 remove(name, container);
             };
 
@@ -351,7 +415,7 @@
              * @param {selector} container
              * @return {undefined}
              */
-            this.show = function (name, container) {
+             this.show = function (name, container) {
                 show(name, container);
             };
 
@@ -362,7 +426,7 @@
              * @param {selector} container
              * @return {undefined}
              */
-            this.hide = function (name, container) {
+             this.hide = function (name, container) {
                 hide(name, container);
             };
 
@@ -373,7 +437,7 @@
              * @param {selector} container
              * @return {undefined}
              */
-            this.toggle = function (name, container) {
+             this.toggle = function (name, container) {
                 toggle(name, container);
             };
 
@@ -384,7 +448,7 @@
              * @param {selector} container
              * @return {boolean}
              */
-            this.isVisible = function (name, container) {
+             this.isVisible = function (name, container) {
                 return isVisible(name, container);
             };
 
@@ -395,7 +459,7 @@
              * @param {selector} container
              * @param {boolean} visible
              */
-            this.addString = function (name, container, visible) {
+             this.addString = function (name, container, visible) {
 
                 var stringBox = $('<div>').addClass('griew-filter-string-box');
                 var operators = $('<select>').addClass('griew-filter-string-operators');
@@ -504,7 +568,7 @@
              * @param {html|function} content
              * @return {undefined}
              */
-            this.add = function (name, container, content) {
+             this.add = function (name, container, content) {
                 add(name, container, content);
             };
 
@@ -515,7 +579,7 @@
              * @param {selector} container
              * @return {undefined}
              */
-            this.remove = function (name, container) {
+             this.remove = function (name, container) {
                 remove(name, container);
             };
 
@@ -526,7 +590,7 @@
              * @param {selector} container
              * @return {undefined}
              */
-            this.show = function (name, container) {
+             this.show = function (name, container) {
                 show(name, container);
             };
 
@@ -537,7 +601,7 @@
              * @param {selector} container
              * @return {undefined}
              */
-            this.hide = function (name, container) {
+             this.hide = function (name, container) {
                 hide(name, container);
             };
 
@@ -548,7 +612,7 @@
              * @param {selector} container
              * @return {undefined}
              */
-            this.toggle = function (name, container) {
+             this.toggle = function (name, container) {
                 toggle(name, container);
             };
 
@@ -559,7 +623,7 @@
              * @param {selector} container
              * @return {boolean}
              */
-            this.isVisible = function (name, container) {
+             this.isVisible = function (name, container) {
                 return isVisible(name, container);
             };
 
@@ -570,7 +634,7 @@
              * @param {selector} container
              * @param {boolean} visible
              */
-            this.addDefault = function (name, container, visible) {
+             this.addDefault = function (name, container, visible) {
                 var orderBox = $('<ul>').addClass('griew-order-default-box');
                 var btnAscSort = $('<li>').addClass('griew-order-default-btn-sort').addClass('griew-order-default-asc-sort');
                 var btnDescSort = $('<li>').addClass('griew-order-default-btn-sort').addClass('griew-order-default-desc-sort');
