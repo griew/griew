@@ -215,6 +215,10 @@ var Griew = function () {
                 var _rowTemplate = '<tr>{cells}</tr>';
                 var _cellTemplate = '<th>{cell-name}</th>';
 
+                var columnClassName = function (name, dot) {
+                    return (dot ? '.' : '') + 'griew-column-' + name;
+                };  
+
                 var render = function (columns) {
                     // TODO: validate data and columns
                     var renderedCells = '';
@@ -226,7 +230,7 @@ var Griew = function () {
                     for (; index < columns.length; index++) {
                         name = columns[index];
                         renderedCell = parse('cell-name', name, _cellTemplate);
-                        renderedCell = $(renderedCell).addClass(_cellClassName)[0].outerHTML;
+                        renderedCell = $(renderedCell).addClass(_cellClassName).addClass(columnClassName(name))[0].outerHTML;
                         renderedCells += renderedCell;
                     }
 
