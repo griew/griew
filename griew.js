@@ -30,6 +30,7 @@ var Griew = function () {
             }
 
             return result;
+            dddd;
         };
 
         var getTrans = function (key, locale) {
@@ -47,6 +48,28 @@ var Griew = function () {
         this.getLocale = getLocale;
         this.isLocale = isLocale;
         this.trans = trans;
+    };
+
+    var Provider = function () {
+        var _default = '';
+
+        var setDefault = function (name) {
+            _default = name;
+        };
+
+        var getDefault = function () {
+            return _default;
+        };
+
+        var getDefaultProvider = function () {
+            return new Griew.providers[_default](_options);
+        };
+
+        var run = function (request) {
+            return getDefaultProvider().run(request);
+        };
+
+        this.run = run;
     };
 
     var View = function () {
@@ -753,11 +776,33 @@ var Griew = function () {
             //clone of data
             _data = Object.assign([], data);
             render();
-        }
+        };
     };
+
+    var Options = function () {
+        var _options = {};
+
+        var set = function (name, value) {
+            _options[name] = value;
+        };
+
+        var get = function (name) {
+            return _options[name];
+        };
+
+        var exists = function (name) {
+            return _options[name] !== undefined;
+        };
+
+        this.set = set;
+        this.get = get;
+        this.exists = exists;
+    }
     //--------------------------------------------------------------------------------------------------------------------------
     var _localization = new Localization();
+    var _provider = new Provider();
     var _view = new View();
+    var _options = new Options();
     //--------------------------------------------------------------------------------------------------------------------------
     var trans = function (key, locale) {
         return _localization.trans(key, locale);
@@ -774,6 +819,23 @@ var Griew = function () {
 };
 //--------------------------------------------------------------------------------------------------------------------------
 Griew.langs = {};
+Griew.providers = {};
+
 Griew.setLang = function (name, trans) {
     Griew.langs[name] = trans;
 };
+
+Griew.setProvider = function (name, provider) {
+    Griew.providers[name] = provider;
+};
+//--------------------------------------------------------------------------------------------------------------------------
+Griew.setProvider('json', function (options) {
+    
+
+    var run = function (request) { //{columns, paginate, filters, orders, extra}
+        return response; // {data, columns, paginate, extra}
+    }
+    };
+
+    this.run = run;
+});
