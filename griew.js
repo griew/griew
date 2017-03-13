@@ -1,6 +1,54 @@
 "use strict"
 var Griew = function () {
 
+    var Localization = function () {
+        var _locale = 'fa';
+
+        var setLocale = function (locale) {
+            _locale = locale || _locale;
+        };
+
+        var getLocale = function () {
+            return _locale;
+        };
+
+        var isLocale = function (locale) {
+            return _locale === locale;
+        };
+
+        var hasTransKey = function (key, locale) {
+            var subKeys = key.split('.');
+            if (Griew.langs[locale] == undefined) return false;
+            var result = Griew.langs[locale];
+            for (var i = 0; i < subKeys.length; i++) {
+                if (subKeys[i] in result) {
+                    result = result[subKeys[i]];
+                    continue;
+                }
+
+                return false;
+            }
+
+            return result;
+        };
+
+        var getTrans = function (key, locale) {
+            var result = hasTransKey(key, locale);
+            return result ? result : key;
+        };
+
+        var trans = function (key, locale) {
+            locale = locale || _locale;
+            key = key || '';
+            return getTrans(key, locale);
+        };
+
+        this.setLocale = setLocale;
+        this.getLocale = getLocale;
+        this.isLocale = isLocale;
+        this.trans = trans;
+    };
+
     var View = function () {
 
         var Collection = function () {
@@ -21,7 +69,7 @@ var Griew = function () {
                  * @returns {string} (HTML)
                  * 
                  */
-                var render = function (columns, data, rowNumber, renderColumn) {
+                 var render = function (columns, data, rowNumber, renderColumn) {
                     // TODO: validate data and columns
                     var renderedColumns = '';
                     var renderedRow = '';
@@ -708,56 +756,21 @@ var Griew = function () {
         }
     };
     //--------------------------------------------------------------------------------------------------------------------------
-    var _locale = 'fa';
+    var _localization = new Localization();
     var _view = new View();
     //--------------------------------------------------------------------------------------------------------------------------
-    var setLocale = function (locale) {
-        _locale = locale || _locale;
-    };
-
-    var getLocale = function () {
-        return _locale;
-    };
-
-    var isLocale = function (locale) {
-        return _locale === locale;
-    };
-
-    var hasTransKey = function (key, locale) {
-        var subKeys = key.split('.');
-        if (Griew.langs[locale] == undefined) return false;
-        var result = Griew.langs[locale];
-        for (var i = 0; i < subKeys.length; i++) {
-            if (subKeys[i] in result) {
-                result = result[subKeys[i]];
-                continue;
-            }
-
-            return false;
-        }
-
-        return result;
-    };
-
-    var getTrans = function (key, locale) {
-        var result = hasTransKey(key, locale);
-        return result ? result : key;
-    };
-
     var trans = function (key, locale) {
-        locale = locale || _locale;
-        key = key || '';
-        return getTrans(key, locale);
+        return _localization.trans(key, locale);
     };
     //--------------------------------------------------------------------------------------------------------------------------
     this.view = function () {
         return _view
     };
 
-    this.setLocale = setLocale;
-    this.getLocale = getLocale;
-    this.isLocale = isLocale;
-    this.trans = trans;
+    this.setLocale = _localization.setLocale;
+    this.getLocale = _localization.getLocale;
+    this.isLocale = _localization.isLocale;
+    this.trans = _localization.trans;
 };
 //--------------------------------------------------------------------------------------------------------------------------
 Griew.langs = {};
