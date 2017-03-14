@@ -50,6 +50,37 @@ var Griew = function () {
         this.trans = trans;
     };
 
+    var Request = function () {
+        var _columns = [];
+        var _paginate = {};
+        var _filters = [];
+        var _orders = [];
+        var _extra = {};
+        
+        var addColumn = function (column) {};
+        var getColumn = function (name) {};
+        var removeColumn = function (name) {};
+        var getColumns = function () {};
+
+        var setPaginate = function (paginate) {};
+        var getPaginate = function () {};
+        var removePaginate = function () {};
+
+        var addFilter = function (filter) {};
+        var getFilter = function (name) {};
+        var removeFilter = function (name) {};
+        var getFilters = function () {};
+
+        var addOrder = function (order) {};
+        var getOrder = function (name) {};
+        var removeOrder = function (name) {};
+        var getOrders = function () {};
+
+        var collect = function () {};
+
+        this.collect = collect;
+    };
+
     var Provider = function () {
         var _default = '';
 
@@ -832,7 +863,7 @@ Griew.setProvider = function (name, provider) {
 Griew.setProvider('json', function (options) {
     
 
-    var run = function (request) { //{columns, paginate, filters, orders, extra}
+    var run = function (request) { 
         return response; // {data, columns, paginate, extra}
     }
     };
