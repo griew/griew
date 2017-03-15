@@ -76,12 +76,51 @@ var Griew = function () {
         var removeOrder = function (name) {};
         var getOrders = function () {};
 
-        var collect = function () {};
+        var toArray = function () {
+            return [
+            getColumns(),
+            getFilters(),
+            getOrders(),
+            getPaginate(),
+            extra
+            ];
+        };
+        var toObject = function () {
+            return {
+             columns : getColumns(),
+             filters : getFilters(),
+             orders : getOrders(),
+             pagination : getPaginate(),
+             extra : extra
+         };
+        };
+        var toJson = function () {
+            return JSON.strigify(toObject());
+        };
+
+        /**
+        *
+        *
+        * @return object
+        */
+        var collect = function () {
+            // collecting columns
+            // collecting pagination
+            // collecting filters
+            // collecting orders
+            // collecting extra data 
+
+            return {
+                toArray: toArray,
+                toObject: toObject,
+                toJson: toJson
+            };
+        };
 
         this.collect = collect;
     };
 
-    var Provider = function () {
+    var DataProvider = function () {
         var _default = '';
 
         var setDefault = function (name) {
@@ -92,15 +131,24 @@ var Griew = function () {
             return _default;
         };
 
-        var getDefaultProvider = function () {
-            return new Griew.providers[_default](_options);
+        var getDefaultDataProvider = function () {
+            return new Griew.dataProviders[_default](_options);
         };
 
         var run = function (request) {
-            return getDefaultProvider().run(request);
+            return getDefaultDataProvider().run(request);
         };
 
         this.run = run;
+
+        //--------------------------------------------------------------------------------------------------------------------------
+        Griew.setDataProvider('json', function (options) {
+            var run = function (request) { 
+                return response; // {data, columns, paginate, extra}
+            };
+
+            this.run = run;
+        });
     };
 
     var View = function () {
@@ -831,7 +879,7 @@ var Griew = function () {
     }
     //--------------------------------------------------------------------------------------------------------------------------
     var _localization = new Localization();
-    var _provider = new Provider();
+    var _dataProvider = new DataProvider();
     var _view = new View();
     var _options = new Options();
     //--------------------------------------------------------------------------------------------------------------------------
@@ -850,23 +898,12 @@ var Griew = function () {
 };
 //--------------------------------------------------------------------------------------------------------------------------
 Griew.langs = {};
-Griew.providers = {};
+Griew.dataProviders = {};
 
 Griew.setLang = function (name, trans) {
     Griew.langs[name] = trans;
 };
 
-Griew.setProvider = function (name, provider) {
-    Griew.providers[name] = provider;
+Griew.setDataProvider = function (name, dataProvider) {
+    Griew.dataProviders[name] = dataProvider;
 };
-//--------------------------------------------------------------------------------------------------------------------------
-Griew.setProvider('json', function (options) {
-    
-
-    var run = function (request) { 
-        return response; // {data, columns, paginate, extra}
-    }
-    };
-
-    this.run = run;
-});
