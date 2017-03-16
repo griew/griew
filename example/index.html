@@ -52,56 +52,29 @@
 
         // griew.view().orders().addDefault('family', '.tst', true);
         
-        var data = [
-            {
-                id: 1,
-                name: "majid",
-                family: "ataee",
-                age: 31
-            },
-            {
-                id: 2,
-                name: "majid",
-                family: "ataee",
-                age: 31
-            },
-            {
-                id: 3,
-                name: "majid",
-                family: "ataee",
-                age: 31
-            },
-            {
-                id: 4,
-                name: "majid",
-                family: "ataee",
-                age: 31
-            },
-            {
-                id: 5,
-                name: "majid",
-                family: "ataee",
-                age: 31
-            }
-        ];
+        var data = '[{"id": 1, "name": "majid", "family": "ataee", "age": 31},{"id": 2, "name": "hamed", "family": "anvary", "age": 35}]';
+            
         //name, type, order, visibility, template, beforRender, afterRender
         griew.view().columns().add('id', 'number', 1, false);
         griew.view().columns().add('name', 'string', 2, true, '<td><i>{ name }</i></td>');
         griew.view().columns().add('family', 'string', 3, true, null, 
-        function (name, value, template, rowNumber, colNumber) {
-            //return '<td><a href="{id}">{family} {name}</a></td>';
-            return template;
-        }, 
-        function (name, html, rowNumber, colNumber) {
-            return html;
-        });
+            function (name, value, template, rowNumber, colNumber) {
+                //return '<td><a href="{id}">{family} {name}</a></td>';
+                return template;
+            }, 
+            function (name, html, rowNumber, colNumber) {
+                return html;
+            }
+        );
 
         griew.view().columns().add('age', 'string', 4, true, null, function (name, data, template) {
             data.value += 1;
             return template;
         });
 
-        griew.view().render(data);
+        griew.options.set('dataSource', data);
+
+        griew.refresh();
         
     </script>
     <style>

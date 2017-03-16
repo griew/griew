@@ -56,43 +56,143 @@ var Griew = function () {
         var _filters = [];
         var _orders = [];
         var _extra = {};
+
+        var addColumn = function (column) {
+            var index = indexOfColumns(column.name);
+            if(index >= 0) {
+                _columns[index] = column;
+
+            } else {
+                _columns.push(column);
+            }
+        };
+        var getColumn = function (name) {
+            var index = indexOfColumns(name);
+            if(index >= 0) {
+                return _columns[index]
+            }
+            return null;
+        };
+        var removeColumn = function (name) {
+            var index = indexOfColumns(name);
+            if(index >= 0) {
+                _columns.splice(index, 1);
+            }
+        };
+        var indexOfColumns = function (name) {
+            for(var index in _columns) {
+                if(_columns[index].name == name) {
+                    return index;
+                }
+            }
+
+            return -1;
+        };
+        var getColumns = function () {
+            return _columns;
+        };
         
-        var addColumn = function (column) {};
-        var getColumn = function (name) {};
-        var removeColumn = function (name) {};
-        var getColumns = function () {};
+        var setPaginate = function (paginate) {
+            _paginate = paginate;
+        };
+        var getPaginate = function () {
+            return _paginate;
+        };
+        
+        var addFilter = function (filter) {
+            var index = indexOfFilters(filter.name);
+            if(index >= 0) {
+                _filters[index] = filter;
+            } else {
+                _filters.push(filter);
+            }
+        };
+        var getFilter = function (name) {
+            var index = indexOfFilters(name);
+            if(index >= 0) {
+                return _filters[index];
+            }
 
-        var setPaginate = function (paginate) {};
-        var getPaginate = function () {};
-        var removePaginate = function () {};
+            return null;
+        };
+        var removeFilter = function (name) {
+            var index = indexOfFilters(name);
+            if(index >= 0) {
+                _filters.splice(index, 1);
+            }
+        };
+        var indexOfFilters = function (name) {
+            for(var index in _filters) {
+                if(_filters[index].name == name) {
+                    return index;
+                }
+            }
 
-        var addFilter = function (filter) {};
-        var getFilter = function (name) {};
-        var removeFilter = function (name) {};
-        var getFilters = function () {};
+            return -1;
+        };
+        var getFilters = function () {
+            return _filters;
+        };
+        
+        var addOrder = function (order) {
+            var index = indexOfOrders(order.name);
+            if(index >= 0) {
+                _orders[index] = order;
+            } else {
+                _orders.push(order);
+            }
+        };
+        var getOrder = function (name) {
+            var index = indexOfOrders(name);
+            if(index >= 0) {
+                return _orders[index];
+            }
 
-        var addOrder = function (order) {};
-        var getOrder = function (name) {};
-        var removeOrder = function (name) {};
-        var getOrders = function () {};
+            return null;
+        };
+        var removeOrder = function (name) {
+            var index = indexOfOrders(name);
+            if(index >= 0) {
+                _orders.splice(index, 1);
+            }
+        };
+        var indexOfOrders = function (name) {
+            for(var index in _orders) {
+                if(_orders[index].name == name) {
+                    return index;
+                }
+            }
 
+            return -1;
+        };
+        var getOrders = function () {
+            return _orders;
+        };
+        
+        var setExtra = function (extra) {
+            _extra = extra;
+        };
+        var getExtra = function () {
+            return _extra;
+        };
+        
         var toArray = function () {
             return [
-            getColumns(),
-            getFilters(),
-            getOrders(),
-            getPaginate(),
-            extra
+                getColumns(),
+                getFilters(),
+                getOrders(),
+                getPaginate(),
+                _extra
             ];
         };
         var toObject = function () {
             return {
-             columns : getColumns(),
-             filters : getFilters(),
-             orders : getOrders(),
-             pagination : getPaginate(),
-             extra : extra
-         };
+                columns : getColumns(),
+                filters : getFilters(),
+                orders : getOrders(),
+                pagination : getPaginate(),
+                extra : _extra
+            };
         };
         var toJson = function () {
             return JSON.strigify(toObject());
@@ -120,6 +220,174 @@ var Griew = function () {
         this.collect = collect;
     };
 
+    var Response = function () {
+        var _data = [];
+        var _columns = [];
+        var _paginate = {};
+        var _filters = [];
+        var _orders = [];
+        var _extra = {};
+        
+        var setData = function (data) {
+            _data = data;
+        };
+        var getData = function () {
+            return _data;
+        };
+
+        var addColumn = function (column) {
+            var index = indexOfColumns(column.name);
+            if(index >= 0) {
+                _columns[index] = column;
+
+            } else {
+                _columns.push(column);
+            }
+        };
+        var getColumn = function (name) {
+            var index = indexOfColumns(name);
+            if(index >= 0) {
+                return _columns[index]
+            }
+            return null;
+        };
+        var indexOfColumns = function (name) {
+            for(var index in _columns) {
+                if(_columns[index].name == name) {
+                    return index;
+                }
+            }
+
+            return -1;
+        };
+        var addColumns = function (columns) {
+            if(!Array.isArray(columns)) {
+                return;
+            }
+
+            for (var i = 0; i < columns.length; i++) {
+                addColumn(columns[i]);
+            }
+        };
+        var getColumns = function () {
+            return _columns;
+        };
+        
+        var setPaginate = function (paginate) {
+            _paginate = paginate;
+        };
+        var getPaginate = function () {
+            return _paginate;
+        };
+        
+        var addFilter = function (filter) {
+            var index = indexOfFilters(filter.name);
+            if(index >= 0) {
+                _filters[index] = filter;
+            } else {
+                _filters.push(filter);
+            }
+        };
+        var getFilter = function (name) {
+            var index = indexOfFilters(name);
+            if(index >= 0) {
+                return _filters[index];
+            }
+
+            return null;
+        };
+        var indexOfFilters = function (name) {
+            for(var index in _filters) {
+                if(_filters[index].name == name) {
+                    return index;
+                }
+            }
+
+            return -1;
+        };
+        var addFilters = function (filters) {
+            if(!Array.isArray(filters)) {
+                return;
+            }
+
+            for (var i = 0; i < filters.length; i++) {
+                addFilter(filters[i]);
+            }
+        };
+        var getFilters = function () {
+            return _filters;
+        };
+        
+        var addOrder = function (order) {
+            var index = indexOfOrders(order.name);
+            if(index >= 0) {
+                _orders[index] = order;
+            } else {
+                _orders.push(order);
+            }
+        };
+        var getOrder = function (name) {
+            var index = indexOfOrders(name);
+            if(index >= 0) {
+                return _orders[index];
+            }
+
+            return null;
+        };
+        var indexOfOrders = function (name) {
+            for(var index in _orders) {
+                if(_orders[index].name == name) {
+                    return index;
+                }
+            }
+
+            return -1;
+        };
+        var addOrders = function (orders) {
+            if(!Array.isArray(orders)) {
+                return;
+            }
+
+            for (var i = 0; i < orders.length; i++) {
+                addOrder(orders[i]);
+            }
+        };
+        var getOrders = function () {
+            return _orders;
+        };
+        
+        var setExtra = function (extra) {
+            _extra = extra;
+        };
+        var getExtra = function () {
+            return _extra;
+        };
+
+        this.setData = setData;
+        this.getData = getData;
+
+        this.addColumn = addColumn;
+        this.getColumn = getColumn;
+        this.addColumns = addColumns;
+        this.getColumns = getColumns;
+        
+        this.setPaginate = setPaginate;
+        this.getPaginate = getPaginate;
+        
+        this.addFilter = addFilter;
+        this.getFilter = getFilter;
+        this.addFilters = addFilters;
+        this.getFilters = getFilters;
+        
+        this.addOrder = addOrder;
+        this.getOrder = getOrder;
+        this.addOrders = addOrders;
+        this.getOrders = getOrders;
+        
+        this.setExtra = setExtra;
+        this.getExtra = getExtra;
+    };
+
     var DataProvider = function () {
         var _default = '';
 
@@ -131,23 +399,98 @@ var Griew = function () {
             return _default;
         };
 
+        var exists = function (name) {
+            return Griew.dataProviders[name] !== undefined;
+        };
+
         var getDefaultDataProvider = function () {
-            return new Griew.dataProviders[_default](_options);
+            return getDataProvider(_default);
         };
 
-        var run = function (request) {
-            return getDefaultDataProvider().run(request);
+        var getDataProvider = function (name) {
+            if(!exists(name)) {
+                return null;
+            }
+
+            return new Griew.dataProviders[name](_options);
         };
 
+        var run = function (request, name) {
+            var dataProvider = name === undefined ? getDefaultDataProvider() : getDataProvider(name);
+            return dataProvider === null ? dataProvider : dataProvider.run(request, new Response());
+        };
+
+        this.setDefault = setDefault;
+        this.getDefault = getDefault;
         this.run = run;
 
         //--------------------------------------------------------------------------------------------------------------------------
         Griew.setDataProvider('json', function (options) {
-            var run = function (request) { 
-                return response; // {data, columns, paginate, extra}
+            var source;
+            var data;
+            var autoGenerateColumns;
+
+            var constructor = function () {
+                autoGenerateColumns = false;
+
+                if(options.exists('autoGenerateColumns')) {
+                    autoGenerateColumns = options.get('autoGenerateColumns');
+                }
+
+                if(options.exists('dataSource')) {
+                    source = options.get('dataSource');
+                }
+
+                if(typeof source === 'string') {
+                    data = JSON.parse(source);
+                }
+
+                if(!Array.isArray(data)) {
+                    throw "Data most be array";
+                }
+            };
+
+            var processFilters = function (data, filters) {
+                return data;
+            };
+
+            var processOrders = function (data, orders) {
+                return data;
+            };
+
+            var processPaginate = function (data, paginate) {
+                return data;
+            };
+
+            var processColumns = function (data, columns) {
+                return columns;
+            };
+
+            var run = function (request, response) {
+                var tempData;
+                var requestObject = request.toObject();
+
+                tempData = processFilters(data, requestObject.filters);
+                tempData = processOrders(tempData, requestObject.orders);
+                tempData = processPaginate(tempData, requestObject.pagination);
+
+                response.setData(tempData);
+                response.addFilters(requestObject.filters);
+                response.addOrders(requestObject.orders);
+                response.setPaginate(requestObject.pagination);
+                response.setExtra(requestObject.extra);
+                if(autoGenerateColumns) {
+                    response.addColumns(processColumns(tempData, requestObject.columns));
+                } else {
+                    response.addColumns(requestObject.columns);
+                }
+
+                return response;
             };
 
             this.run = run;
+
+            constructor();
         });
     };
 
@@ -887,14 +1230,23 @@ var Griew = function () {
         return _localization.trans(key, locale);
     };
     //--------------------------------------------------------------------------------------------------------------------------
+    _dataProvider.setDefault('json');
+    //--------------------------------------------------------------------------------------------------------------------------
     this.view = function () {
         return _view
     };
+
+    this.options = _options;
 
     this.setLocale = _localization.setLocale;
     this.getLocale = _localization.getLocale;
     this.isLocale = _localization.isLocale;
     this.trans = _localization.trans;
+
+    this.refresh = function () {
+        var response = _dataProvider.run(new Request().collect());
+        _view.render(response.getData());
+    };
 };
 //--------------------------------------------------------------------------------------------------------------------------
 Griew.langs = {};
