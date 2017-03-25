@@ -30,7 +30,6 @@ var Griew = function () {
             }
 
             return result;
-            dddd;
         };
 
         var getTrans = function (key, locale) {
