@@ -55,12 +55,12 @@
         
         var data = '[{"id": 1, "name": "Majid", "family": "Ataee", "age": 31},{"id": 2, "name": "Hamed", "family": "Anvary", "age": 35}]';
             
-        //name, type, order, visibility, template, beforRender, afterRender
-        griew.view().columns().add('id', 'number', 1, false);
-        griew.view().columns().add('name', 'string', 2, true, '<td><i>{ name }</i></td>');
-        griew.view().columns().add('family', 'string', 3, true, null, 
+        //name, caption, schema, type, order, visibility, sortable, filterable, template, beforRender, afterRender
+        griew.view().columns().add('id', 'Id', null, 'number', 1, false, false, false);
+        griew.view().columns().add('name', 'Name', null, 'string', 2, true, false, false, '<td><i>{ name }</i></td>');
+        griew.view().columns().add('family', 'Family', null, 'string', 3, true, false, false, null,
             function (name, value, template, rowNumber, colNumber) {
-                //return '<td><a href="{id}">{family} {name}</a></td>';
+                // return '<td><a href="{id}">{family} {name}</a></td>';
                 return template;
             }, 
             function (name, html, rowNumber, colNumber) {
@@ -68,7 +68,7 @@
             }
         );
 
-        griew.view().columns().add('age', 'string', 4, true, null, function (name, data, template) {
+        griew.view().columns().add('age', 'Age', null, 'string', 4, true, false, false, null, function (name, data, template) {
             data.value += 1;
             return template;
         });

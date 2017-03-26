@@ -504,16 +504,7 @@ var Griew = function () {
                 var _beforRender = function (item, template) { return template; };
                 var _afterRender = function (html) { return html; };
 
-                /**
-                 * 
-                 * @param {array} columns (visible columns)
-                 * @param {object} data (data row)
-                 * @param {number} number (row number)
-                 * @param {function} renderColumn
-                 * @returns {string} (HTML)
-                 * 
-                 */
-                 var render = function (columns, data, rowNumber, renderColumn) {
+                var render = function (columns, data, rowNumber, renderColumn) {
                     // TODO: validate data and columns
                     var renderedColumns = '';
                     var renderedRow = '';
@@ -583,16 +574,24 @@ var Griew = function () {
                     return (dot ? '.' : '') + 'griew-column-' + name;
                 };
 
-                var add = function (name, type, order, visibility, template, beforRender, afterRender) {
+                var add = function (name, caption, schema, type, order, visibility, sortable, filterable, template, beforRender, afterRender) {
                     _columns[name] = {
                         name: name,
+                        caption: caption,
+                        schema: schema,
                         type: type,
                         order: order || 1,
                         visibility: visibility === undefined ? true : visibility,
                         template: template || '<td>{' + name + '}</td>',
+                        sortable: sortable,
+                        filterable: filterable,
                         beforRender: beforRender || function (name, data, template, rowNumber, colNumber) { return template; },
                         afterRender: afterRender || function (name, html, rowNumber, colNumber) { return html; }
                     };
+                };
+
+                var get = function (name) {
+                    return _columns[name];
                 };
 
                 var remove = function (name) {
@@ -634,15 +633,8 @@ var Griew = function () {
                     return keys;
                 }
 
-                /**
-                 * 
-                 * @param {string} name (column name)
-                 * @param {any} value
-                 * @param {number} rowNumber
-                 * @param {number} colNumber
-                 * @returns {string} HTML
-                 */
-                 var render = function (name, rowData, rowNumber, colNumber) {
+                
+                var render = function (name, rowData, rowNumber, colNumber) {
                     // TODO: validate name and value
                     var renderedColumn = '';
                     var column = _columns[name];
@@ -652,7 +644,6 @@ var Griew = function () {
                     var template = column.beforRender(name, data, column.template, rowNumber, colNumber);
 
                     rowData[name] = data.value;
-
                     renderedColumn = parse(rowData, template);
                     renderedColumn = $(renderedColumn).addClass(_className).addClass(columnClassName(name))[0].outerHTML;
                     renderedColumn = column.afterRender(name, renderedColumn, rowNumber, colNumber);
@@ -676,9 +667,13 @@ var Griew = function () {
                     }
                 });
 
-                this.add = function (name, type, order, visibility, template, beforRender, afterRender) {
+                this.add = function (name, caption, schema, type, order, visibility, sortable, filterable, template, beforRender, afterRender) {
                     //TODO name param maybe string, col object or array of col objects.
-                    add(name, type, order, visibility, template, beforRender, afterRender);
+                    add(name, caption, schema, type, order, visibility, sortable, filterable, template, beforRender, afterRender);
+                };
+
+                this.get = function (name) {
+                    return get(name);
                 };
 
                 this.remove = function (name) {
@@ -721,7 +716,7 @@ var Griew = function () {
 
                     for (; index < columns.length; index++) {
                         name = columns[index];
-                        renderedCell = parse('cell-name', name, _cellTemplate);
+                        renderedCell = parse('cell-name', _columns.get(name).caption, _cellTemplate);
                         renderedCell = $(renderedCell).addClass(_cellClassName).addClass(columnClassName(name))[0].outerHTML;
                         renderedCells += renderedCell;
                     }
@@ -774,7 +769,7 @@ var Griew = function () {
                     return source.replace(keyWithName, value);
                 }
                 source = value;
-                var value = name;
+                value = name;
                 var names = source.match(key) || [];
                 for (var i = 0; i < names.length; i++) {
                     name = names[i].replace(/[{ }]*/gi, '');
