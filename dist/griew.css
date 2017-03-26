@@ -1,1 +1,1 @@
-.griew{border:1px solid black}
+table.griew{width:100%;max-width:100%;border-collapse:collapse;background-color:transparent;border-spacing:2px;border-color:grey;font-size:14px}table.griew th,table.griew td{padding:.65rem}table.griew thead{vertical-align:middle}table.griew thead tr th{text-align:left;border-top:1px solid #eceeef;border-bottom:2px solid #eceeef}table.griew tbody tr td{text-align:left;border-top:1px solid #eceeef}table.griew .griew-data-row:nth-child(odd){background-color:#fafafa}

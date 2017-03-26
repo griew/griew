@@ -1,3 +1,37 @@
-.griew {
-	border: 1px solid black;
+table.griew {
+	width: 100%;
+	max-width: 100%;
+	border-collapse: collapse;
+	background-color: transparent;
+	border-spacing: 2px;
+	border-color: grey;
+	font-size: 14px;
+
+	th, td {
+		padding: .65rem;
+	}
+
+	thead {
+		vertical-align: middle;
+		tr {
+			th {
+				text-align: left;
+				border-top: 1px solid #eceeef;
+				border-bottom: 2px solid #eceeef;
+			}
+		}
+	}
+
+	tbody {
+		tr {
+			td {
+				text-align: left;
+				border-top: 1px solid #eceeef;
+			}
+		}
+	}
+
+	.griew-data-row:nth-child(odd) {
+		background-color: #fafafa;
+	}
 }
