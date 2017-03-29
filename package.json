@@ -1,0 +1,33 @@
+{
+  "name": "griew",
+  "version": "1.0.0",
+  "description": "The name Griew means Grid View.",
+  "main": "griew.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/ataiemajid_63/griew.git"
+  },
+  "keywords": [
+    "griew",
+    "grid view",
+    "data view",
+    "table view"
+  ],
+  "author": "Majid Ataee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/ataiemajid_63/griew/issues"
+  },
+  "homepage": "http://www.griew.ir",
+  "devDependencies": {
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "2.4.1",
+    "gulp-uglify": "^2.1.2"
+  }
+}

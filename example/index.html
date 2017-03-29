@@ -4,14 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../dist/griew.css">
     <script src="jquery-3.1.1.min.js"></script>
     <script src="../griew.js" type="text/javascript"></script>
 </head>
 
 <body>
-    <div class="test" style="background: #e78d26; padding:10px"></div>
-    <div class="tst" style="background: #edd846"></div>
-    <table>
+    <!-- <div class="test" style="background: #e78d26; padding:10px"></div> -->
+    <div class="tst"></div>
+    <table class="griew">
         <thead></thead>
         <tbody></tbody>
     </table>
@@ -19,6 +20,18 @@
         Griew.setLang('fa', {
             accept: 'تایید',
             string: 'رشته',
+            filter: {
+                string: {
+                    operators: {
+                        IsEqualTo: "برابر باشد با",
+                        IsNotEqualTo: "برابر نباشد با",
+                        StartWith: "شروع شود با",
+                        DoesNotContains: "شامل نشود",
+                        EndsWith: "پایان یابد با",
+                        Contains: "شامل شود"
+                    }
+                }
+            },
             order: {
                 ascending: 'ترتیب صعودی',
                 descending: 'ترتیب نزولی',
@@ -27,10 +40,23 @@
         });
         Griew.setLang('en', {
             accept: 'Accept',
-            string: 'String'
+            string: 'String',
+            filter: {
+                string: {
+                    operators: {
+                        IsEqualTo: "Is Equal To",
+                        IsNotEqualTo: "Is Not Equal To",
+                        StartWith: "Start With",
+                        DoesNotContains: "Does Not Contains",
+                        EndsWith: "Ends With",
+                        Contains: "Contains"
+                    }
+                }
+            }
         });
 
         var griew = new Griew();
+        griew.setLocale('en');
 
         // griew.view().filters().onshow = function (name, container) {
         //     console.log("Show ", name, container);
@@ -46,66 +72,54 @@
         //     });
         // });
 
-        // griew.view().filters().addString('family', '.tst', true);
+        griew.view().filters().addString('family', '.tst', false);
 
         // griew.view().filters().show('name');
 
         // griew.view().orders().addDefault('family', '.tst', true);
         
-        var data = [
-            {
-                id: 1,
-                name: "majid",
-                family: "ataee",
-                age: 31
-            },
-            {
-                id: 2,
-                name: "majid",
-                family: "ataee",
-                age: 31
-            },
-            {
-                id: 3,
-                name: "majid",
-                family: "ataee",
-                age: 31
-            },
-            {
-                id: 4,
-                name: "majid",
-                family: "ataee",
-                age: 31
-            },
-            {
-                id: 5,
-                name: "majid",
-                family: "ataee",
-                age: 31
-            }
-        ];
+<<<<<<< HEAD
+        var data = '[{"id": 1, "name": "majid", "family": "ataee", "age": 31},{"id": 2, "name": "hamed", "family": "anvary", "age": 35}]';
+            
         //name, type, order, visibility, template, beforRender, afterRender
         griew.view().columns().add('id', 'number', 1, false);
         griew.view().columns().add('name', 'string', 2, true, '<td><i>{ name }</i></td>');
         griew.view().columns().add('family', 'string', 3, true, null, 
-        function (name, value, template, rowNumber, colNumber) {
-            //return '<td><a href="{id}">{family} {name}</a></td>';
-            return template;
-        }, 
-        function (name, html, rowNumber, colNumber) {
-            return html;
-        });
+            function (name, value, template, rowNumber, colNumber) {
+                //return '<td><a href="{id}">{family} {name}</a></td>';
+=======
+        var data = '[{"id": 1, "name": "Majid", "family": "Ataee", "age": 31},{"id": 2, "name": "Hamed", "family": "Anvary", "age": 35}]';
+            
+        //name, caption, schema, type, order, visibility, sortable, filterable, template, beforRender, afterRender
+        griew.view().columns().add('id', 'Id', null, 'number', 1, false, false, false);
+        griew.view().columns().add('name', 'Name', null, 'string', 2, true, false, false, '<td><i>{ name }</i></td>');
+        griew.view().columns().add('family', 'Family', null, 'string', 3, true, false, false, null,
+            function (name, value, template, rowNumber, colNumber) {
+                // return '<td><a href="{id}">{family} {name}</a></td>';
+>>>>>>> 2cf56caab9b1532c8a4f0a514c193ac889035462
+                return template;
+            }, 
+            function (name, html, rowNumber, colNumber) {
+                return html;
+            }
+        );
 
-        griew.view().columns().add('age', 'string', 4, true, null, function (name, data, template) {
+        griew.view().columns().add('age', 'Age', null, 'string', 4, true, false, false, null, function (name, data, template) {
             data.value += 1;
             return template;
         });
 
-        griew.view().render(data);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2cf56caab9b1532c8a4f0a514c193ac889035462
+        griew.options.set('dataSource', data);
+
+        griew.refresh();
         
     </script>
     <style>
-        .test .active {
+        /*.test .active {
             background: #00ffee;
         }
         
@@ -169,7 +183,7 @@
 
         .griew-header-cell.griew-column-family {
             color: #33aa00;
-        }
+        }*/
     </style>
 </body>
 
