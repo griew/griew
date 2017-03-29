@@ -204,9 +204,22 @@ var Griew = function () {
         */
         var collect = function () {
             // collecting columns
+            var columns = _View.columns().toArray();
+            for (var i = 0; i < columns.length; i++) {
+               addColumn(columns[i]);
+            }
             // collecting pagination
+            setPaginate(_Paginate.getPage());
             // collecting filters
+            var filters = _Filter.toArray();
+            for(var i = 0; i < filters.length; i++) {
+                addFilter(filters[i]);
+            }
             // collecting orders
+            var orders = _Order.toArray();
+            for (var i = 0; i < orders.length; i++) {
+                addOrder(orders[i]);
+            }
             // collecting extra data 
 
             return {
@@ -411,7 +424,7 @@ var Griew = function () {
                 return null;
             }
 
-            return new Griew.dataProviders[name](_options);
+            return new Griew.dataProviders[name](_Options);
         };
 
         var run = function (request, name) {
@@ -468,6 +481,8 @@ var Griew = function () {
             var run = function (request, response) {
                 var tempData;
                 var requestObject = request.toObject();
+
+                console.log(requestObject);
 
                 tempData = processFilters(data, requestObject.filters);
                 tempData = processOrders(tempData, requestObject.orders);
@@ -631,8 +646,15 @@ var Griew = function () {
                         }
                     }
                     return keys;
-                }
+                };
 
+                var toArray = function () {
+                    var columns = [];
+                    for (var i in _columns) {
+                        columns.push(_columns[i]);
+                    }
+                    return columns;
+                };
                 
                 var render = function (name, rowData, rowNumber, colNumber) {
                     // TODO: validate name and value
@@ -690,6 +712,10 @@ var Griew = function () {
 
                 this.visibles = function () {
                     return visibles();
+                };
+
+                this.toArray = function () {
+                    return toArray();
                 };
 
                 this.render = render;
@@ -810,7 +836,10 @@ var Griew = function () {
             }
 
             var add = function (name, container, content) {
-                var filterBox = $('<div>').addClass(_boxClassName).addClass(filterClassName(name)).append(typeof content === 'function' ? content() : content);
+                var filterBox = $('<div>')
+                    .addClass(_boxClassName)
+                    .addClass(filterClassName(name))
+                    .append(typeof content === 'function' ? content() : content);
                 $(container).append(filterBox);
             };
 
@@ -958,7 +987,10 @@ var Griew = function () {
                 var btnAccept = $('<button type="button">').addClass('griew-filter-string-btn-accept');
                 var btnClear = $('<button type="button">').addClass('griew-filter-string-btn-clear');
 
-                operators.append($('<option>').text('Start With').val('start'));
+                var options = trans('filter.string.operators');
+                for (var i in options) {
+                    operators.append($('<option>').text(options[i]).val(i));
+                }
                 btnAccept.text(trans('accept')).click(function () {
                     hide(name, container);
                 });
@@ -1184,7 +1216,8 @@ var Griew = function () {
 
         this.columns = function () {
             return {
-                add: _collection.columns.add
+                add: _collection.columns.add,
+                toArray: function() { return _collection.columns.toArray(); }
             };
         };
 
@@ -1833,36 +1866,36 @@ var Griew = function () {
         this.set = set;
         this.get = get;
         this.exists = exists;
-    }
+    };
     //--------------------------------------------------------------------------------------------------------------------------
-    var _localization = new Localization();
-    var _dataProvider = new DataProvider();
-    var _view = new View();
-    var _filter = new Filter();
-    var _order = new Order();
-    var _paginate = new Paginate();
-    var _options = new Options();
+    var _Localization = new Localization();
+    var _DataProvider = new DataProvider();
+    var _View = new View();
+    var _Filter = new Filter();
+    var _Order = new Order();
+    var _Paginate = new Paginate();
+    var _Options = new Options();
     //--------------------------------------------------------------------------------------------------------------------------
     var trans = function (key, locale) {
-        return _localization.trans(key, locale);
+        return _Localization.trans(key, locale);
     };
     //--------------------------------------------------------------------------------------------------------------------------
-    _dataProvider.setDefault('json');
+    _DataProvider.setDefault('json');
     //--------------------------------------------------------------------------------------------------------------------------
     this.view = function () {
-        return _view
+        return _View
     };
 
-    this.options = _options;
+    this.options = _Options;
 
-    this.setLocale = _localization.setLocale;
-    this.getLocale = _localization.getLocale;
-    this.isLocale = _localization.isLocale;
-    this.trans = _localization.trans;
+    this.setLocale = _Localization.setLocale;
+    this.getLocale = _Localization.getLocale;
+    this.isLocale = _Localization.isLocale;
+    this.trans = _Localization.trans;
 
     this.refresh = function () {
-        var response = _dataProvider.run(new Request().collect());
-        _view.render(response.getData());
+        var response = _DataProvider.run(new Request().collect());
+        _View.render(response.getData());
     };
 };
 //--------------------------------------------------------------------------------------------------------------------------

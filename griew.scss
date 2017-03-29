@@ -7,6 +7,10 @@ table.griew {
 	border-color: grey;
 	font-size: 14px;
 
+	* {
+		box-sizing: border-box;
+	}
+
 	th, td {
 		padding: .65rem;
 	}
@@ -33,5 +37,58 @@ table.griew {
 
 	.griew-data-row:nth-child(odd) {
 		background-color: #fafafa;
+	}
+}
+
+.griew-filter-box {
+	width: 240px;
+	padding: .75rem;
+	border: 1px solid rgb(220,220,220);
+	background-color: #fff;
+	box-shadow: 0 0 2px rgba(200,200,200,.8);
+
+	* {
+		box-sizing: border-box;
+		outline: none;
+	}
+
+	.griew-filter-string-btn-accept, 
+	.griew-filter-string-btn-clear {
+		padding: .35rem .6rem;
+		border: 1px solid rgb(220,220,220);
+		margin-right: 4px;
+		color: #444;
+		background-color: #eee;
+
+	}
+
+	.griew-filter-string-btn-clear {
+		background-color: #f9f9f9;
+	}
+
+	.griew-filter-string-box {
+		.griew-filter-string-operators {
+			display: block;
+			width: 100%;
+			margin: 0 0 .5rem;
+			padding: .25rem;
+			border: 1px solid rgb(200,200,200);
+		}
+
+		.griew-filter-string-operand {
+			display: block;
+			width: 100%;
+			margin: 0 0 .5rem;
+			padding: .25rem;
+			border: 1px solid rgb(200,200,200);
+		}
+
+		.griew-filter-string-btn-accept {
+
+		}
+
+		.griew-filter-string-btn-clear {
+
+		}
 	}
 }

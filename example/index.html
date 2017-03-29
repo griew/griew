@@ -11,7 +11,7 @@
 
 <body>
     <!-- <div class="test" style="background: #e78d26; padding:10px"></div> -->
-    <!-- <div class="tst" style="background: #edd846"></div> -->
+    <div class="tst"></div>
     <table class="griew">
         <thead></thead>
         <tbody></tbody>
@@ -20,6 +20,18 @@
         Griew.setLang('fa', {
             accept: 'تایید',
             string: 'رشته',
+            filter: {
+                string: {
+                    operators: {
+                        IsEqualTo: "برابر باشد با",
+                        IsNotEqualTo: "برابر نباشد با",
+                        StartWith: "شروع شود با",
+                        DoesNotContains: "شامل نشود",
+                        EndsWith: "پایان یابد با",
+                        Contains: "شامل شود"
+                    }
+                }
+            },
             order: {
                 ascending: 'ترتیب صعودی',
                 descending: 'ترتیب نزولی',
@@ -28,10 +40,23 @@
         });
         Griew.setLang('en', {
             accept: 'Accept',
-            string: 'String'
+            string: 'String',
+            filter: {
+                string: {
+                    operators: {
+                        IsEqualTo: "Is Equal To",
+                        IsNotEqualTo: "Is Not Equal To",
+                        StartWith: "Start With",
+                        DoesNotContains: "Does Not Contains",
+                        EndsWith: "Ends With",
+                        Contains: "Contains"
+                    }
+                }
+            }
         });
 
         var griew = new Griew();
+        griew.setLocale('en');
 
         // griew.view().filters().onshow = function (name, container) {
         //     console.log("Show ", name, container);
@@ -47,7 +72,7 @@
         //     });
         // });
 
-        // griew.view().filters().addString('family', '.tst', true);
+        griew.view().filters().addString('family', '.tst', false);
 
         // griew.view().filters().show('name');
 
@@ -72,6 +97,7 @@
             data.value += 1;
             return template;
         });
+
 
         griew.options.set('dataSource', data);
 
