@@ -48,6 +48,10 @@ table.griew {
 	box-shadow: 0 0 2px rgba(200,200,200,.8);
 	display: none;
 
+	&.active {
+		display: block;
+	}
+
 	* {
 		box-sizing: border-box;
 		outline: none;
