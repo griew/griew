@@ -78,16 +78,6 @@
 
         // griew.view().orders().addDefault('family', '.tst', true);
         
-<<<<<<< HEAD
-        var data = '[{"id": 1, "name": "majid", "family": "ataee", "age": 31},{"id": 2, "name": "hamed", "family": "anvary", "age": 35}]';
-            
-        //name, type, order, visibility, template, beforRender, afterRender
-        griew.view().columns().add('id', 'number', 1, false);
-        griew.view().columns().add('name', 'string', 2, true, '<td><i>{ name }</i></td>');
-        griew.view().columns().add('family', 'string', 3, true, null, 
-            function (name, value, template, rowNumber, colNumber) {
-                //return '<td><a href="{id}">{family} {name}</a></td>';
-=======
         var data = '[{"id": 1, "name": "Majid", "family": "Ataee", "age": 31},{"id": 2, "name": "Hamed", "family": "Anvary", "age": 35}]';
             
         //name, caption, schema, type, order, visibility, sortable, filterable, template, beforRender, afterRender
@@ -96,7 +86,6 @@
         griew.view().columns().add('family', 'Family', null, 'string', 3, true, false, false, null,
             function (name, value, template, rowNumber, colNumber) {
                 // return '<td><a href="{id}">{family} {name}</a></td>';
->>>>>>> 2cf56caab9b1532c8a4f0a514c193ac889035462
                 return template;
             }, 
             function (name, html, rowNumber, colNumber) {
@@ -109,10 +98,7 @@
             return template;
         });
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 2cf56caab9b1532c8a4f0a514c193ac889035462
         griew.options.set('dataSource', data);
 
         griew.refresh();

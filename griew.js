@@ -90,7 +90,6 @@ var Griew = function () {
         var getColumns = function () {
             return _columns;
         };
-<<<<<<< HEAD
         
         var setPaginate = function (paginate) {
             _paginate = paginate;
@@ -99,16 +98,6 @@ var Griew = function () {
             return _paginate;
         };
         
-=======
-        
-        var setPaginate = function (paginate) {
-            _paginate = paginate;
-        };
-        var getPaginate = function () {
-            return _paginate;
-        };
-        
->>>>>>> 2cf56caab9b1532c8a4f0a514c193ac889035462
         var addFilter = function (filter) {
             var index = indexOfFilters(filter.name);
             if(index >= 0) {
@@ -428,23 +417,6 @@ var Griew = function () {
 
         var getDefaultDataProvider = function () {
             return getDataProvider(_default);
-<<<<<<< HEAD
-        };
-
-        var getDataProvider = function (name) {
-            if(!exists(name)) {
-                return null;
-            }
-
-            return new Griew.dataProviders[name](_options);
-        };
-
-        var run = function (request, name) {
-            var dataProvider = name === undefined ? getDefaultDataProvider() : getDataProvider(name);
-            return dataProvider === null ? dataProvider : dataProvider.run(request, new Response());
-        };
-
-=======
         };
 
         var getDataProvider = function (name) {
@@ -460,7 +432,6 @@ var Griew = function () {
             return dataProvider === null ? dataProvider : dataProvider.run(request, new Response());
         };
 
->>>>>>> 2cf56caab9b1532c8a4f0a514c193ac889035462
         this.setDefault = setDefault;
         this.getDefault = getDefault;
         this.run = run;
@@ -511,11 +482,8 @@ var Griew = function () {
                 var tempData;
                 var requestObject = request.toObject();
 
-<<<<<<< HEAD
-=======
                 console.log(requestObject);
 
->>>>>>> 2cf56caab9b1532c8a4f0a514c193ac889035462
                 tempData = processFilters(data, requestObject.filters);
                 tempData = processOrders(tempData, requestObject.orders);
                 tempData = processPaginate(tempData, requestObject.pagination);
@@ -1912,28 +1880,12 @@ var Griew = function () {
         return _Localization.trans(key, locale);
     };
     //--------------------------------------------------------------------------------------------------------------------------
-<<<<<<< HEAD
-    _dataProvider.setDefault('json');
-=======
     _DataProvider.setDefault('json');
->>>>>>> 2cf56caab9b1532c8a4f0a514c193ac889035462
     //--------------------------------------------------------------------------------------------------------------------------
     this.view = function () {
         return _View
     };
 
-<<<<<<< HEAD
-    this.options = _options;
-
-    this.setLocale = _localization.setLocale;
-    this.getLocale = _localization.getLocale;
-    this.isLocale = _localization.isLocale;
-    this.trans = _localization.trans;
-
-    this.refresh = function () {
-        var response = _dataProvider.run(new Request().collect());
-        _view.render(response.getData());
-=======
     this.options = _Options;
 
     this.setLocale = _Localization.setLocale;
@@ -1944,7 +1896,6 @@ var Griew = function () {
     this.refresh = function () {
         var response = _DataProvider.run(new Request().collect());
         _View.render(response.getData());
->>>>>>> 2cf56caab9b1532c8a4f0a514c193ac889035462
     };
 };
 //--------------------------------------------------------------------------------------------------------------------------
