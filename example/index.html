@@ -29,7 +29,10 @@
                         DoesNotContains: "شامل نشود",
                         EndsWith: "پایان یابد با",
                         Contains: "شامل شود"
-                    }
+                    },
+                    operand: "عبارت",
+                    accept: "اعمال فیلتر",
+                    clear: "حذف فیلتر"
                 }
             },
             order: {
@@ -39,8 +42,6 @@
             }
         });
         Griew.setLang('en', {
-            accept: 'Accept',
-            string: 'String',
             filter: {
                 string: {
                     operators: {
@@ -50,7 +51,10 @@
                         DoesNotContains: "Does Not Contains",
                         EndsWith: "Ends With",
                         Contains: "Contains"
-                    }
+                    },
+                    operand: "Expression",
+                    accept: "Accept",
+                    clear: "Clear"
                 }
             }
         });
@@ -72,7 +76,7 @@
         //     });
         // });
 
-        griew.view().filters().addString('family', '.tst', false);
+        // griew.view().filters().addString('family', '.tst', false);
 
         // griew.view().filters().show('name');
 

@@ -22,6 +22,7 @@ table.griew {
 				text-align: left;
 				border-top: 1px solid #eceeef;
 				border-bottom: 2px solid #eceeef;
+				position: relative;
 			}
 		}
 	}
@@ -47,6 +48,10 @@ table.griew {
 	background-color: #fff;
 	box-shadow: 0 0 2px rgba(200,200,200,.8);
 	display: none;
+	position: absolute;
+	left: 0;
+	right: 0;	
+	margin: 0 auto;
 
 	&.active {
 		display: block;
@@ -97,3 +102,15 @@ table.griew {
 		}
 	}
 }
+
+.griew-filter-button {
+		border: 0;
+		background-color: transparent;
+		float: right;
+		outline: 0;
+
+		&:after {
+			content: "F";
+		}
+
+	}

@@ -730,7 +730,11 @@ var Griew = function () {
 
                 var columnClassName = function (name, dot) {
                     return (dot ? '.' : '') + 'griew-column-' + name;
-                };  
+                };
+
+                var getCellSelector = function (name) {
+                    return '.' + _cellClassName + columnClassName(name, true);
+                }  
 
                 var render = function (columns) {
                     // TODO: validate data and columns
@@ -781,6 +785,7 @@ var Griew = function () {
                 });                
 
                 this.render = render;
+                this.getCellSelector = getCellSelector;
             };
 
             var _row = new Row();
@@ -814,7 +819,11 @@ var Griew = function () {
                 $rowContainer.html('');
 
                 $headerContainer.html(_header.render(columns));
-                
+
+                _filters.autoGenerate(columns, function (name) {
+                    return _header.getCellSelector(name);
+                });
+
                 for (; index < data.length; index++) {
                     $rowContainer.append(_row.render(columns, data[index], index + 1, _columns.render));
                 }
@@ -870,6 +879,14 @@ var Griew = function () {
                 _onhide(name, container);
             }
 
+            var hideOthers = function (name, container) {
+                if (container === undefined) {
+                    $('.' + _boxClassName + ':not(' + filterClassName(name, true) + ')').removeClass('active');
+                } else {
+                    $(container + '>' + '.' + _boxClassName + ':not(' + filterClassName(name, true) + ')').removeClass('active');
+                }
+            }
+
             var toggle = function (name, container) {
                 if (container === undefined) {
                     $(filterClassName(name, true)).toggleClass('active');
@@ -886,11 +903,10 @@ var Griew = function () {
 
             var isVisible = function (name, container) {
                 if (container === undefined) {
-                    $(filterClassName(name, true)).hasClass('active');
-                    return;
+                    return $(filterClassName(name, true)).hasClass('active');
                 }
 
-                $(container + '>' + filterClassName(name, true)).hasClass('active');
+                return $(container + '>' + filterClassName(name, true)).hasClass('active');
             };
 
             Object.defineProperty(this, 'onshow', {
@@ -952,6 +968,17 @@ var Griew = function () {
 
             /**
              * 
+             * Invisible Other filter boxs by name and container. if do not choose container invisible all other filter boxes.
+             * @param {string} name
+             * @param {selector} container
+             * @return {undefined}
+             */
+             this.hideOthers = function (name, container) {
+                hideOthers(name, container);
+            };
+
+            /**
+             * 
              * Toggle visible filter box by name and container. if do not choose container toggle visible all filter boxes.
              * @param {string} name
              * @param {selector} container
@@ -980,8 +1007,7 @@ var Griew = function () {
              * @param {boolean} visible
              */
              this.addString = function (name, container, visible) {
-
-                var stringBox = $('<div>').addClass('griew-filter-string-box');
+                var filterBox = $('<div>').addClass('griew-filter-string-box');
                 var operators = $('<select>').addClass('griew-filter-string-operators');
                 var operand = $('<input type="text">').addClass('griew-filter-string-operand');
                 var btnAccept = $('<button type="button">').addClass('griew-filter-string-btn-accept');
@@ -991,17 +1017,69 @@ var Griew = function () {
                 for (var i in options) {
                     operators.append($('<option>').text(options[i]).val(i));
                 }
-                btnAccept.text(trans('accept')).click(function () {
+                operand.attr('placeholder', trans('filter.string.operand'));
+                btnAccept.text(trans('filter.string.accept')).click(function () {
                     hide(name, container);
                 });
-                btnClear.text('Clear');
+                btnClear.text(trans('filter.string.clear'));
 
-                stringBox.append(operators).append(operand).append(btnAccept).append(btnClear);
+                filterBox.append(operators).append(operand).append(btnAccept).append(btnClear);
 
-                add(name, container, stringBox);
+                add(name, container, filterBox);
 
                 if (visible) {
                     show(name, container);
+                }
+            };
+
+            this.autoGenerate = function (columns, getContainer) {
+                var column = null;
+                var container = '';
+
+                for(var i in columns) { 
+                    column = _collection.columns.get(columns[i]);
+                    container = getContainer(column.name);
+
+                    var $button = $('<button>');
+                    $button.addClass('griew-filter-button');
+                    $button.data('FilterBoxName', column.name);
+                    $button.data('FilterBoxContainer', container);
+                    $button.click(function () {
+                        var filterBoxName = $(this).data('FilterBoxName');
+                        var filterBoxContainer = $(this).data('FilterBoxContainer');
+                        if(isVisible(filterBoxName, filterBoxContainer)) {
+                            hide(filterBoxName, filterBoxContainer);
+                        } else {
+                            hideOthers(filterBoxName);
+                            show(filterBoxName, filterBoxContainer);
+                        }
+                    });
+
+                    $(container).append($button);
+
+                    switch(column.type) {
+                        case 'string':
+                            _filters.addString(column.name, container,true);
+                        break;
+                        case 'number':
+                            _filters.addNumber(column.name, container,true);
+                        break;
+                        case 'date':
+                            _filters.addDate(column.name, container,true);
+                        break;
+                        case 'datetime':
+                            _filters.addDateTime(column.name, container,true);
+                        break;
+                        case 'time':
+                            _filters.addTime(column.name, container,true);
+                        break;
+                        case 'enum':
+                            _filters.addEnum(column.name, container,true);
+                        break;
+                        case 'boolean':
+                            _filters.addBoolean(column.name, container,true);
+                        break;
+                    }
                 }
             };
         };
