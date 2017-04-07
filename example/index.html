@@ -33,6 +33,38 @@
                     operand: "عبارت",
                     accept: "اعمال فیلتر",
                     clear: "حذف فیلتر"
+                },
+                number: {
+                    operators: {
+                        IsEqualTo: "Is Equal To",
+                        IsNotEqualTo: "Is Not Equal To",
+                        Between: "Between",
+                        IsGreaterThanOrEqualTo: "Is Greater Than Or Equal To",
+                        IsGreaterThan: "Is Greater Than",
+                        IsLessThanOrEqualTo: "Is Less Than Or Equal To",
+                        IsLessThan: "Is Less Than",
+                    },
+                    operand: "رقم",
+                    operand1: "از رقم",
+                    operand2: "تا رقم",
+                    accept: "اعمال فیمتر",
+                    clear: "حذف فیلتر"
+                },
+                number: {
+                    operators: {
+                        IsEqualTo: "Is Equal To",
+                        IsNotEqualTo: "Is Not Equal To",
+                        Between: "Between",
+                        IsGreaterThanOrEqualTo: "Is Greater Than Or Equal To",
+                        IsGreaterThan: "Is Greater Than",
+                        IsLessThanOrEqualTo: "Is Less Than Or Equal To",
+                        IsLessThan: "Is Less Than",
+                    },
+                    operand: "Number",
+                    operand1: "From",
+                    operand2: "To",
+                    accept: "Accept",
+                    clear: "Clear"
                 }
             },
             order: {
@@ -53,6 +85,42 @@
                         Contains: "Contains"
                     },
                     operand: "Expression",
+                    accept: "Accept",
+                    clear: "Clear"
+                },
+                number: {
+                    operators: {
+                        IsEqualTo: "Is Equal To",
+                        IsNotEqualTo: "Is Not Equal To",
+                        Between: "Between",
+                        IsGreaterThanOrEqualTo: "Is Greater Than Or Equal To",
+                        IsGreaterThan: "Is Greater Than",
+                        IsLessThanOrEqualTo: "Is Less Than Or Equal To",
+                        IsLessThan: "Is Less Than",
+                    },
+                    operand: "Number",
+                    operand1: "From",
+                    operand2: "To",
+                    accept: "Accept",
+                    clear: "Clear"
+                },
+                datetime: {
+                    operators: {
+                        IsEqualTo: "Is Equal To",
+                        IsNotEqualTo: "Is Not Equal To",
+                        Between: "Between",
+                        IsAfterThanOrEqualTo: "Is After Than Or Equal To",
+                        IsAfterThan: "Is After Than",
+                        IsBeforeThanOrEqualTo: "Is Before Than Or Equal To",
+                        IsBeforeThan: "Is Before Than",
+                    },
+                    operand: {
+                        year: "Year",
+                        month: "Month",
+                        day: "Day",
+                        hour: "Hour",
+                        minute: "Minute",
+                    },
                     accept: "Accept",
                     clear: "Clear"
                 }
@@ -87,7 +155,7 @@
         //name, caption, schema, type, order, visibility, sortable, filterable, template, beforRender, afterRender
         griew.view().columns().add('id', 'Id', null, 'number', 1, false, false, false);
         griew.view().columns().add('name', 'Name', null, 'string', 2, true, false, false, '<td><i>{ name }</i></td>');
-        griew.view().columns().add('family', 'Family', null, 'string', 3, true, false, false, null,
+        griew.view().columns().add('family', 'Family', null, 'datetime', 3, true, false, false, null,
             function (name, value, template, rowNumber, colNumber) {
                 // return '<td><a href="{id}">{family} {name}</a></td>';
                 return template;
@@ -97,7 +165,7 @@
             }
         );
 
-        griew.view().columns().add('age', 'Age', null, 'string', 4, true, false, false, null, function (name, data, template) {
+        griew.view().columns().add('age', 'Age', null, 'number', 4, true, false, false, null, function (name, data, template) {
             data.value += 1;
             return template;
         });

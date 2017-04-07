@@ -62,6 +62,10 @@ table.griew {
 		outline: none;
 	}
 
+	.griew-filter-datetime-btn-accept, 
+	.griew-filter-datetime-btn-clear, 
+	.griew-filter-number-btn-accept, 
+	.griew-filter-number-btn-clear, 
 	.griew-filter-string-btn-accept, 
 	.griew-filter-string-btn-clear {
 		padding: .35rem .6rem;
@@ -72,12 +76,13 @@ table.griew {
 
 	}
 
+	.griew-filter-number-btn-clear,
 	.griew-filter-string-btn-clear {
 		background-color: #f9f9f9;
 	}
 
 	.griew-filter-string-box {
-		.griew-filter-string-operators {
+		.griew-filter-string-operator {
 			display: block;
 			width: 100%;
 			margin: 0 0 .5rem;
@@ -101,6 +106,122 @@ table.griew {
 
 		}
 	}
+
+	.griew-filter-number-box {
+		.griew-filter-number-operator {
+			display: block;
+			width: 100%;
+			margin: 0 0 .5rem;
+			padding: .25rem;
+			border: 1px solid rgb(200,200,200);
+		}
+
+		.griew-filter-number-operand {
+			display: block;
+			width: 100%;
+			margin: 0 0 .5rem;
+			padding: .25rem;
+			border: 1px solid rgb(200,200,200);
+
+			&.hide {
+				display: none;
+			}
+		}
+
+		.griew-filter-number-btn-accept {
+
+		}
+
+		.griew-filter-number-btn-clear {
+
+		}
+	}
+
+	.griew-filter-datetime-box {
+		.griew-filter-datetime-operator {
+			display: block;
+			width: 100%;
+			margin: 0 0 .5rem;
+			padding: .25rem;
+			border: 1px solid rgb(200,200,200);
+		}
+
+		.griew-filter-datetime-operand {
+			display: block;
+			width: 100%;
+			margin: 0 0 .5rem;
+			padding: 0;
+			border: 1px solid rgb(200,200,200);
+			position: relative;
+
+			&.hide {
+				display: none;
+			}
+
+			.griew-filter-datetime-date-wrapper,
+			.griew-filter-datetime-time-wrapper {
+				margin: 0;
+				padding: 0;
+				display: flex;
+				border-bottom: 1px solid rgb(200,200,200);
+
+				* {
+					border: none;
+					margin: 0;
+					padding:.25rem;
+					outline: none;
+					display: block;
+					box-sizing: border-box;
+					width: 100%;	
+				}
+			}
+
+			.griew-filter-datetime-operand-year {
+				// width: 28%;
+			}
+
+			.griew-filter-datetime-operand-month {
+				// width: 28%;	
+			}
+
+			.griew-filter-datetime-operand-day {
+				// width: 30%;
+			}
+
+			.griew-filter-datetime-operand-hour {
+				// width: 40%;
+			}
+
+			.griew-filter-datetime-operand-minute {
+				// width: 40%;
+			}
+
+			.griew-filter-datetime-date-separator {
+				text-align: center;
+				width: auto;
+				&:after {
+					content: "/";
+				}
+				
+			}
+
+			.griew-filter-datetime-time-separator {
+				text-align: center;
+				width: auto;
+				&:after {
+					content: ":";
+				}
+			}
+		}
+
+		.griew-filter-datetime-btn-accept {
+
+		}
+
+		.griew-filter-datetime-btn-clear {
+
+		}
+	}
 }
 
 .griew-filter-button {
@@ -112,5 +233,4 @@ table.griew {
 		&:after {
 			content: "F";
 		}
-
-	}
+}

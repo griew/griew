@@ -1007,25 +1007,352 @@ var Griew = function () {
              * @param {boolean} visible
              */
              this.addString = function (name, container, visible) {
-                var filterBox = $('<div>').addClass('griew-filter-string-box');
-                var operators = $('<select>').addClass('griew-filter-string-operators');
-                var operand = $('<input type="text">').addClass('griew-filter-string-operand');
-                var btnAccept = $('<button type="button">').addClass('griew-filter-string-btn-accept');
-                var btnClear = $('<button type="button">').addClass('griew-filter-string-btn-clear');
+                var $filterBox = $('<div>').addClass('griew-filter-string-box');
+                var $operator = $('<select>').addClass('griew-filter-string-operator');
+                var $operand = $('<input type="text">').addClass('griew-filter-string-operand');
+                var $btnAccept = $('<button type="button">').addClass('griew-filter-string-btn-accept');
+                var $btnClear = $('<button type="button">').addClass('griew-filter-string-btn-clear');
 
-                var options = trans('filter.string.operators');
-                for (var i in options) {
-                    operators.append($('<option>').text(options[i]).val(i));
+                var operators = [
+                    'Contains',
+                    'DoesNotContains',
+                    'IsEqualTo',
+                    'IsNotEqualTo',
+                    'StartWith',
+                    'EndsWith'
+                ];
+
+                for (var i in operators) {
+                    $operator.append($('<option>').text(trans('filter.string.operators.' + operators[i])).val(operators[i]));
                 }
-                operand.attr('placeholder', trans('filter.string.operand'));
-                btnAccept.text(trans('filter.string.accept')).click(function () {
+                $operand.attr('placeholder', trans('filter.string.operand'));
+                $btnAccept.text(trans('filter.string.accept')).click(function () {
+                    _Filter.add(name, 'string',$operator.val(), $operand.val());
                     hide(name, container);
                 });
-                btnClear.text(trans('filter.string.clear'));
+                $btnClear.text(trans('filter.string.clear')).click(function () {
+                    _Filter.remove(name);
+                    hide(name, container);
+                });
 
-                filterBox.append(operators).append(operand).append(btnAccept).append(btnClear);
+                $filterBox.append($operator).append($operand).append($btnAccept).append($btnClear);
 
-                add(name, container, filterBox);
+                add(name, container, $filterBox);
+
+                if (visible) {
+                    show(name, container);
+                }
+            };
+
+            /**
+             * 
+             * 
+             * @param {string} name
+             * @param {selector} container
+             * @param {boolean} visible
+             */
+             this.addNumber = function (name, container, visible) {
+                var $filterBox = $('<div>').addClass('griew-filter-number-box');
+                var $operator = $('<select id="operator">').addClass('griew-filter-number-operator');
+                var $operand1 = $('<input type="number" id="operand1">').addClass('griew-filter-number-operand');
+                var $operand2 = $('<input type="number" id="operand2">').addClass('griew-filter-number-operand');
+                var $btnAccept = $('<button type="button">').addClass('griew-filter-number-btn-accept');
+                var $btnClear = $('<button type="button">').addClass('griew-filter-number-btn-clear');
+
+                var operators = [
+                    'IsEqualTo',
+                    'IsNotEqualTo',
+                    'Between',
+                    'IsGreaterThanOrEqualTo',
+                    'IsGreaterThan',
+                    'IsLessThanOrEqualTo',
+                    'IsLessThan'
+                ];
+
+                for (var i in operators) {
+                    $operator.append($('<option>').text(trans('filter.number.operators.' + operators[i])).val(operators[i]));
+                }
+                $operator.change(function () {
+                    if($(this).val() === 'Between') {
+                        $operand2.removeClass('hide');
+                        $operand1.attr('placeholder', trans('filter.number.operand1'));
+                    } else {
+                        $operand2.addClass('hide');
+                        $operand1.attr('placeholder', trans('filter.number.operand'));
+                    }
+                });
+
+                $operand1.attr('placeholder', trans('filter.number.operand1'));
+                $operand2.attr('placeholder', trans('filter.number.operand2'));
+                $btnAccept.text(trans('filter.number.accept')).click(function () {
+                    if($operator.val() === 'Between') {
+                        _Filter.add(name, 'number',$operator.val(), Number($operand1.val()), Number($operand2.val()));
+                    } else {
+                        _Filter.add(name, 'number',$operator.val(), Number($operand1.val()));
+                    }
+
+                    hide(name, container);
+                });
+                $btnClear.text(trans('filter.number.clear')).click(function () {
+                    _Filter.remove(name);
+                    hide(name, container);
+                });
+
+                $filterBox.append($operator).append($operand1).append($operand2).append($btnAccept).append($btnClear);
+
+                add(name, container, $filterBox);
+
+                $operator.change();
+
+                if (visible) {
+                    show(name, container);
+                }
+            };
+
+            /**
+             * 
+             * 
+             * @param {string} name
+             * @param {selector} container
+             * @param {object} options
+             * @param {boolean} visible
+             */
+             this.addDateTime = function (name, container, options, visible) {
+                options = options || {};
+
+                var $filterBox = $('<div>').addClass('griew-filter-datetime-box');
+                var $operator = $('<select id="operator">').addClass('griew-filter-datetime-operator');
+                
+                var $operand1 = $('<div id="operand1">').addClass('griew-filter-datetime-operand');
+                var $operand1Year = $('<input type="number">').addClass('griew-filter-datetime-operand-year');
+                var $operand1Month = $('<input type="number">').addClass('griew-filter-datetime-operand-month');
+                var $operand1Day = $('<input type="number">').addClass('griew-filter-datetime-operand-day');
+                var $operand1Hour = $('<input type="number">').addClass('griew-filter-datetime-operand-hour');
+                var $operand1Minute = $('<input type="number">').addClass('griew-filter-datetime-operand-minute');
+                var $operand1DateWrapper = $('<div>').addClass('griew-filter-datetime-date-wrapper');
+                var $operand1TimeWrapper = $('<div>').addClass('griew-filter-datetime-time-wrapper');
+                
+                var $operand2 = $('<div id="operand2">').addClass('griew-filter-datetime-operand');
+                var $operand2Year = $('<input type="number">').addClass('griew-filter-datetime-operand-year');
+                var $operand2Month = $('<input type="number">').addClass('griew-filter-datetime-operand-month');
+                var $operand2Day = $('<input type="number">').addClass('griew-filter-datetime-operand-day');
+                var $operand2Hour = $('<input type="number">').addClass('griew-filter-datetime-operand-hour');
+                var $operand2Minute = $('<input type="number">').addClass('griew-filter-datetime-operand-minute');
+                var $operand2DateWrapper = $('<div>').addClass('griew-filter-datetime-date-wrapper');
+                var $operand2TimeWrapper = $('<div>').addClass('griew-filter-datetime-time-wrapper');
+                
+                var dateSeparator = '<span class="griew-filter-datetime-date-separator"></span>';
+                var timeSeparator = '<span class="griew-filter-datetime-time-separator"></span>';
+                var $btnAccept = $('<button type="button">').addClass('griew-filter-datetime-btn-accept');
+                var $btnClear = $('<button type="button">').addClass('griew-filter-datetime-btn-clear');
+
+                var operators = [
+                    'IsEqualTo',
+                    'IsNotEqualTo',
+                    'Between',
+                    'IsAfterThanOrEqualTo',
+                    'IsAfterThan',
+                    'IsBeforeThanOrEqualTo',
+                    'IsBeforeThan'
+                ];
+
+                for (var i in operators) {
+                    $operator.append($('<option>').text(trans('filter.datetime.operators.' + operators[i])).val(operators[i]));
+                }
+                $operator.change(function () {
+                    if($(this).val() === 'Between') {
+                        $operand2.removeClass('hide');
+                    } else {
+                        $operand2.addClass('hide');
+                    }
+                });
+
+                $operand1Year
+                    .attr({
+                        'placeholder': trans('filter.datetime.operand.year'),
+                        'min': options.year && options.year ? options.year.min : 1000,
+                        'max': options.year && options.year ? options.year.max : ''
+                    })
+                    .val(options.default && options.default.year ? options.default.year : '');
+                $operand1Month
+                    .attr({
+                        'placeholder': trans('filter.datetime.operand.month'),
+                        'min': 1,
+                        'max': 12
+                    })
+                    .val(options.default && options.default.month ? options.default.month : '');
+                $operand1Day
+                    .attr({
+                        'placeholder': trans('filter.datetime.operand.day'),
+                        'min': 1,
+                        'max': 31
+                    })
+                    .val(options.default && options.default.day ? options.default.day : '');
+                $operand1Hour
+                    .attr({
+                        'placeholder': trans('filter.datetime.operand.hour'),
+                        'min': 0,
+                        'max': 23
+                    })
+                    .val(options.default && options.default.hour ? options.default.hour : '');
+                $operand1Minute
+                    .attr({
+                        'placeholder': trans('filter.datetime.operand.minute'),
+                        'min': 0,
+                        'max': 59
+                    })
+                    .val(options.default && options.default.minute ? options.default.minute : '');
+
+                $operand2Year
+                    .attr({
+                        'placeholder': trans('filter.datetime.operand.year'),
+                        'min': options.year && options.year.min ? options.year.min : 1000,
+                        'max': options.year && options.year.max ? options.year.max : ''
+                    })
+                    .val(options.default && options.default.year ? options.default.year : '');
+                $operand2Month
+                    .attr({
+                        'placeholder': trans('filter.datetime.operand.month'),
+                        'min': 1,
+                        'max': 12
+                    })
+                    .val(options.default && options.default.month ? options.default.month : '');
+                $operand2Day
+                    .attr({
+                        'placeholder': trans('filter.datetime.operand.day'),
+                        'min': 1,
+                        'max': 31
+                    })
+                    .val(options.default && options.default.day ? options.default.day : '');
+                $operand2Hour
+                    .attr({
+                        'placeholder': trans('filter.datetime.operand.hour'),
+                        'min': 0,
+                        'max': 23
+                    })
+                    .val(options.default && options.default.hour ? options.default.hour : '');
+                $operand2Minute
+                    .attr({
+                        'placeholder': trans('filter.datetime.operand.minute'),
+                        'min': 0,
+                        'max': 59
+                    })
+                    .val(options.default && options.default.minute ? options.default.minute : '');
+
+                $btnAccept.text(trans('filter.datetime.accept')).click(function () {
+                    var operand1 = {
+                        year: Number($operand1Year.val()),
+                        month: Number($operand1Month.val()),
+                        day: Number($operand1Day.val()),
+                        hour: Number($operand1Hour.val()),
+                        minute: Number($operand1Minute.val())
+                    };
+
+                    var operand2 = {
+                        year: Number($operand2Year.val()),
+                        month: Number($operand2Month.val()),
+                        day: Number($operand2Day.val()),
+                        hour: Number($operand2Hour.val()),
+                        minute: Number($operand2Minute.val())
+                    };
+
+                    if($operator.val() === 'Between') {
+                        _Filter.add(name, 'datetime',$operator.val(), operand1, operand2);
+                    } else {
+                        _Filter.add(name, 'datetime',$operator.val(), operand1);
+                    }
+
+                    hide(name, container);
+                });
+                $btnClear.text(trans('filter.datetime.clear')).click(function () {
+                    _Filter.remove(name);
+                    hide(name, container);
+                });
+
+                options.type = options.type || 'datetime';
+                if(options.type && options.type === 'date' || options.type === 'datetime') {
+                    $operand1DateWrapper
+                        .append($operand1Year)
+                        .append(dateSeparator)
+                        .append($operand1Month)
+                        .append(dateSeparator)
+                        .append($operand1Day);
+                    $operand1.append($operand1DateWrapper);
+
+                    $operand2DateWrapper
+                        .append($operand2Year)
+                        .append(dateSeparator)
+                        .append($operand2Month)
+                        .append(dateSeparator)
+                        .append($operand2Day);
+                    $operand2.append($operand2DateWrapper);
+                }
+
+                if(options.type && options.type === 'time' || options.type === 'datetime') {
+                    $operand1TimeWrapper
+                        .append($operand1Hour)
+                        .append(timeSeparator)
+                        .append($operand1Minute);
+                    $operand1.append($operand1TimeWrapper);
+
+                    $operand2TimeWrapper
+                        .append($operand2Hour)
+                        .append(timeSeparator)
+                        .append($operand2Minute);
+                    $operand2.append($operand2TimeWrapper);
+                }
+
+                $filterBox.append($operator).append($operand1).append($operand2).append($btnAccept).append($btnClear);
+
+                add(name, container, $filterBox);
+
+                $operator.change();
+
+                if (visible) {
+                    show(name, container);
+                }
+            };
+
+                        /**
+             * 
+             * 
+             * @param {string} name
+             * @param {selector} container
+             * @param {object} options
+             * @param {boolean} visible
+             */
+             this.addEnum = function (name, container, options, visible) {
+                options = options || {};
+
+                var $filterBox = $('<div>').addClass('griew-filter-enum-box');
+                var $operand = $('<div>').addClass('griew-filter-enum-operand');
+                var $btnAccept = $('<button type="button">').addClass('griew-filter-enum-btn-accept');
+                var $btnClear = $('<button type="button">').addClass('griew-filter-enum-btn-clear');
+
+                var operator = 'In';
+
+                options.items = options.items || {};
+                var type = options.type && options.type == 'single' ? 'radio' : 'checkbox';
+                for(var i in options.items) {
+                    $operand.append(
+                        $('<label>').append(
+                            $('<input>').val(i).attr({'name': 'filter_' + name, 'type': type})
+                        ).append(options.items[i])
+                    );
+                }
+                
+                $btnAccept.text(trans('filter.enum.accept')).click(function () {
+                    _Filter.add(name, 'enum', operator, $operand);
+                    hide(name, container);
+                });
+                $btnClear.text(trans('filter.enum.clear')).click(function () {
+                    _Filter.remove(name);
+                    hide(name, container);
+                });
+
+                $filterBox.append($operand).append($btnAccept).append($btnClear);
+
+                add(name, container, $filterBox);
 
                 if (visible) {
                     show(name, container);
@@ -1059,25 +1386,22 @@ var Griew = function () {
 
                     switch(column.type) {
                         case 'string':
-                            _filters.addString(column.name, container,true);
+                            _filters.addString(column.name, container, false);
                         break;
                         case 'number':
-                            _filters.addNumber(column.name, container,true);
-                        break;
-                        case 'date':
-                            _filters.addDate(column.name, container,true);
+                            _filters.addNumber(column.name, container, false);
                         break;
                         case 'datetime':
-                            _filters.addDateTime(column.name, container,true);
-                        break;
-                        case 'time':
-                            _filters.addTime(column.name, container,true);
+                            var options = column.options && column.options.filter ? column.options.filter : undefined; 
+                            _filters.addDateTime(column.name, container, options, false);
                         break;
                         case 'enum':
-                            _filters.addEnum(column.name, container,true);
+                            var options = column.options && column.options.filter ? column.options.filter : undefined; 
+                            _filters.addEnum(column.name, container, options, false);
                         break;
                         case 'boolean':
-                            _filters.addBoolean(column.name, container,true);
+                            var options = column.options && column.options.filter ? column.options.filter : undefined; 
+                            _filters.addBoolean(column.name, container, options, false);
                         break;
                     }
                 }
@@ -1753,6 +2077,7 @@ var Griew = function () {
             return false;
         };
         
+        this.add = add;
         this.remove = remove;
         this.clear = clear;
         this.find = find;
@@ -1963,6 +2288,8 @@ var Griew = function () {
     this.view = function () {
         return _View
     };
+
+    this.filter = _Filter;
 
     this.options = _Options;
 
