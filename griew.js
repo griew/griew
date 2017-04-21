@@ -177,11 +177,11 @@ var Griew = function () {
         
         var toArray = function () {
             return [
-                getColumns(),
-                getFilters(),
-                getOrders(),
-                getPaginate(),
-                _extra
+            getColumns(),
+            getFilters(),
+            getOrders(),
+            getPaginate(),
+            _extra
             ];
         };
         var toObject = function () {
@@ -206,8 +206,8 @@ var Griew = function () {
             // collecting columns
             var columns = _View.columns().toArray();
             for (var i = 0; i < columns.length; i++) {
-               addColumn(columns[i]);
-            }
+             addColumn(columns[i]);
+         }
             // collecting pagination
             setPaginate(_Paginate.getPage());
             // collecting filters
@@ -589,7 +589,7 @@ var Griew = function () {
                     return (dot ? '.' : '') + 'griew-column-' + name;
                 };
 
-                var add = function (name, caption, schema, type, order, visibility, sortable, filterable, template, beforRender, afterRender) {
+                var add = function (name, caption, schema, type, order, visibility, sortable, filterable, template, options, beforRender, afterRender) {
                     _columns[name] = {
                         name: name,
                         caption: caption,
@@ -600,6 +600,7 @@ var Griew = function () {
                         template: template || '<td>{' + name + '}</td>',
                         sortable: sortable,
                         filterable: filterable,
+                        options: options,
                         beforRender: beforRender || function (name, data, template, rowNumber, colNumber) { return template; },
                         afterRender: afterRender || function (name, html, rowNumber, colNumber) { return html; }
                     };
@@ -689,9 +690,9 @@ var Griew = function () {
                     }
                 });
 
-                this.add = function (name, caption, schema, type, order, visibility, sortable, filterable, template, beforRender, afterRender) {
+                this.add = function (name, caption, schema, type, order, visibility, sortable, filterable, template, options, beforRender, afterRender) {
                     //TODO name param maybe string, col object or array of col objects.
-                    add(name, caption, schema, type, order, visibility, sortable, filterable, template, beforRender, afterRender);
+                    add(name, caption, schema, type, order, visibility, sortable, filterable, template, options, beforRender, afterRender);
                 };
 
                 this.get = function (name) {
@@ -846,9 +847,9 @@ var Griew = function () {
 
             var add = function (name, container, content) {
                 var filterBox = $('<div>')
-                    .addClass(_boxClassName)
-                    .addClass(filterClassName(name))
-                    .append(typeof content === 'function' ? content() : content);
+                .addClass(_boxClassName)
+                .addClass(filterClassName(name))
+                .append(typeof content === 'function' ? content() : content);
                 $(container).append(filterBox);
             };
 
@@ -999,14 +1000,7 @@ var Griew = function () {
                 return isVisible(name, container);
             };
 
-            /**
-             * 
-             * 
-             * @param {string} name
-             * @param {selector} container
-             * @param {boolean} visible
-             */
-             this.addString = function (name, container, visible) {
+            this.addString = function (name, container, visible) {
                 var $filterBox = $('<div>').addClass('griew-filter-string-box');
                 var $operator = $('<select>').addClass('griew-filter-string-operator');
                 var $operand = $('<input type="text">').addClass('griew-filter-string-operand');
@@ -1014,12 +1008,12 @@ var Griew = function () {
                 var $btnClear = $('<button type="button">').addClass('griew-filter-string-btn-clear');
 
                 var operators = [
-                    'Contains',
-                    'DoesNotContains',
-                    'IsEqualTo',
-                    'IsNotEqualTo',
-                    'StartWith',
-                    'EndsWith'
+                'Contains',
+                'DoesNotContains',
+                'IsEqualTo',
+                'IsNotEqualTo',
+                'StartWith',
+                'EndsWith'
                 ];
 
                 for (var i in operators) {
@@ -1044,14 +1038,7 @@ var Griew = function () {
                 }
             };
 
-            /**
-             * 
-             * 
-             * @param {string} name
-             * @param {selector} container
-             * @param {boolean} visible
-             */
-             this.addNumber = function (name, container, visible) {
+            this.addNumber = function (name, container, visible) {
                 var $filterBox = $('<div>').addClass('griew-filter-number-box');
                 var $operator = $('<select id="operator">').addClass('griew-filter-number-operator');
                 var $operand1 = $('<input type="number" id="operand1">').addClass('griew-filter-number-operand');
@@ -1060,13 +1047,13 @@ var Griew = function () {
                 var $btnClear = $('<button type="button">').addClass('griew-filter-number-btn-clear');
 
                 var operators = [
-                    'IsEqualTo',
-                    'IsNotEqualTo',
-                    'Between',
-                    'IsGreaterThanOrEqualTo',
-                    'IsGreaterThan',
-                    'IsLessThanOrEqualTo',
-                    'IsLessThan'
+                'IsEqualTo',
+                'IsNotEqualTo',
+                'Between',
+                'IsGreaterThanOrEqualTo',
+                'IsGreaterThan',
+                'IsLessThanOrEqualTo',
+                'IsLessThan'
                 ];
 
                 for (var i in operators) {
@@ -1109,15 +1096,7 @@ var Griew = function () {
                 }
             };
 
-            /**
-             * 
-             * 
-             * @param {string} name
-             * @param {selector} container
-             * @param {object} options
-             * @param {boolean} visible
-             */
-             this.addDateTime = function (name, container, options, visible) {
+            this.addDateTime = function (name, container, options, visible) {
                 options = options || {};
 
                 var $filterBox = $('<div>').addClass('griew-filter-datetime-box');
@@ -1147,13 +1126,13 @@ var Griew = function () {
                 var $btnClear = $('<button type="button">').addClass('griew-filter-datetime-btn-clear');
 
                 var operators = [
-                    'IsEqualTo',
-                    'IsNotEqualTo',
-                    'Between',
-                    'IsAfterThanOrEqualTo',
-                    'IsAfterThan',
-                    'IsBeforeThanOrEqualTo',
-                    'IsBeforeThan'
+                'IsEqualTo',
+                'IsNotEqualTo',
+                'Between',
+                'IsAfterThanOrEqualTo',
+                'IsAfterThan',
+                'IsBeforeThanOrEqualTo',
+                'IsBeforeThan'
                 ];
 
                 for (var i in operators) {
@@ -1168,76 +1147,76 @@ var Griew = function () {
                 });
 
                 $operand1Year
-                    .attr({
-                        'placeholder': trans('filter.datetime.operand.year'),
-                        'min': options.year && options.year ? options.year.min : 1000,
-                        'max': options.year && options.year ? options.year.max : ''
-                    })
-                    .val(options.default && options.default.year ? options.default.year : '');
+                .attr({
+                    'placeholder': trans('filter.datetime.operand.year'),
+                    'min': options.year && options.year ? options.year.min : 1000,
+                    'max': options.year && options.year ? options.year.max : ''
+                })
+                .val(options.default && options.default.year ? options.default.year : '');
                 $operand1Month
-                    .attr({
-                        'placeholder': trans('filter.datetime.operand.month'),
-                        'min': 1,
-                        'max': 12
-                    })
-                    .val(options.default && options.default.month ? options.default.month : '');
+                .attr({
+                    'placeholder': trans('filter.datetime.operand.month'),
+                    'min': 1,
+                    'max': 12
+                })
+                .val(options.default && options.default.month ? options.default.month : '');
                 $operand1Day
-                    .attr({
-                        'placeholder': trans('filter.datetime.operand.day'),
-                        'min': 1,
-                        'max': 31
-                    })
-                    .val(options.default && options.default.day ? options.default.day : '');
+                .attr({
+                    'placeholder': trans('filter.datetime.operand.day'),
+                    'min': 1,
+                    'max': 31
+                })
+                .val(options.default && options.default.day ? options.default.day : '');
                 $operand1Hour
-                    .attr({
-                        'placeholder': trans('filter.datetime.operand.hour'),
-                        'min': 0,
-                        'max': 23
-                    })
-                    .val(options.default && options.default.hour ? options.default.hour : '');
+                .attr({
+                    'placeholder': trans('filter.datetime.operand.hour'),
+                    'min': 0,
+                    'max': 23
+                })
+                .val(options.default && options.default.hour ? options.default.hour : '');
                 $operand1Minute
-                    .attr({
-                        'placeholder': trans('filter.datetime.operand.minute'),
-                        'min': 0,
-                        'max': 59
-                    })
-                    .val(options.default && options.default.minute ? options.default.minute : '');
+                .attr({
+                    'placeholder': trans('filter.datetime.operand.minute'),
+                    'min': 0,
+                    'max': 59
+                })
+                .val(options.default && options.default.minute ? options.default.minute : '');
 
                 $operand2Year
-                    .attr({
-                        'placeholder': trans('filter.datetime.operand.year'),
-                        'min': options.year && options.year.min ? options.year.min : 1000,
-                        'max': options.year && options.year.max ? options.year.max : ''
-                    })
-                    .val(options.default && options.default.year ? options.default.year : '');
+                .attr({
+                    'placeholder': trans('filter.datetime.operand.year'),
+                    'min': options.year && options.year.min ? options.year.min : 1000,
+                    'max': options.year && options.year.max ? options.year.max : ''
+                })
+                .val(options.default && options.default.year ? options.default.year : '');
                 $operand2Month
-                    .attr({
-                        'placeholder': trans('filter.datetime.operand.month'),
-                        'min': 1,
-                        'max': 12
-                    })
-                    .val(options.default && options.default.month ? options.default.month : '');
+                .attr({
+                    'placeholder': trans('filter.datetime.operand.month'),
+                    'min': 1,
+                    'max': 12
+                })
+                .val(options.default && options.default.month ? options.default.month : '');
                 $operand2Day
-                    .attr({
-                        'placeholder': trans('filter.datetime.operand.day'),
-                        'min': 1,
-                        'max': 31
-                    })
-                    .val(options.default && options.default.day ? options.default.day : '');
+                .attr({
+                    'placeholder': trans('filter.datetime.operand.day'),
+                    'min': 1,
+                    'max': 31
+                })
+                .val(options.default && options.default.day ? options.default.day : '');
                 $operand2Hour
-                    .attr({
-                        'placeholder': trans('filter.datetime.operand.hour'),
-                        'min': 0,
-                        'max': 23
-                    })
-                    .val(options.default && options.default.hour ? options.default.hour : '');
+                .attr({
+                    'placeholder': trans('filter.datetime.operand.hour'),
+                    'min': 0,
+                    'max': 23
+                })
+                .val(options.default && options.default.hour ? options.default.hour : '');
                 $operand2Minute
-                    .attr({
-                        'placeholder': trans('filter.datetime.operand.minute'),
-                        'min': 0,
-                        'max': 59
-                    })
-                    .val(options.default && options.default.minute ? options.default.minute : '');
+                .attr({
+                    'placeholder': trans('filter.datetime.operand.minute'),
+                    'min': 0,
+                    'max': 59
+                })
+                .val(options.default && options.default.minute ? options.default.minute : '');
 
                 $btnAccept.text(trans('filter.datetime.accept')).click(function () {
                     var operand1 = {
@@ -1272,33 +1251,33 @@ var Griew = function () {
                 options.type = options.type || 'datetime';
                 if(options.type && options.type === 'date' || options.type === 'datetime') {
                     $operand1DateWrapper
-                        .append($operand1Year)
-                        .append(dateSeparator)
-                        .append($operand1Month)
-                        .append(dateSeparator)
-                        .append($operand1Day);
+                    .append($operand1Year)
+                    .append(dateSeparator)
+                    .append($operand1Month)
+                    .append(dateSeparator)
+                    .append($operand1Day);
                     $operand1.append($operand1DateWrapper);
 
                     $operand2DateWrapper
-                        .append($operand2Year)
-                        .append(dateSeparator)
-                        .append($operand2Month)
-                        .append(dateSeparator)
-                        .append($operand2Day);
+                    .append($operand2Year)
+                    .append(dateSeparator)
+                    .append($operand2Month)
+                    .append(dateSeparator)
+                    .append($operand2Day);
                     $operand2.append($operand2DateWrapper);
                 }
 
                 if(options.type && options.type === 'time' || options.type === 'datetime') {
                     $operand1TimeWrapper
-                        .append($operand1Hour)
-                        .append(timeSeparator)
-                        .append($operand1Minute);
+                    .append($operand1Hour)
+                    .append(timeSeparator)
+                    .append($operand1Minute);
                     $operand1.append($operand1TimeWrapper);
 
                     $operand2TimeWrapper
-                        .append($operand2Hour)
-                        .append(timeSeparator)
-                        .append($operand2Minute);
+                    .append($operand2Hour)
+                    .append(timeSeparator)
+                    .append($operand2Minute);
                     $operand2.append($operand2TimeWrapper);
                 }
 
@@ -1313,15 +1292,7 @@ var Griew = function () {
                 }
             };
 
-                        /**
-             * 
-             * 
-             * @param {string} name
-             * @param {selector} container
-             * @param {object} options
-             * @param {boolean} visible
-             */
-             this.addEnum = function (name, container, options, visible) {
+            this.addEnum = function (name, container, options, visible) {
                 options = options || {};
 
                 var $filterBox = $('<div>').addClass('griew-filter-enum-box');
@@ -1335,14 +1306,20 @@ var Griew = function () {
                 var type = options.type && options.type == 'single' ? 'radio' : 'checkbox';
                 for(var i in options.items) {
                     $operand.append(
-                        $('<label>').append(
-                            $('<input>').val(i).attr({'name': 'filter_' + name, 'type': type})
-                        ).append(options.items[i])
+                        $('<label>').addClass('griew-filter-enum-item-control').append(
+                            $('<input>').addClass('griew-filter-enum-item-input').val(i).attr({'name': 'filter_' + name, 'type': type})
+                        ).append(
+                            $('<span>').addClass('griew-filter-enum-item-caption').html(options.items[i])
+                        )
                     );
                 }
                 
                 $btnAccept.text(trans('filter.enum.accept')).click(function () {
-                    _Filter.add(name, 'enum', operator, $operand);
+                    var operand = [];
+                    $operand.find('.griew-filter-enum-item-input:checked').each(function(number, input){
+                        operand.push(input.value);
+                    });
+                    _Filter.add(name, 'enum', operator, operand);
                     hide(name, container);
                 });
                 $btnClear.text(trans('filter.enum.clear')).click(function () {
@@ -1386,22 +1363,22 @@ var Griew = function () {
 
                     switch(column.type) {
                         case 'string':
-                            _filters.addString(column.name, container, false);
+                        _filters.addString(column.name, container, false);
                         break;
                         case 'number':
-                            _filters.addNumber(column.name, container, false);
+                        _filters.addNumber(column.name, container, false);
                         break;
                         case 'datetime':
-                            var options = column.options && column.options.filter ? column.options.filter : undefined; 
-                            _filters.addDateTime(column.name, container, options, false);
+                        var options = column.options && column.options.filter ? column.options.filter : undefined; 
+                        _filters.addDateTime(column.name, container, options, false);
                         break;
                         case 'enum':
-                            var options = column.options && column.options.filter ? column.options.filter : undefined; 
-                            _filters.addEnum(column.name, container, options, false);
+                        var options = column.options && column.options.filter ? column.options.filter : undefined; 
+                        _filters.addEnum(column.name, container, options, false);
                         break;
                         case 'boolean':
-                            var options = column.options && column.options.filter ? column.options.filter : undefined; 
-                            _filters.addBoolean(column.name, container, options, false);
+                        var options = column.options && column.options.filter ? column.options.filter : undefined; 
+                        _filters.addBoolean(column.name, container, options, false);
                         break;
                     }
                 }
@@ -1670,7 +1647,7 @@ var Griew = function () {
          * @param operand1
          * @param operand2
          */
-        var add = function (name, type, operator, operand1, operand2) {
+         var add = function (name, type, operator, operand1, operand2) {
             var filter = {
                 name: name,
                 type: type,
@@ -1696,7 +1673,7 @@ var Griew = function () {
          * @param name
          * @returns {boolean}
          */
-        var remove = function (name) {
+         var remove = function (name) {
             for (var i in _filters) {
                 if (_filters[i].name === name) {
                     _filters.splice(i, 1);
@@ -1711,7 +1688,7 @@ var Griew = function () {
          * @param name
          * @returns return Filter if true and null if false
          */
-        var find = function (name) {
+         var find = function (name) {
             for (var i in _filters) {
                 if (_filters[i].name === name) {
                     return _filters[i];
@@ -1725,7 +1702,7 @@ var Griew = function () {
          * @description Remove all filters
          *
          */
-        var clear = function () {
+         var clear = function () {
             _filters = [];
         };
         
@@ -1733,7 +1710,7 @@ var Griew = function () {
          *
          * @returns {Array} filters
          */
-        var toArray = function () {
+         var toArray = function () {
             return _filters;
         };
         
@@ -1745,7 +1722,7 @@ var Griew = function () {
          * @param string
          * @returns {boolean}
          */
-        this.addEqualString = function (name, string) {
+         this.addEqualString = function (name, string) {
             if (name && string) {
                 add(name, STRING, IS_EQUAL_TO, string, null);
                 return true;
@@ -1759,7 +1736,7 @@ var Griew = function () {
          * @param string
          * @returns {boolean}
          */
-        this.addNotEqualString = function (name, string) {
+         this.addNotEqualString = function (name, string) {
             if (name && string) {
                 add(name, STRING, IS_NOT_EQUAL_TO, string, null);
                 return true;
@@ -1773,7 +1750,7 @@ var Griew = function () {
          * @param string
          * @returns {boolean}
          */
-        this.addStartWithString = function (name, string) {
+         this.addStartWithString = function (name, string) {
             if (name && string) {
                 add(name, STRING, START_WITH, string, null);
                 return true;
@@ -1787,7 +1764,7 @@ var Griew = function () {
          * @param string
          * @returns {boolean}
          */
-        this.addDoesNotContainsString = function (name, string) {
+         this.addDoesNotContainsString = function (name, string) {
             if (name && string) {
                 add(name, STRING, DOES_NOT_CONTAINS, string, null);
                 return true;
@@ -1801,7 +1778,7 @@ var Griew = function () {
          * @param string
          * @returns {boolean}
          */
-        this.addEndsWithString = function (name, string) {
+         this.addEndsWithString = function (name, string) {
             if (name && string) {
                 add(name, STRING, ENDS_WITH, string, null);
                 return true;
@@ -1815,7 +1792,7 @@ var Griew = function () {
          * @param string
          * @returns {boolean}
          */
-        this.addContainsString = function (name, string) {
+         this.addContainsString = function (name, string) {
             if (name && string) {
                 add(name, STRING, CONTAINS, string, null);
                 return true;
@@ -1829,7 +1806,7 @@ var Griew = function () {
          * @param number
          * @returns {boolean}
          */
-        this.addEqualNumber = function (name, number) {
+         this.addEqualNumber = function (name, number) {
             if (name && number) {
                 add(name, NUMBER, IS_EQUAL_TO, number, null);
                 return true
@@ -1843,7 +1820,7 @@ var Griew = function () {
          * @param number
          * @returns {boolean}
          */
-        this.addNotEqualNumber = function (name, number) {
+         this.addNotEqualNumber = function (name, number) {
             if (name && number) {
                 add(name, NUMBER, IS_NOT_EQUAL_TO, number, null);
                 return true
@@ -1858,7 +1835,7 @@ var Griew = function () {
          * @param to
          * @returns {boolean}
          */
-        this.addBetweenNumber = function (name, from, to) {
+         this.addBetweenNumber = function (name, from, to) {
             if (name && from && to) {
                 add(name, NUMBER, BETWEEN, from, to);
                 return true;
@@ -1872,7 +1849,7 @@ var Griew = function () {
          * @param number
          * @returns {boolean}
          */
-        this.addGreaterThanOrEqualNumber = function (name, number) {
+         this.addGreaterThanOrEqualNumber = function (name, number) {
             if (name && number) {
                 add(name, NUMBER, IS_GREATER_THAN_OR_EQUAL_TO, number, null);
                 return true
@@ -1886,7 +1863,7 @@ var Griew = function () {
          * @param number
          * @returns {boolean}
          */
-        this.addGreaterThanNumber = function (name, number) {
+         this.addGreaterThanNumber = function (name, number) {
             if (name && number) {
                 add(name, NUMBER, IS_GREATER_THAN, number, null);
                 return true
@@ -1900,7 +1877,7 @@ var Griew = function () {
          * @param number
          * @returns {boolean}
          */
-        this.addLessThanOrEqualNumber = function (name, number) {
+         this.addLessThanOrEqualNumber = function (name, number) {
             if (name && number) {
                 add(name, NUMBER, IS_LESS_THAN_OR_EQUAL_TO, number, null);
                 return true
@@ -1914,7 +1891,7 @@ var Griew = function () {
          * @param number
          * @returns {boolean}
          */
-        this.addLessThanNumber = function (name, number) {
+         this.addLessThanNumber = function (name, number) {
             if (name && number) {
                 add(name, NUMBER, IS_LESS_THAN, number, null);
                 return true
@@ -1928,7 +1905,7 @@ var Griew = function () {
          * @param date
          * @returns {boolean}
          */
-        this.addEqualDate = function (name, date) {
+         this.addEqualDate = function (name, date) {
             if (name && date) {
                 add(name, DATE, IS_EQUAL_TO, date, null);
                 return true
@@ -1942,7 +1919,7 @@ var Griew = function () {
          * @param date
          * @returns {boolean}
          */
-        this.addNotEqualDate = function (name, date) {
+         this.addNotEqualDate = function (name, date) {
             if (name && date) {
                 add(name, DATE, IS_NOT_EQUAL_TO, date, null);
                 return true
@@ -1957,7 +1934,7 @@ var Griew = function () {
          * @param to
          * @returns {boolean}
          */
-        this.addBetweenDate = function (name, from, to) {
+         this.addBetweenDate = function (name, from, to) {
             if (name && from && to) {
                 add(name, DATE, BETWEEN, from, to);
                 return true;
@@ -1971,7 +1948,7 @@ var Griew = function () {
          * @param date
          * @returns {boolean}
          */
-        this.addAfterThanOrEqualDate = function (name, date) {
+         this.addAfterThanOrEqualDate = function (name, date) {
             if (name && date) {
                 add(name, DATE, IS_AFTER_THAN_OR_EQUAL_TO, date, null);
                 return true
@@ -1985,7 +1962,7 @@ var Griew = function () {
          * @param date
          * @returns {boolean}
          */
-        this.addAfterThanDate = function (name, date) {
+         this.addAfterThanDate = function (name, date) {
             if (name && date) {
                 add(name, DATE, IS_AFTER_THAN, date, null);
                 return true
@@ -1999,7 +1976,7 @@ var Griew = function () {
          * @param date
          * @returns {boolean}
          */
-        this.addBeforeThanOrEqualDate = function (name, date) {
+         this.addBeforeThanOrEqualDate = function (name, date) {
             if (name && date) {
                 add(name, DATE, IS_BEFORE_THAN_OR_EQUAL_TO, date, null);
                 return true
@@ -2013,7 +1990,7 @@ var Griew = function () {
          * @param date
          * @returns {boolean}
          */
-        this.addBeforeThanDate = function (name, date) {
+         this.addBeforeThanDate = function (name, date) {
             if (name && date) {
                 add(name, DATE, IS_BEFORE_THAN, date, null);
                 return true
@@ -2027,7 +2004,7 @@ var Griew = function () {
          * @param items
          * @returns {boolean}
          */
-        this.addInItems = function (name, items) {
+         this.addInItems = function (name, items) {
             if (name && items) {
                 add(name, ENUM, IN, items, null);
                 return true;
@@ -2041,7 +2018,7 @@ var Griew = function () {
          * @param items
          * @returns {boolean}
          */
-        this.addNotInItems = function (name, items) {
+         this.addNotInItems = function (name, items) {
             if (name && items) {
                 add(name, ENUM, NOT_IN, items, null);
                 return true;
@@ -2055,7 +2032,7 @@ var Griew = function () {
          * @param value
          * @returns {boolean}
          */
-        this.addIsBoolean = function (name, value) {
+         this.addIsBoolean = function (name, value) {
             if (name && value) {
                 add(name, BOOLEAN, IS_EQUAL_TO, value, null);
                 return true
@@ -2069,7 +2046,7 @@ var Griew = function () {
          * @param value
          * @returns {boolean}
          */
-        this.addIsNotBoolean = function (name, value) {
+         this.addIsNotBoolean = function (name, value) {
             if (name && value) {
                 add(name, BOOLEAN, IS_NOT_EQUAL_TO, value, null);
                 return true
