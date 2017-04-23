@@ -1308,10 +1308,10 @@ var Griew = function () {
                     $operand.append(
                         $('<label>').addClass('griew-filter-enum-item-control').append(
                             $('<input>').addClass('griew-filter-enum-item-input').val(i).attr({'name': 'filter_' + name, 'type': type})
-                        ).append(
+                            ).append(
                             $('<span>').addClass('griew-filter-enum-item-caption').html(options.items[i])
-                        )
-                    );
+                            )
+                            );
                 }
                 
                 $btnAccept.text(trans('filter.enum.accept')).click(function () {
@@ -1609,12 +1609,7 @@ var Griew = function () {
 
     var Filter = function () {
         var _filters = [];
-        //------------ Filter Types ------------\\
-        var STRING = 'string';
-        var NUMBER = 'number';
-        var DATE = 'date';
-        var ENUM = 'enum';
-        var BOOLEAN = 'boolean';
+
         //------------ String & Number & Date & Boolean ------------\\
         var IS_EQUAL_TO = 'IsEqualTo';
         var IS_NOT_EQUAL_TO = 'IsNotEqualTo';
@@ -1639,15 +1634,7 @@ var Griew = function () {
         var IS_BEFORE_THAN_OR_EQUAL_TO = 'IsBeforeThanOrEqualTo';
         var IS_BEFORE_THAN = 'IsBeforeThan';
         
-        /**
-         *
-         * @param name
-         * @param type
-         * @param operator
-         * @param operand1
-         * @param operand2
-         */
-         var add = function (name, type, operator, operand1, operand2) {
+        var add = function (name, type, operator, operand1, operand2) {
             var filter = {
                 name: name,
                 type: type,
@@ -1655,6 +1642,7 @@ var Griew = function () {
                 operand1: operand1,
                 operand2: operand2
             };
+
             if (find(name)) {
                 filter = find(name);
                 filter.name = name;
@@ -1668,12 +1656,7 @@ var Griew = function () {
             }
         };
         
-        /**
-         *
-         * @param name
-         * @returns {boolean}
-         */
-         var remove = function (name) {
+        var remove = function (name) {
             for (var i in _filters) {
                 if (_filters[i].name === name) {
                     _filters.splice(i, 1);
@@ -1683,12 +1666,7 @@ var Griew = function () {
             return false;
         };
         
-        /**
-         *
-         * @param name
-         * @returns return Filter if true and null if false
-         */
-         var find = function (name) {
+        var find = function (name) {
             for (var i in _filters) {
                 if (_filters[i].name === name) {
                     return _filters[i];
@@ -1697,361 +1675,12 @@ var Griew = function () {
             return null;
         };
         
-        /**
-         *
-         * @description Remove all filters
-         *
-         */
-         var clear = function () {
+        var clear = function () {
             _filters = [];
         };
         
-        /**
-         *
-         * @returns {Array} filters
-         */
-         var toArray = function () {
+        var toArray = function () {
             return _filters;
-        };
-        
-        //-- Public methods --------------------------------------------------------------------------------------------
-        
-        /**
-         *
-         * @param name
-         * @param string
-         * @returns {boolean}
-         */
-         this.addEqualString = function (name, string) {
-            if (name && string) {
-                add(name, STRING, IS_EQUAL_TO, string, null);
-                return true;
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param string
-         * @returns {boolean}
-         */
-         this.addNotEqualString = function (name, string) {
-            if (name && string) {
-                add(name, STRING, IS_NOT_EQUAL_TO, string, null);
-                return true;
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param string
-         * @returns {boolean}
-         */
-         this.addStartWithString = function (name, string) {
-            if (name && string) {
-                add(name, STRING, START_WITH, string, null);
-                return true;
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param string
-         * @returns {boolean}
-         */
-         this.addDoesNotContainsString = function (name, string) {
-            if (name && string) {
-                add(name, STRING, DOES_NOT_CONTAINS, string, null);
-                return true;
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param string
-         * @returns {boolean}
-         */
-         this.addEndsWithString = function (name, string) {
-            if (name && string) {
-                add(name, STRING, ENDS_WITH, string, null);
-                return true;
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param string
-         * @returns {boolean}
-         */
-         this.addContainsString = function (name, string) {
-            if (name && string) {
-                add(name, STRING, CONTAINS, string, null);
-                return true;
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param number
-         * @returns {boolean}
-         */
-         this.addEqualNumber = function (name, number) {
-            if (name && number) {
-                add(name, NUMBER, IS_EQUAL_TO, number, null);
-                return true
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param number
-         * @returns {boolean}
-         */
-         this.addNotEqualNumber = function (name, number) {
-            if (name && number) {
-                add(name, NUMBER, IS_NOT_EQUAL_TO, number, null);
-                return true
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param from
-         * @param to
-         * @returns {boolean}
-         */
-         this.addBetweenNumber = function (name, from, to) {
-            if (name && from && to) {
-                add(name, NUMBER, BETWEEN, from, to);
-                return true;
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param number
-         * @returns {boolean}
-         */
-         this.addGreaterThanOrEqualNumber = function (name, number) {
-            if (name && number) {
-                add(name, NUMBER, IS_GREATER_THAN_OR_EQUAL_TO, number, null);
-                return true
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param number
-         * @returns {boolean}
-         */
-         this.addGreaterThanNumber = function (name, number) {
-            if (name && number) {
-                add(name, NUMBER, IS_GREATER_THAN, number, null);
-                return true
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param number
-         * @returns {boolean}
-         */
-         this.addLessThanOrEqualNumber = function (name, number) {
-            if (name && number) {
-                add(name, NUMBER, IS_LESS_THAN_OR_EQUAL_TO, number, null);
-                return true
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param number
-         * @returns {boolean}
-         */
-         this.addLessThanNumber = function (name, number) {
-            if (name && number) {
-                add(name, NUMBER, IS_LESS_THAN, number, null);
-                return true
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param date
-         * @returns {boolean}
-         */
-         this.addEqualDate = function (name, date) {
-            if (name && date) {
-                add(name, DATE, IS_EQUAL_TO, date, null);
-                return true
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param date
-         * @returns {boolean}
-         */
-         this.addNotEqualDate = function (name, date) {
-            if (name && date) {
-                add(name, DATE, IS_NOT_EQUAL_TO, date, null);
-                return true
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param from
-         * @param to
-         * @returns {boolean}
-         */
-         this.addBetweenDate = function (name, from, to) {
-            if (name && from && to) {
-                add(name, DATE, BETWEEN, from, to);
-                return true;
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param date
-         * @returns {boolean}
-         */
-         this.addAfterThanOrEqualDate = function (name, date) {
-            if (name && date) {
-                add(name, DATE, IS_AFTER_THAN_OR_EQUAL_TO, date, null);
-                return true
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param date
-         * @returns {boolean}
-         */
-         this.addAfterThanDate = function (name, date) {
-            if (name && date) {
-                add(name, DATE, IS_AFTER_THAN, date, null);
-                return true
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param date
-         * @returns {boolean}
-         */
-         this.addBeforeThanOrEqualDate = function (name, date) {
-            if (name && date) {
-                add(name, DATE, IS_BEFORE_THAN_OR_EQUAL_TO, date, null);
-                return true
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param date
-         * @returns {boolean}
-         */
-         this.addBeforeThanDate = function (name, date) {
-            if (name && date) {
-                add(name, DATE, IS_BEFORE_THAN, date, null);
-                return true
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param items
-         * @returns {boolean}
-         */
-         this.addInItems = function (name, items) {
-            if (name && items) {
-                add(name, ENUM, IN, items, null);
-                return true;
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param items
-         * @returns {boolean}
-         */
-         this.addNotInItems = function (name, items) {
-            if (name && items) {
-                add(name, ENUM, NOT_IN, items, null);
-                return true;
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param value
-         * @returns {boolean}
-         */
-         this.addIsBoolean = function (name, value) {
-            if (name && value) {
-                add(name, BOOLEAN, IS_EQUAL_TO, value, null);
-                return true
-            }
-            return false;
-        };
-        
-        /**
-         *
-         * @param name
-         * @param value
-         * @returns {boolean}
-         */
-         this.addIsNotBoolean = function (name, value) {
-            if (name && value) {
-                add(name, BOOLEAN, IS_NOT_EQUAL_TO, value, null);
-                return true
-            }
-            return false;
         };
         
         this.add = add;
@@ -2143,6 +1772,8 @@ var Griew = function () {
         this.find = find;
         this.swap = swap;
         this.toArray = toArray;
+        this.ACS = ACS,
+        this.DESC = DESC
     };
     
     var Paginate = function () {
