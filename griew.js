@@ -825,6 +825,10 @@ var Griew = function () {
                     return _header.getCellSelector(name);
                 });
 
+                _orders.autoGenerate(columns, function (name) {
+                    return _header.getCellSelector(name);
+                });
+
                 for (; index < data.length; index++) {
                     $rowContainer.append(_row.render(columns, data[index], index + 1, _columns.render));
                 }
@@ -1443,11 +1447,10 @@ var Griew = function () {
 
             var isVisible = function (name, container) {
                 if (container === undefined) {
-                    $(orderClassName(name, true)).hasClass('active');
-                    return;
+                    return $(orderClassName(name, true)).hasClass('active');
                 }
 
-                $(container + '>' + orderClassName(name, true)).hasClass('active');
+                return $(container + '>' + orderClassName(name, true)).hasClass('active');
             };
 
             Object.defineProperty(this, 'onshow', {
@@ -1546,12 +1549,55 @@ var Griew = function () {
                 btnDescSort.append($('<a>').text(trans('order.descending')));
                 btnClearSort.append($('<a>').text(trans('order.clear sort')));
 
+                btnAscSort.click(function(){
+                    _Order.addAscending(name);
+                    hide(name, container);
+                });
+
+                btnDescSort.click(function(){
+                    _Order.addDescending(name);
+                    hide(name, container);
+                });
+
+                btnClearSort.click(function(){
+                    _Order.remove(name);
+                    hide(name, container);
+                });
+
                 orderBox.append(btnAscSort).append(btnDescSort).append(btnClearSort);
 
                 add(name, container, orderBox);
 
                 if (visible) {
                     show(name, container);
+                }
+            };
+
+            this.autoGenerate = function (columns, getContainer) {
+                var column = null;
+                var container = '';
+
+                for(var i in columns) { 
+                    column = _collection.columns.get(columns[i]);
+                    container = getContainer(column.name);
+
+                    var $button = $('<button>');
+                    $button.addClass('griew-order-button');
+                    $button.data('OrderBoxName', column.name);
+                    $button.data('OrderBoxContainer', container);
+                    $button.click(function () {
+                        var orderBoxName = $(this).data('OrderBoxName');
+                        var orderBoxContainer = $(this).data('OrderBoxContainer');
+                        if(isVisible(orderBoxName, orderBoxContainer)) {
+                            hide(orderBoxName, orderBoxContainer);
+                        } else {
+                            show(orderBoxName, orderBoxContainer);
+                        }
+                    });
+
+                    $(container).append($button);
+
+                    _orders.addDefault(column.name, container, false);
                 }
             };
         };
@@ -1699,12 +1745,12 @@ var Griew = function () {
         var add = function (name, type) {
             var order = {
                 name: name,
-                type: type
+                type: type.toUpperCase()
             };
             if (find(name)) {
                 order = find(name);
                 order.name = name;
-                order.type = type;
+                order.type = type.toUpperCase();
             }
             else {
                 _orders.push(order);
@@ -1772,8 +1818,6 @@ var Griew = function () {
         this.find = find;
         this.swap = swap;
         this.toArray = toArray;
-        this.ACS = ACS,
-        this.DESC = DESC
     };
     
     var Paginate = function () {
@@ -1898,6 +1942,7 @@ var Griew = function () {
     };
 
     this.filter = _Filter;
+    this.order = _Order;
 
     this.options = _Options;
 

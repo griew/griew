@@ -272,3 +272,76 @@ table.griew {
 			content: "F";
 		}
 }
+
+
+.griew-order-box {
+	width: 200px;
+	padding: .75rem;
+	border: 1px solid rgb(220,220,220);
+	background-color: #fff;
+	box-shadow: 0 0 2px rgba(200,200,200,.8);
+	display: none;
+	position: absolute;
+	left: 0;
+	right: 0;	
+	margin: 0 auto;
+
+	&.active {
+		display: block;
+	}
+
+	* {
+		box-sizing: border-box;
+		outline: none;
+	}
+
+	.griew-order-default-box {
+		margin: 0;
+		list-style-type: none;
+		padding: 0;
+
+		.griew-order-default-btn-sort {
+			padding: .25rem .25rem;
+			cursor: pointer;
+
+			&:hover {
+				background-color: #eee;
+			}
+		}
+
+		.griew-order-default-asc-sort {
+
+			&:before {
+				content: "-";
+				padding: .25rem;
+			}
+		}
+		
+		.griew-order-default-desc-sort {
+
+			&:before {
+				content: "-";
+				padding: .25rem;
+			}
+		}
+		
+		.griew-order-default-clear-sort {
+			color: red;
+			&:before {
+				content: "*";
+				padding: .25rem;
+			}
+		}
+	}	
+}
+
+.griew-order-button {
+		border: 0;
+		background-color: transparent;
+		float: right;
+		outline: 0;
+
+		&:after {
+			content: "O";
+		}
+}
