@@ -16,6 +16,7 @@
         <thead></thead>
         <tbody></tbody>
     </table>
+    <div class="pagination"></div>
     <script>
         Griew.setLang('fa', {
             accept: 'تایید',
@@ -194,6 +195,14 @@
 
 
         griew.options.set('dataSource', data);
+        griew.options.set('pagination', {
+            'container': undefined,
+            'visibility': true,
+            'onePageNavigation': true,
+            'multiPagesNavigation': true,
+            'manualNavigation': true,
+            'jumpPagesCount': 5
+        });
 
         griew.view().filters().show('family', '.tst');
 

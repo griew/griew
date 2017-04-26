@@ -273,7 +273,6 @@ table.griew {
 		}
 }
 
-
 .griew-order-box {
 	width: 200px;
 	padding: .75rem;
@@ -344,4 +343,32 @@ table.griew {
 		&:after {
 			content: "O";
 		}
+}
+
+.griew-pagination {
+	display: flex;
+	padding: 0;
+	list-style: none;
+
+	.griew-pagination-item {
+		
+		.griew-pagination-link {
+			position: relative;
+			display: block;
+			padding: .5rem .75rem;
+			line-height: 1.25;
+			color: #333;
+			background-color: #fff;
+			border: 1px solid #ddd;
+			margin-left: -1px;
+			cursor: pointer;
+		}
+
+		&.active .griew-pagination-link {
+			z-index: 2;
+			color: #fff;
+			background-color: #ccc;
+			border-color: #ccc;
+		}
+	}
 }

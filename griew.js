@@ -51,7 +51,7 @@ var Griew = function () {
 
     var Request = function () {
         var _columns = [];
-        var _paginate = {};
+        var _pagination = {};
         var _filters = [];
         var _orders = [];
         var _extra = {};
@@ -91,11 +91,11 @@ var Griew = function () {
             return _columns;
         };
         
-        var setPaginate = function (paginate) {
-            _paginate = paginate;
+        var setPagination = function (pagination) {
+            _pagination = pagination;
         };
-        var getPaginate = function () {
-            return _paginate;
+        var getPagination = function () {
+            return _pagination;
         };
         
         var addFilter = function (filter) {
@@ -180,7 +180,7 @@ var Griew = function () {
             getColumns(),
             getFilters(),
             getOrders(),
-            getPaginate(),
+            getPagination(),
             _extra
             ];
         };
@@ -189,7 +189,7 @@ var Griew = function () {
                 columns : getColumns(),
                 filters : getFilters(),
                 orders : getOrders(),
-                pagination : getPaginate(),
+                pagination : getPagination(),
                 extra : _extra
             };
         };
@@ -209,7 +209,7 @@ var Griew = function () {
              addColumn(columns[i]);
          }
             // collecting pagination
-            setPaginate(_Paginate.getPage());
+            setPagination(_Pagination.getPage());
             // collecting filters
             var filters = _Filter.toArray();
             for(var i = 0; i < filters.length; i++) {
@@ -235,7 +235,7 @@ var Griew = function () {
     var Response = function () {
         var _data = [];
         var _columns = [];
-        var _paginate = {};
+        var _pagination = {};
         var _filters = [];
         var _orders = [];
         var _extra = {};
@@ -285,11 +285,11 @@ var Griew = function () {
             return _columns;
         };
         
-        var setPaginate = function (paginate) {
-            _paginate = paginate;
+        var setPagination = function (pagination) {
+            _pagination = pagination;
         };
-        var getPaginate = function () {
-            return _paginate;
+        var getPagination = function () {
+            return _pagination;
         };
         
         var addFilter = function (filter) {
@@ -383,8 +383,8 @@ var Griew = function () {
         this.addColumns = addColumns;
         this.getColumns = getColumns;
         
-        this.setPaginate = setPaginate;
-        this.getPaginate = getPaginate;
+        this.setPagination = setPagination;
+        this.getPagination = getPagination;
         
         this.addFilter = addFilter;
         this.getFilter = getFilter;
@@ -470,7 +470,7 @@ var Griew = function () {
                 return data;
             };
 
-            var processPaginate = function (data, paginate) {
+            var processPagination = function (data, pagination) {
                 return data;
             };
 
@@ -486,12 +486,12 @@ var Griew = function () {
 
                 tempData = processFilters(data, requestObject.filters);
                 tempData = processOrders(tempData, requestObject.orders);
-                tempData = processPaginate(tempData, requestObject.pagination);
+                tempData = processPagination(tempData, requestObject.pagination);
 
                 response.setData(tempData);
                 response.addFilters(requestObject.filters);
                 response.addOrders(requestObject.orders);
-                response.setPaginate(requestObject.pagination);
+                response.setPagination(requestObject.pagination);
                 response.setExtra(requestObject.extra);
                 if(autoGenerateColumns) {
                     response.addColumns(processColumns(tempData, requestObject.columns));
@@ -510,333 +510,281 @@ var Griew = function () {
 
     var View = function () {
 
-        var Collection = function () {
+        var Row = function () {
+            var _className = 'griew-data-row';
+            var _container = 'tbody';
+            var _template = '<tr>{columns}</tr>';
+            var _beforRender = function (item, template) { return template; };
+            var _afterRender = function (html) { return html; };
 
-            var Row = function () {
-                var _className = 'griew-data-row';
-                var _container = 'tbody';
-                var _template = '<tr>{columns}</tr>';
-                var _beforRender = function (item, template) { return template; };
-                var _afterRender = function (html) { return html; };
-
-                var render = function (columns, data, rowNumber, renderColumn) {
-                    // TODO: validate data and columns
-                    var renderedColumns = '';
-                    var renderedRow = '';
-                    var index = 0;
-                    var name = '';
-
-                    _template = _beforRender(data, _template, rowNumber);
-
-                    for (; index < columns.length; index++) {
-                        name = columns[index];
-                        renderedColumns += renderColumn(name, data, rowNumber, index + 1);
-                    }
-
-                    renderedRow = parse('columns', renderedColumns, _template);
-                    renderedRow = $(renderedRow).addClass(_className)[0].outerHTML;
-
-                    renderedRow = _afterRender(renderedRow);
-
-                    return renderedRow;
-                };
-
-                Object.defineProperty(this, 'beforRender', {
-                    set: function (callback) {
-                        if (typeof callback === 'function') {
-                            _beforRender = callback;
-                        }
-                    }
-                });
-
-                Object.defineProperty(this, 'afterRender', {
-                    set: function (callback) {
-                        if (typeof callback === 'function') {
-                            _afterRender = callback;
-                        }
-                    }
-                });
-
-                Object.defineProperty(this, 'container', {
-                    set: function (value) {
-                        _container = value;
-                    },
-                    get: function () {
-                        return _container;
-                    },
-                });
-
-                Object.defineProperty(this, 'template', {
-                    set: function (value) {
-                        _template = value;
-                    },
-                    get: function () {
-                        return _template;
-                    },
-                });
-
-                this.render = render;
-            };
-
-            var Columns = function () {
-                var _onshow = function (name) { };
-                var _onhide = function (name) { };
-
-                var _className = 'griew-data-column';
-                var _columns = {};
-
-                var columnClassName = function (name, dot) {
-                    return (dot ? '.' : '') + 'griew-column-' + name;
-                };
-
-                var add = function (name, caption, schema, type, order, visibility, sortable, filterable, template, options, beforRender, afterRender) {
-                    _columns[name] = {
-                        name: name,
-                        caption: caption,
-                        schema: schema,
-                        type: type,
-                        order: order || 1,
-                        visibility: visibility === undefined ? true : visibility,
-                        template: template || '<td>{' + name + '}</td>',
-                        sortable: sortable,
-                        filterable: filterable,
-                        options: options,
-                        beforRender: beforRender || function (name, data, template, rowNumber, colNumber) { return template; },
-                        afterRender: afterRender || function (name, html, rowNumber, colNumber) { return html; }
-                    };
-                };
-
-                var get = function (name) {
-                    return _columns[name];
-                };
-
-                var remove = function (name) {
-                    delete _columns[name];
-                };
-
-                var show = function (name) {
-                    $(_row.getContainer() + ' ' + columnClassName(name, true)).removeClass('griew-column-hide');
-                    _onshow(name);
-                }
-
-                var hide = function (name) {
-                    $(_row.getContainer() + ' ' + columnClassName(name, true)).addClass('griew-column-hide');
-                    _onhide(name);
-                }
-
-                var visibles = function (unorder) {
-                    var order = !unorder;
-                    var columns = [];
-                    var keys = [];
-
-                    for (var key in _columns) {
-                        if (_columns[key].visibility) {
-                            columns.push(_columns[key]);
-                        }
-                    }
-
-                    if (order) {
-                        columns.sort(function (a, b) {
-                            return a.order - b.order;
-                        });
-                    }
-
-                    for (var key in columns) {
-                        if (columns[key].visibility) {
-                            keys.push(columns[key].name);
-                        }
-                    }
-                    return keys;
-                };
-
-                var toArray = function () {
-                    var columns = [];
-                    for (var i in _columns) {
-                        columns.push(_columns[i]);
-                    }
-                    return columns;
-                };
-                
-                var render = function (name, rowData, rowNumber, colNumber) {
-                    // TODO: validate name and value
-                    var renderedColumn = '';
-                    var column = _columns[name];
-                    var data = {};
-                    data.value = rowData[name];
-
-                    var template = column.beforRender(name, data, column.template, rowNumber, colNumber);
-
-                    rowData[name] = data.value;
-                    renderedColumn = parse(rowData, template);
-                    renderedColumn = $(renderedColumn).addClass(_className).addClass(columnClassName(name))[0].outerHTML;
-                    renderedColumn = column.afterRender(name, renderedColumn, rowNumber, colNumber);
-
-                    return renderedColumn;
-                };
-
-                Object.defineProperty(this, 'onshow', {
-                    set: function (callback) {
-                        if (typeof callback === 'function') {
-                            _onshow = callback;
-                        }
-                    }
-                });
-
-                Object.defineProperty(this, 'onhide', {
-                    set: function (callback) {
-                        if (typeof callback === 'function') {
-                            _onhide = callback;
-                        }
-                    }
-                });
-
-                this.add = function (name, caption, schema, type, order, visibility, sortable, filterable, template, options, beforRender, afterRender) {
-                    //TODO name param maybe string, col object or array of col objects.
-                    add(name, caption, schema, type, order, visibility, sortable, filterable, template, options, beforRender, afterRender);
-                };
-
-                this.get = function (name) {
-                    return get(name);
-                };
-
-                this.remove = function (name) {
-                    remove(name);
-                };
-
-                this.show = function (name) {
-                    show(name);
-                };
-
-                this.hide = function (name) {
-                    hide(name);
-                };
-
-                this.visibles = function () {
-                    return visibles();
-                };
-
-                this.toArray = function () {
-                    return toArray();
-                };
-
-                this.render = render;
-            };
-
-            var Header = function () {
-                var _rowClassName = 'griew-header-row';
-                var _cellClassName = 'griew-header-cell';
-                var _container = 'thead';
-                var _rowTemplate = '<tr>{cells}</tr>';
-                var _cellTemplate = '<th>{cell-name}</th>';
-
-                var columnClassName = function (name, dot) {
-                    return (dot ? '.' : '') + 'griew-column-' + name;
-                };
-
-                var getCellSelector = function (name) {
-                    return '.' + _cellClassName + columnClassName(name, true);
-                }  
-
-                var render = function (columns) {
-                    // TODO: validate data and columns
-                    var renderedCells = '';
-                    var renderedCell = '';
-                    var renderedRow = '';
-                    var index = 0;
-                    var name = '';
-
-                    for (; index < columns.length; index++) {
-                        name = columns[index];
-                        renderedCell = parse('cell-name', _columns.get(name).caption, _cellTemplate);
-                        renderedCell = $(renderedCell).addClass(_cellClassName).addClass(columnClassName(name))[0].outerHTML;
-                        renderedCells += renderedCell;
-                    }
-
-                    renderedRow = parse('cells', renderedCells, _rowTemplate);
-                    renderedRow = $(renderedRow).addClass(_rowClassName)[0].outerHTML;
-
-                    return renderedRow;
-                };
-
-                Object.defineProperty(this, 'container', {
-                    set: function (value) {
-                        _container = value;
-                    },
-                    get: function () {
-                        return _container;
-                    },
-                });
-
-                Object.defineProperty(this, 'rowTemplate', {
-                    set: function (value) {
-                        _rowTemplate = value;
-                    },
-                    get: function () {
-                        return _rowTemplate;
-                    },
-                });
-
-                Object.defineProperty(this, 'cellTemplate', {
-                    set: function (value) {
-                        _cellTemplate = value;
-                    },
-                    get: function () {
-                        return _cellTemplate;
-                    },
-                });                
-
-                this.render = render;
-                this.getCellSelector = getCellSelector;
-            };
-
-            var _row = new Row();
-            var _columns = new Columns();
-            var _header = new Header();
-
-            var parse = function (name, value, source) {
-                //TODO validation for source
-                var key = new RegExp('[{]{1}[ ]*[a-zA-Z0-9._-]+[ ]*[}]{1}', 'gi');
-                var keyWithName = new RegExp('[{]{1}[ ]*(' + name + '){1}[ ]*[}]{1}', 'gi');
-                if (typeof name === 'string') {
-                    return source.replace(keyWithName, value);
-                }
-                source = value;
-                value = name;
-                var names = source.match(key) || [];
-                for (var i = 0; i < names.length; i++) {
-                    name = names[i].replace(/[{ }]*/gi, '');
-                    source = parse(name, value[name], source);
-                }
-                return source;
-            };
-
-            var render = function (data) {
-                // TODO: validate data for array
+            var render = function (columns, data, rowNumber, renderColumn) {
+                // TODO: validate data and columns
+                var renderedColumns = '';
+                var renderedRow = '';
                 var index = 0;
-                var columns = _columns.visibles();
-                var $rowContainer = $(_row.container);
-                var $headerContainer = $(_header.container);
-                
-                $rowContainer.html('');
+                var name = '';
 
-                $headerContainer.html(_header.render(columns));
+                _template = _beforRender(data, _template, rowNumber);
 
-                _filters.autoGenerate(columns, function (name) {
-                    return _header.getCellSelector(name);
-                });
-
-                _orders.autoGenerate(columns, function (name) {
-                    return _header.getCellSelector(name);
-                });
-
-                for (; index < data.length; index++) {
-                    $rowContainer.append(_row.render(columns, data[index], index + 1, _columns.render));
+                for (; index < columns.length; index++) {
+                    name = columns[index];
+                    renderedColumns += renderColumn(name, data, rowNumber, index + 1);
                 }
+
+                renderedRow = parse('columns', renderedColumns, _template);
+                renderedRow = $(renderedRow).addClass(_className)[0].outerHTML;
+
+                renderedRow = _afterRender(renderedRow);
+
+                return renderedRow;
+            };
+
+            Object.defineProperty(this, 'beforRender', {
+                set: function (callback) {
+                    if (typeof callback === 'function') {
+                        _beforRender = callback;
+                    }
+                }
+            });
+
+            Object.defineProperty(this, 'afterRender', {
+                set: function (callback) {
+                    if (typeof callback === 'function') {
+                        _afterRender = callback;
+                    }
+                }
+            });
+
+            Object.defineProperty(this, 'container', {
+                set: function (value) {
+                    _container = value;
+                },
+                get: function () {
+                    return _container;
+                },
+            });
+
+            Object.defineProperty(this, 'template', {
+                set: function (value) {
+                    _template = value;
+                },
+                get: function () {
+                    return _template;
+                },
+            });
+
+            this.render = render;
+        };
+
+        var Columns = function () {
+            var _onshow = function (name) { };
+            var _onhide = function (name) { };
+
+            var _className = 'griew-data-column';
+            var _columns = {};
+
+            var columnClassName = function (name, dot) {
+                return (dot ? '.' : '') + 'griew-column-' + name;
+            };
+
+            var add = function (name, caption, schema, type, order, visibility, sortable, filterable, template, options, beforRender, afterRender) {
+                _columns[name] = {
+                    name: name,
+                    caption: caption,
+                    schema: schema,
+                    type: type,
+                    order: order || 1,
+                    visibility: visibility === undefined ? true : visibility,
+                    template: template || '<td>{' + name + '}</td>',
+                    sortable: sortable,
+                    filterable: filterable,
+                    options: options,
+                    beforRender: beforRender || function (name, data, template, rowNumber, colNumber) { return template; },
+                    afterRender: afterRender || function (name, html, rowNumber, colNumber) { return html; }
+                };
+            };
+
+            var get = function (name) {
+                return _columns[name];
+            };
+
+            var remove = function (name) {
+                delete _columns[name];
+            };
+
+            var show = function (name) {
+                $(_row.getContainer() + ' ' + columnClassName(name, true)).removeClass('griew-column-hide');
+                _onshow(name);
+            }
+
+            var hide = function (name) {
+                $(_row.getContainer() + ' ' + columnClassName(name, true)).addClass('griew-column-hide');
+                _onhide(name);
+            }
+
+            var visibles = function (unorder) {
+                var order = !unorder;
+                var columns = [];
+                var keys = [];
+
+                for (var key in _columns) {
+                    if (_columns[key].visibility) {
+                        columns.push(_columns[key]);
+                    }
+                }
+
+                if (order) {
+                    columns.sort(function (a, b) {
+                        return a.order - b.order;
+                    });
+                }
+
+                for (var key in columns) {
+                    if (columns[key].visibility) {
+                        keys.push(columns[key].name);
+                    }
+                }
+                return keys;
+            };
+
+            var toArray = function () {
+                var columns = [];
+                for (var i in _columns) {
+                    columns.push(_columns[i]);
+                }
+                return columns;
+            };
+            
+            var render = function (name, rowData, rowNumber, colNumber) {
+                // TODO: validate name and value
+                var renderedColumn = '';
+                var column = _columns[name];
+                var data = {};
+                data.value = rowData[name];
+
+                var template = column.beforRender(name, data, column.template, rowNumber, colNumber);
+
+                rowData[name] = data.value;
+                renderedColumn = parse(rowData, template);
+                renderedColumn = $(renderedColumn).addClass(_className).addClass(columnClassName(name))[0].outerHTML;
+                renderedColumn = column.afterRender(name, renderedColumn, rowNumber, colNumber);
+
+                return renderedColumn;
+            };
+
+            Object.defineProperty(this, 'onshow', {
+                set: function (callback) {
+                    if (typeof callback === 'function') {
+                        _onshow = callback;
+                    }
+                }
+            });
+
+            Object.defineProperty(this, 'onhide', {
+                set: function (callback) {
+                    if (typeof callback === 'function') {
+                        _onhide = callback;
+                    }
+                }
+            });
+
+            this.add = function (name, caption, schema, type, order, visibility, sortable, filterable, template, options, beforRender, afterRender) {
+                //TODO name param maybe string, col object or array of col objects.
+                add(name, caption, schema, type, order, visibility, sortable, filterable, template, options, beforRender, afterRender);
+            };
+
+            this.get = function (name) {
+                return get(name);
+            };
+
+            this.remove = function (name) {
+                remove(name);
+            };
+
+            this.show = function (name) {
+                show(name);
+            };
+
+            this.hide = function (name) {
+                hide(name);
+            };
+
+            this.visibles = function () {
+                return visibles();
+            };
+
+            this.toArray = function () {
+                return toArray();
             };
 
             this.render = render;
-            this.columns = _columns;
-            this.row = _row;
+        };
+
+        var Header = function () {
+            var _rowClassName = 'griew-header-row';
+            var _cellClassName = 'griew-header-cell';
+            var _container = 'thead';
+            var _rowTemplate = '<tr>{cells}</tr>';
+            var _cellTemplate = '<th>{cell-name}</th>';
+
+            var columnClassName = function (name, dot) {
+                return (dot ? '.' : '') + 'griew-column-' + name;
+            };
+
+            var getCellSelector = function (name) {
+                return '.' + _cellClassName + columnClassName(name, true);
+            }  
+
+            var render = function (columns) {
+                // TODO: validate data and columns
+                var renderedCells = '';
+                var renderedCell = '';
+                var renderedRow = '';
+                var index = 0;
+                var name = '';
+
+                for (; index < columns.length; index++) {
+                    name = columns[index];
+                    renderedCell = parse('cell-name', _columns.get(name).caption, _cellTemplate);
+                    renderedCell = $(renderedCell).addClass(_cellClassName).addClass(columnClassName(name))[0].outerHTML;
+                    renderedCells += renderedCell;
+                }
+
+                renderedRow = parse('cells', renderedCells, _rowTemplate);
+                renderedRow = $(renderedRow).addClass(_rowClassName)[0].outerHTML;
+
+                return renderedRow;
+            };
+
+            Object.defineProperty(this, 'container', {
+                set: function (value) {
+                    _container = value;
+                },
+                get: function () {
+                    return _container;
+                },
+            });
+
+            Object.defineProperty(this, 'rowTemplate', {
+                set: function (value) {
+                    _rowTemplate = value;
+                },
+                get: function () {
+                    return _rowTemplate;
+                },
+            });
+
+            Object.defineProperty(this, 'cellTemplate', {
+                set: function (value) {
+                    _cellTemplate = value;
+                },
+                get: function () {
+                    return _cellTemplate;
+                },
+            });                
+
+            this.render = render;
+            this.getCellSelector = getCellSelector;
         };
 
         var Filter = function () {
@@ -1345,7 +1293,7 @@ var Griew = function () {
                 var container = '';
 
                 for(var i in columns) { 
-                    column = _collection.columns.get(columns[i]);
+                    column = _columns.get(columns[i]);
                     container = getContainer(column.name);
 
                     var $button = $('<button>');
@@ -1578,7 +1526,7 @@ var Griew = function () {
                 var container = '';
 
                 for(var i in columns) { 
-                    column = _collection.columns.get(columns[i]);
+                    column = _columns.get(columns[i]);
                     container = getContainer(column.name);
 
                     var $button = $('<button>');
@@ -1602,13 +1550,137 @@ var Griew = function () {
             };
         };
 
-        var _collection = new Collection();
+        var Pagination = function () {
+            var container;
+            var buttonGroupTemplate;
+            var numberButtonTemplate;
+            var nextButtonTemplate;
+            var previousButtonTemplate;
+            var firstButtonTemplate;
+            var lastButtonTemplate;
+            var jumpNextButtonTemplate;
+            var jumpPreviousButtonTemplate;
+            var manualNavigationTemplate;
+
+            var initTemplateItems = function (options) {
+                //get pagination data from options
+                options = options || {};
+
+                container = options.container || '.pagination';
+                buttonGroupTemplate = options.buttonGroupTemplate || '<ul class="griew-pagination">{pagination-items}</ul>';
+                numberButtonTemplate = options.numberButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-number}</a></li>';
+                nextButtonTemplate = options.nextButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-next}</a></li>';
+                previousButtonTemplate = options.previousButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-previous}</a></li>';
+                firstButtonTemplate = options.firstButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-first}</a></li>';
+                lastButtonTemplate = options.lastButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-last}</a></li>';
+                jumpNextButtonTemplate = options.jumpNextButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-jump-next}</a></li>';
+                jumpPreviousButtonTemplate = options.jumpPreviousButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-jump-previous}</a></li>';
+                manualNavigationTemplate = options.manualNavigationTemplate || '<li class="griew-pagination-item griew-pagination-manual"><input type="number" class="griew-pagination-manual-input" value="{pagination-current}" min="1" max="{pagination-last}"><span class="griew-pagination-manual-separator"></span><span class="griew-pagination-manual-last">{pagination-last}</span></li>'
+            };
+
+            var render = function (options) {
+                var page = _Pagination.getPage();
+                var items = '';
+                var index = 0;
+                var length = 5;
+
+                options = options || {};
+
+                // options.onePageNavigation;
+                // options.multiPagesNavigation;
+                // options.manualNavigation;
+                // options.jumpPagesCount;
+                
+                index = page.currentPage - 2;
+                for(;;) {
+                    if(index <= 0) {
+                        index++;
+                        continue;
+                    }
+
+                    if(index > length) {
+                        break;
+                    }
+
+                    items = items + parse({'pagination-page': index, 'pagination-number': index}, numberButtonTemplate);
+
+                    index++;
+                }
+
+                var $buttonGroup = $(parse('pagination-items', items, buttonGroupTemplate));
+                $buttonGroup.find('.griew-pagination-link[data-page=' + page.currentPage + ']').parent().addClass('active');
+
+                return $buttonGroup[0];
+            };
+
+            var generate = function () {
+                var options = _Options.get('pagination');
+                initTemplateItems(options);
+                $(container).html(render(options));
+            };
+
+            this.render = function () {
+                var options = _Options.get('pagination');
+                $(container).html(render(options));
+            };
+
+            this.generate = function () {
+                generate();
+            };
+        };
+
+        var _row = new Row();
+        var _columns = new Columns();
+        var _header = new Header();
         var _filters = new Filter();
         var _orders = new Order();
+        var _pagination = new Pagination();
         var _data = [];
 
-        var render = function () {
-            _collection.render(_data);
+        var parse = function (name, value, source) {
+            //TODO validation for source
+            var key = new RegExp('[{]{1}[ ]*[a-zA-Z0-9._-]+[ ]*[}]{1}', 'gi');
+            var keyWithName = new RegExp('[{]{1}[ ]*(' + name + '){1}[ ]*[}]{1}', 'gi');
+            if (typeof name === 'string') {
+                return source.replace(keyWithName, value);
+            }
+            source = value;
+            value = name;
+            var names = source.match(key) || [];
+            for (var i = 0; i < names.length; i++) {
+                name = names[i].replace(/[{ }]*/gi, '');
+                source = parse(name, value[name], source);
+            }
+            return source;
+        };
+
+        var render = function (data) {
+            // TODO: validate data for array
+            var index = 0;
+            var columns = _columns.visibles();
+            var $rowContainer = $(_row.container);
+            var $headerContainer = $(_header.container);
+            
+            $rowContainer.html('');
+
+            $headerContainer.html(_header.render(columns));
+
+            _filters.autoGenerate(columns, function (name) {
+                return _header.getCellSelector(name);
+            });
+
+            _orders.autoGenerate(columns, function (name) {
+                return _header.getCellSelector(name);
+            });
+
+            var paginationOptions = _Options.get('pagination') || {};
+            if(paginationOptions.visibility == undefined || paginationOptions.visibility == true) {
+                _pagination.generate();
+            }
+
+            for (; index < data.length; index++) {
+                $rowContainer.append(_row.render(columns, data[index], index + 1, _columns.render));
+            }
         };
 
         this.filters = function () {
@@ -1619,37 +1691,41 @@ var Griew = function () {
             return _orders
         };
 
+        this.pagination = function () {
+            return _pagination;
+        };
+
         this.row = function () {
             return {
                 container: function (selector) {
                     if (selector && typeof selector === 'string') {
-                        _collection.row.container = selector;
+                        _row.container = selector;
                     }
-                    return _collection.row.container;
+                    return _row.container;
                 },
                 template: function (template) {
                     if (template && typeof template === 'string') {
-                        _collection.row.template = template;
+                        _row.template = template;
                     } else {
-                        return _collection.row.template;
+                        return _row.template;
                     }
                 },
-                beforRender: _collection.row.beforRender,
-                afterRender: _collection.row.afterRender,
+                beforRender: _row.beforRender,
+                afterRender: _row.afterRender,
             };
         };
 
         this.columns = function () {
             return {
-                add: _collection.columns.add,
-                toArray: function() { return _collection.columns.toArray(); }
+                add: _columns.add,
+                toArray: function() { return _columns.toArray(); }
             };
         };
 
         this.render = function (data) {
             //clone of data
             _data = Object.assign([], data);
-            render();
+            render(_data);
         };
     };
 
@@ -1820,7 +1896,7 @@ var Griew = function () {
         this.toArray = toArray;
     };
     
-    var Paginate = function () {
+    var Pagination = function () {
         var _page = {
             currentPage: 1,
             lastPage: 1,
@@ -1928,7 +2004,7 @@ var Griew = function () {
     var _View = new View();
     var _Filter = new Filter();
     var _Order = new Order();
-    var _Paginate = new Paginate();
+    var _Pagination = new Pagination();
     var _Options = new Options();
     //--------------------------------------------------------------------------------------------------------------------------
     var trans = function (key, locale) {
@@ -1943,6 +2019,7 @@ var Griew = function () {
 
     this.filter = _Filter;
     this.order = _Order;
+    this.pagination = _Pagination;
 
     this.options = _Options;
 
