@@ -263,14 +263,14 @@ table.griew {
 }
 
 .griew-filter-button {
-		border: 0;
-		background-color: transparent;
-		float: right;
-		outline: 0;
+	border: 0;
+	background-color: transparent;
+	float: right;
+	outline: 0;
 
-		&:after {
-			content: "F";
-		}
+	&:after {
+		content: "F";
+	}
 }
 
 .griew-order-box {
@@ -335,14 +335,14 @@ table.griew {
 }
 
 .griew-order-button {
-		border: 0;
-		background-color: transparent;
-		float: right;
-		outline: 0;
+	border: 0;
+	background-color: transparent;
+	float: right;
+	outline: 0;
 
-		&:after {
-			content: "O";
-		}
+	&:after {
+		content: "O";
+	}
 }
 
 .griew-pagination {
@@ -369,6 +369,51 @@ table.griew {
 			color: #fff;
 			background-color: #ccc;
 			border-color: #ccc;
+		}
+
+		&.griew-pagination-manual {
+			margin: 0 .5rem;
+			padding: 0;
+			position: relative;
+			border: 1px solid #ddd;
+
+			.griew-pagination-manual-input {
+				display: inline-block;
+				padding: .5rem 0;
+				margin: 0;
+				font-size: 1rem;
+				width: 3rem;
+				line-height: 1.25;
+				color: #333;
+				background-color: #fff;
+				border: none;
+				outline: none;
+				text-align: center;
+			}
+
+			.griew-pagination-manual-separator {
+				display: inline-block;
+				padding: .5rem .25rem;
+				margin: 0;
+				font-size: 1rem;
+				line-height: 1.25;
+				color: #333;
+				background-color: #fff;
+
+				&:before {
+					content: "/";
+				}
+			}
+
+			.griew-pagination-manual-last {
+				display: inline-block;
+				padding: .5rem .25rem;
+				margin: 0;
+				font-size: 1rem;
+				line-height: 1.25;
+				color: #333;
+				background-color: #fff;
+			}
 		}
 	}
 }

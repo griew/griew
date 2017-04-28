@@ -471,6 +471,12 @@ var Griew = function () {
             };
 
             var processPagination = function (data, pagination) {
+                pagination.count = 10;
+                pagination.currentPage = 1;
+                pagination.from = 1;
+                pagination.lastPage = 50;
+                pagination.perPage = 10;
+                pagination.total = 500;
                 return data;
             };
 
@@ -1563,18 +1569,17 @@ var Griew = function () {
             var manualNavigationTemplate;
 
             var initTemplateItems = function (options) {
-                //get pagination data from options
                 options = options || {};
 
                 container = options.container || '.pagination';
                 buttonGroupTemplate = options.buttonGroupTemplate || '<ul class="griew-pagination">{pagination-items}</ul>';
-                numberButtonTemplate = options.numberButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-number}</a></li>';
-                nextButtonTemplate = options.nextButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-next}</a></li>';
-                previousButtonTemplate = options.previousButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-previous}</a></li>';
-                firstButtonTemplate = options.firstButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-first}</a></li>';
-                lastButtonTemplate = options.lastButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-last}</a></li>';
-                jumpNextButtonTemplate = options.jumpNextButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-jump-next}</a></li>';
-                jumpPreviousButtonTemplate = options.jumpPreviousButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}">{pagination-jump-previous}</a></li>';
+                numberButtonTemplate = options.numberButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}" data-action="{pagination-action}">{pagination-number}</a></li>';
+                nextButtonTemplate = options.nextButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}" data-action="{pagination-action}">{pagination-next}</a></li>';
+                previousButtonTemplate = options.previousButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}" data-action="{pagination-action}">{pagination-previous}</a></li>';
+                firstButtonTemplate = options.firstButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}" data-action="{pagination-action}">{pagination-first}</a></li>';
+                lastButtonTemplate = options.lastButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}" data-action="{pagination-action}">{pagination-last}</a></li>';
+                jumpNextButtonTemplate = options.jumpNextButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}" data-action="{pagination-action}">{pagination-jump-next}</a></li>';
+                jumpPreviousButtonTemplate = options.jumpPreviousButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}" data-action="{pagination-action}">{pagination-jump-previous}</a></li>';
                 manualNavigationTemplate = options.manualNavigationTemplate || '<li class="griew-pagination-item griew-pagination-manual"><input type="number" class="griew-pagination-manual-input" value="{pagination-current}" min="1" max="{pagination-last}"><span class="griew-pagination-manual-separator"></span><span class="griew-pagination-manual-last">{pagination-last}</span></li>'
             };
 
@@ -1582,16 +1587,40 @@ var Griew = function () {
                 var page = _Pagination.getPage();
                 var items = '';
                 var index = 0;
-                var length = 5;
+                var count = 5;
+                var halfCount = Math.floor(count / 2);
+                var length = count > page.currentPage + halfCount ? count : page.currentPage + halfCount;
+                    length = length > page.lastPage ? page.lastPage : length;
 
                 options = options || {};
+                var optionOnePageNavigation = options.onePageNavigation ? options.onePageNavigation : true;
+                var optionMultiPagesNavigation = options.multiPagesNavigation ? options.multiPagesNavigation : true;
+                var optionManualNavigation = options.manualNavigation ? options.manualNavigation : true;
+                var optionJumpPagesCount = options.jumpPagesCount ? options.jumpPagesCount : 10;
 
-                // options.onePageNavigation;
-                // options.multiPagesNavigation;
-                // options.manualNavigation;
-                // options.jumpPagesCount;
+                items = items.concat(parse({
+                    'pagination-page': 1, 
+                    'pagination-action': 'first',
+                    'pagination-first': '|<<'
+                }, firstButtonTemplate));
+
+                if(optionMultiPagesNavigation) {
+                    items = items.concat(parse({
+                        'pagination-page': optionJumpPagesCount, 
+                        'pagination-action': 'previous',
+                        'pagination-jump-previous': '<<'
+                    }, jumpPreviousButtonTemplate));
+                }
+
+                if(optionOnePageNavigation) {
+                    items = items.concat(parse({
+                        'pagination-page': 1, 
+                        'pagination-action': 'previous',
+                        'pagination-previous': '<'
+                    }, previousButtonTemplate));
+                }
                 
-                index = page.currentPage - 2;
+                index = page.currentPage - halfCount;
                 for(;;) {
                     if(index <= 0) {
                         index++;
@@ -1602,21 +1631,80 @@ var Griew = function () {
                         break;
                     }
 
-                    items = items + parse({'pagination-page': index, 'pagination-number': index}, numberButtonTemplate);
+                    items = items + parse({
+                        'pagination-page': index, 
+                        'pagination-number': index,
+                        'pagination-action': 'page'
+                    }, numberButtonTemplate);
 
                     index++;
                 }
 
-                var $buttonGroup = $(parse('pagination-items', items, buttonGroupTemplate));
-                $buttonGroup.find('.griew-pagination-link[data-page=' + page.currentPage + ']').parent().addClass('active');
+                if(optionOnePageNavigation) {
+                    items = items.concat(parse({
+                        'pagination-page': 1, 
+                        'pagination-action': 'next',
+                        'pagination-next': '>'
+                    }, nextButtonTemplate));
+                }
 
-                return $buttonGroup[0];
+                if(optionMultiPagesNavigation) {
+                    items = items.concat(parse({
+                        'pagination-page': optionJumpPagesCount, 
+                        'pagination-action': 'next',
+                        'pagination-jump-next': '>>'
+                    }, jumpNextButtonTemplate));
+                }
+
+                items = items.concat(parse({
+                    'pagination-page': page.lastPage, 
+                    'pagination-action': 'last',
+                    'pagination-last': '>>|'
+                }, lastButtonTemplate));
+
+                if(optionManualNavigation) {
+                    items = items.concat(parse({
+                        'pagination-current': page.currentPage, 
+                        'pagination-last': page.lastPage
+                    }, manualNavigationTemplate));
+                }
+
+                var $group = $(parse('pagination-items', items, buttonGroupTemplate));
+                $group.find('.griew-pagination-link[data-action="page"][data-page="' + page.currentPage + '"]').parent().addClass('active');
+
+                return $group;
             };
 
             var generate = function () {
                 var options = _Options.get('pagination');
                 initTemplateItems(options);
                 $(container).html(render(options));
+                $(container).on('click', '.griew-pagination-link', function () {
+                    var page = $(this).data('page');
+                    switch($(this).data('action')) {
+                        case 'page':
+                            _Pagination.gotoPage(page);
+                        break;
+                        case 'next':
+                            _Pagination.gotoPage(_Pagination.getCurrentPage() + page);
+                        break;
+                        case 'previous':
+                            _Pagination.gotoPage(_Pagination.getCurrentPage() - page);
+                        break;
+                        case 'last':
+                            _Pagination.gotoLastPage();
+                        break;
+                        case 'first':
+                            _Pagination.gotoFirstPage();
+                        break;
+                    }
+                    $(container).html(render(options));
+                });
+                $(container).on('change', '.griew-pagination-manual-input', function () {
+                    _Pagination.gotoPage($(this).val());                    
+                    $(container).html(render(options));
+                    $(container).find('.griew-pagination-manual-input').focus();
+                });
             };
 
             this.render = function () {
@@ -1906,8 +1994,9 @@ var Griew = function () {
             count: 0
         };
         
-        var goto = function (number) {
+        var gotoPage = function (number) {
             if (number && parseInt(number) > 0) {
+                number = parseInt(number);
                 _page.currentPage = number;
                 if (number > _page.lastPage) {
                     _page.currentPage = _page.lastPage;
@@ -1950,7 +2039,7 @@ var Griew = function () {
         };
         
         var setPage = function (currentPage, lastPage, perPage, total, from, count) {
-            goto(currentPage);
+            gotoPage(currentPage);
             lastPage = parseInt(lastPage);
             perPage = parseInt(perPage);
             total = parseInt(total);
@@ -1967,7 +2056,7 @@ var Griew = function () {
             return _page;
         };
         
-        this.gotoPage = goto;
+        this.gotoPage = gotoPage;
         this.gotoNextPage = gotoNext;
         this.gotoPreviousPage = gotoPrevious;
         this.gotoFirstPage = gotoFirst;
