@@ -827,6 +827,7 @@ var Griew = function () {
                     $(container + '>' + filterClassName(name, true)).addClass('active');
                 }
                 _onshow(name, container);
+                stateChanged(name, container, 'filter', 'show');
             }
 
             var hide = function (name, container) {
@@ -836,14 +837,7 @@ var Griew = function () {
                     $(container + '>' + filterClassName(name, true)).removeClass('active');
                 }
                 _onhide(name, container);
-            }
-
-            var hideOthers = function (name, container) {
-                if (container === undefined) {
-                    $('.' + _boxClassName + ':not(' + filterClassName(name, true) + ')').removeClass('active');
-                } else {
-                    $(container + '>' + '.' + _boxClassName + ':not(' + filterClassName(name, true) + ')').removeClass('active');
-                }
+                stateChanged(name, container, 'filter', 'hide');
             }
 
             var toggle = function (name, container) {
@@ -923,17 +917,6 @@ var Griew = function () {
              */
              this.hide = function (name, container) {
                 hide(name, container);
-            };
-
-            /**
-             * 
-             * Invisible Other filter boxs by name and container. if do not choose container invisible all other filter boxes.
-             * @param {string} name
-             * @param {selector} container
-             * @return {undefined}
-             */
-             this.hideOthers = function (name, container) {
-                hideOthers(name, container);
             };
 
             /**
@@ -1312,7 +1295,6 @@ var Griew = function () {
                         if(isVisible(filterBoxName, filterBoxContainer)) {
                             hide(filterBoxName, filterBoxContainer);
                         } else {
-                            hideOthers(filterBoxName);
                             show(filterBoxName, filterBoxContainer);
                         }
                     });
@@ -1339,6 +1321,12 @@ var Griew = function () {
                         _filters.addBoolean(column.name, container, options, false);
                         break;
                     }
+
+                    onStateChanged(column.name, container, 'filter', function (name, container, section, state) {
+                        if(state == 'show' && (section == 'order' || section == 'filter')) {
+                            hide(name, container);
+                        }
+                    });
                 }
             };
         };
@@ -1374,6 +1362,7 @@ var Griew = function () {
                     $(container + '>' + orderClassName(name, true)).addClass('active');
                 }
                 _onshow(name, container);
+                stateChanged(name, container, 'order', 'show');
             }
 
             var hide = function (name, container) {
@@ -1383,6 +1372,7 @@ var Griew = function () {
                     $(container + '>' + orderClassName(name, true)).removeClass('active');
                 }
                 _onhide(name, container);
+                stateChanged(name, container,'order', 'hide');
             }
 
             var toggle = function (name, container) {
@@ -1552,6 +1542,12 @@ var Griew = function () {
                     $(container).append($button);
 
                     _orders.addDefault(column.name, container, false);
+
+                    onStateChanged(column.name, container,'order', function (name, container, section, state) {
+                        if(state == 'show' && (section == 'order' || section == 'filter')) {
+                            hide(name, container);
+                        }
+                    });
                 }
             };
         };
@@ -1723,6 +1719,7 @@ var Griew = function () {
         var _filters = new Filter();
         var _orders = new Order();
         var _pagination = new Pagination();
+        var _boxList = [];
         var _data = [];
 
         var parse = function (name, value, source) {
@@ -1769,6 +1766,26 @@ var Griew = function () {
             for (; index < data.length; index++) {
                 $rowContainer.append(_row.render(columns, data[index], index + 1, _columns.render));
             }
+        };
+
+        var stateChanged = function (name, container, section, state) {
+            for (var i = 0; i < _boxList.length; i++) {
+                if(_boxList[i].name == name && _boxList[i].section == section) {
+                    continue;
+                }
+                if(_boxList[i].callback) {
+                    _boxList[i].callback(_boxList[i].name, _boxList[i].container, section, state);
+                }
+            }
+        };
+
+        var onStateChanged = function (name, container,section, callback) {
+            _boxList.push({
+                name: name,
+                container: container,
+                section: section,
+                callback: callback
+            });
         };
 
         this.filters = function () {
