@@ -977,6 +977,27 @@ var Griew = function () {
                 if (visible) {
                     show(name, container);
                 }
+
+                _Filter.onCreate = function(filter) {
+                    if(filter.name == name) {
+                        $operand.val(filter.operand1);
+                        $operator.val(filter.operator).change();
+                    }
+                };
+
+                _Filter.onUpdate = function(filter) {
+                    if(filter.name == name) {
+                        $operand.val(filter.operand1);
+                        $operator.val(filter.operator).change();
+                    }
+                };
+
+                _Filter.onRemove = function(filter) {
+                    if(filter.name == name) {
+                        $operand.val('');
+                        $operator.val('Contains').change();
+                    }
+                };
             };
 
             this.addNumber = function (name, container, visible) {
@@ -1035,6 +1056,30 @@ var Griew = function () {
                 if (visible) {
                     show(name, container);
                 }
+
+                _Filter.onCreate = function(filter) {
+                    if(filter.name == name) {
+                        $operand1.val(filter.operand1);
+                        $operand2.val(filter.operand2);
+                        $operator.val(filter.operator).change();
+                    }
+                };
+
+                _Filter.onUpdate = function(filter) {
+                    if(filter.name == name) {
+                        $operand1.val(filter.operand1);
+                        $operand2.val(filter.operand2);
+                        $operator.val(filter.operator).change();
+                    }
+                };
+
+                _Filter.onRemove = function(filter) {
+                    if(filter.name == name) {
+                        $operand1.val('');
+                        $operand2.val('');
+                        $operator.val('IsEqualTo').change();
+                    }
+                };
             };
 
             this.addDateTime = function (name, container, options, visible) {
@@ -1231,6 +1276,64 @@ var Griew = function () {
                 if (visible) {
                     show(name, container);
                 }
+
+                _Filter.onCreate = function(filter) {
+                    if(filter.name == name) {
+                        if(filter.operand1) {
+                            $operand1Year.val(filter.operand1.year);
+                            $operand1Month.val(filter.operand1.month);
+                            $operand1Day.val(filter.operand1.day);
+                            $operand1Hour.val(filter.operand1.hour);
+                            $operand1Minute.val(filter.operand1.minute);
+                        }
+
+                        if(filter.operand2) {
+                            $operand2Year.val(filter.operand2.year);
+                            $operand2Month.val(filter.operand2.month);
+                            $operand2Day.val(filter.operand2.day);
+                            $operand2Hour.val(filter.operand2.hour);
+                            $operand2Minute.val(filter.operand2.minute);
+                        }
+                        $operator.val(filter.operator).change();
+                    }
+                };
+
+                _Filter.onUpdate = function(filter) {
+                    if(filter.name == name) {
+                        if(filter.operand1) {
+                            $operand1Year.val(filter.operand1.year);
+                            $operand1Month.val(filter.operand1.month);
+                            $operand1Day.val(filter.operand1.day);
+                            $operand1Hour.val(filter.operand1.hour);
+                            $operand1Minute.val(filter.operand1.minute);
+                        }
+
+                        if(filter.operand2) {
+                            $operand2Year.val(filter.operand2.year);
+                            $operand2Month.val(filter.operand2.month);
+                            $operand2Day.val(filter.operand2.day);
+                            $operand2Hour.val(filter.operand2.hour);
+                            $operand2Minute.val(filter.operand2.minute);
+                        }
+                        $operator.val(filter.operator).change();
+                    }
+                };
+
+                _Filter.onRemove = function(filter) {
+                    if(filter.name == name) {
+                        $operand1Year.val('');
+                        $operand1Month.val('');
+                        $operand1Day.val('');
+                        $operand1Hour.val('');
+                        $operand1Minute.val('');
+                        $operand2Year.val('');
+                        $operand2Month.val('');
+                        $operand2Day.val('');
+                        $operand2Hour.val('');
+                        $operand2Minute.val('');
+                        $operator.val('IsEqualTo').change();
+                    }
+                };
             };
 
             this.addEnum = function (name, container, options, visible) {
@@ -1247,12 +1350,14 @@ var Griew = function () {
                 var type = options.type && options.type == 'single' ? 'radio' : 'checkbox';
                 for(var i in options.items) {
                     $operand.append(
-                        $('<label>').addClass('griew-filter-enum-item-control').append(
+                        $('<label>').addClass('griew-filter-enum-item-control')
+                        .append(
                             $('<input>').addClass('griew-filter-enum-item-input').val(i).attr({'name': 'filter_' + name, 'type': type})
-                            ).append(
+                        )
+                        .append(
                             $('<span>').addClass('griew-filter-enum-item-caption').html(options.items[i])
-                            )
-                            );
+                        )
+                    );
                 }
                 
                 $btnAccept.text(trans('filter.enum.accept')).click(function () {
@@ -1275,6 +1380,30 @@ var Griew = function () {
                 if (visible) {
                     show(name, container);
                 }
+
+                 _Filter.onCreate = function(filter) {
+                    if(filter.name == name) {
+                        $operand.find('.griew-filter-enum-item-input').removeAttr('checked').prop('checked', false);
+                        for(var i = 0; i < filter.operand1.length; i++) {
+                            $operand.find('.griew-filter-enum-item-input[value=' + filter.operand1[i] + ']').attr('checked', 'checked').prop('checked', true);
+                        }
+                    }
+                };
+
+                _Filter.onUpdate = function(filter) {
+                    if(filter.name == name) {
+                        $operand.find('.griew-filter-enum-item-input').removeAttr('checked').prop('checked', false);
+                        for(var i = 0; i < filter.operand1.length; i++) {
+                            $operand.find('.griew-filter-enum-item-input[value=' + filter.operand1[i] + ']').attr('checked', 'checked').prop('checked', true);
+                        }
+                    }
+                };
+
+                _Filter.onRemove = function(filter) {
+                    if(filter.name == name) {
+                        $operand.find('.griew-filter-enum-item-input').removeAttr('checked').prop('checked', false);
+                    }
+                };
             };
 
             this.autoGenerate = function (columns, getContainer) {
@@ -1880,17 +2009,18 @@ var Griew = function () {
                 filter.operator = operator;
                 filter.operand1 = operand1;
                 filter.operand2 = operand2;
+                fireUpdate(filter);
             }
             else {
                 _filters.push(filter);
-
+                fireCreate(filter);
             }
         };
         
         var remove = function (name) {
             for (var i in _filters) {
                 if (_filters[i].name === name) {
-                    _filters.splice(i, 1);
+                    fireRemove(_filters.splice(i, 1)[0])
                     return true;
                 }
             }
@@ -1907,40 +2037,31 @@ var Griew = function () {
         };
         
         var clear = function () {
-            _filters = [];
+            for (var index = 0; index < _filters.length; index++) {
+                remove(_filters[index].name);
+            }            
         };
         
         var toArray = function () {
             return _filters;
         };
 
-        var triggerCreate = function (name) {
+        var fireCreate = function (filter) {
             for (var i = 0; i < _createCallbacks.length; i++) {
-                if(_createCallbacks[i].name == name) {
-                    _createCallbacks[i].callback();
-                }
+                _createCallbacks[i](filter);
             }
         };
 
-        var onCreate = function (name, callback) {
-            _createCallbacks.push({
-                name: name,
-                callback: callback
-            });
+        var fireUpdate = function (filter) {
+            for (var i = 0; i < _updateCallbacks.length; i++) {
+                _updateCallbacks[i](filter);
+            }
         };
 
-        var onUpdate = function (name, callback) {
-            _updateCallbacks.push({
-                name: name,
-                callback: callback
-            });
-        };
-        
-        var onRemove = function (name, callback) {
-            _removeCallbacks.push({
-                name: name,
-                callback: callback
-            });
+        var fireRemove = function (filter) {
+            for (var i = 0; i < _removeCallbacks.length; i++) {
+                _removeCallbacks[i](filter);
+            }
         };
 
         this.add = add;
@@ -1948,9 +2069,21 @@ var Griew = function () {
         this.clear = clear;
         this.find = find;
         this.toArray = toArray;
-        this.onCreate = onCreate;
-        this.onUpdate = onUpdate;
-        this.onRemove = onRemove;
+        Object.defineProperty(this, 'onCreate', {
+            set: function (callback) {
+                _createCallbacks.push(callback);
+            }
+        });
+        Object.defineProperty(this, 'onUpdate', {
+            set: function (callback) {
+                _updateCallbacks.push(callback);
+            }
+        });
+        Object.defineProperty(this, 'onRemove', {
+            set: function (callback) {
+                _removeCallbacks.push(callback);
+            }
+        });
     };
     
     var Order = function () {
