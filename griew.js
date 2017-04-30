@@ -1836,6 +1836,9 @@ var Griew = function () {
 
     var Filter = function () {
         var _filters = [];
+        var _createCallbacks = [];
+        var _updateCallbacks = [];
+        var _removeCallbacks = [];
 
         //------------ String & Number & Date & Boolean ------------\\
         var IS_EQUAL_TO = 'IsEqualTo';
@@ -1880,6 +1883,7 @@ var Griew = function () {
             }
             else {
                 _filters.push(filter);
+
             }
         };
         
@@ -1909,12 +1913,44 @@ var Griew = function () {
         var toArray = function () {
             return _filters;
         };
+
+        var triggerCreate = function (name) {
+            for (var i = 0; i < _createCallbacks.length; i++) {
+                if(_createCallbacks[i].name == name) {
+                    _createCallbacks[i].callback();
+                }
+            }
+        };
+
+        var onCreate = function (name, callback) {
+            _createCallbacks.push({
+                name: name,
+                callback: callback
+            });
+        };
+
+        var onUpdate = function (name, callback) {
+            _updateCallbacks.push({
+                name: name,
+                callback: callback
+            });
+        };
         
+        var onRemove = function (name, callback) {
+            _removeCallbacks.push({
+                name: name,
+                callback: callback
+            });
+        };
+
         this.add = add;
         this.remove = remove;
         this.clear = clear;
         this.find = find;
         this.toArray = toArray;
+        this.onCreate = onCreate;
+        this.onUpdate = onUpdate;
+        this.onRemove = onRemove;
     };
     
     var Order = function () {
