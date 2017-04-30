@@ -1614,36 +1614,69 @@ var Griew = function () {
              */
              this.addDefault = function (name, container, visible) {
                 var orderBox = $('<ul>').addClass('griew-order-default-box');
-                var btnAscSort = $('<li>').addClass('griew-order-default-btn-sort').addClass('griew-order-default-asc-sort');
-                var btnDescSort = $('<li>').addClass('griew-order-default-btn-sort').addClass('griew-order-default-desc-sort');
-                var btnClearSort = $('<li>').addClass('griew-order-default-btn-sort').addClass('griew-order-default-clear-sort');
+                var $btnAscSort = $('<li>').addClass('griew-order-default-btn-sort').addClass('griew-order-default-asc-sort');
+                var $btnDescSort = $('<li>').addClass('griew-order-default-btn-sort').addClass('griew-order-default-desc-sort');
+                var $btnClearSort = $('<li>').addClass('griew-order-default-btn-sort').addClass('griew-order-default-clear-sort');
 
-                btnAscSort.append($('<a>').text(trans('order.ascending')));
-                btnDescSort.append($('<a>').text(trans('order.descending')));
-                btnClearSort.append($('<a>').text(trans('order.clear sort')));
+                $btnAscSort.append($('<a>').text(trans('order.ascending')));
+                $btnDescSort.append($('<a>').text(trans('order.descending')));
+                $btnClearSort.append($('<a>').text(trans('order.clear sort')));
 
-                btnAscSort.click(function(){
+                $btnAscSort.click(function(){
                     _Order.addAscending(name);
                     hide(name, container);
                 });
 
-                btnDescSort.click(function(){
+                $btnDescSort.click(function(){
                     _Order.addDescending(name);
                     hide(name, container);
                 });
 
-                btnClearSort.click(function(){
+                $btnClearSort.click(function(){
                     _Order.remove(name);
                     hide(name, container);
                 });
 
-                orderBox.append(btnAscSort).append(btnDescSort).append(btnClearSort);
+                orderBox.append($btnAscSort).append($btnDescSort).append($btnClearSort);
 
                 add(name, container, orderBox);
 
                 if (visible) {
                     show(name, container);
                 }
+
+                _Order.onCreate = function(order) {
+                    if(order.name == name) {
+                        if(order.type == 'ASC') {
+                            $btnAscSort.addClass('active');
+                            $btnDescSort.removeClass('active');
+                        }
+                        else if (order.type == 'DESC') {
+                            $btnDescSort.addClass('active');
+                            $btnAscSort.removeClass('active');
+                        }
+                    }
+                };
+
+                _Order.onUpdate = function(order) {
+                    if(order.name == name) {
+                        if(order.type == 'ASC') {
+                            $btnAscSort.addClass('active');
+                            $btnDescSort.removeClass('active');
+                        }
+                        else if (order.type == 'DESC') {
+                            $btnDescSort.addClass('active');
+                            $btnAscSort.removeClass('active');
+                        }
+                    }
+                };
+
+                _Order.onRemove = function(order) {
+                    if(order.name == name) {
+                        $btnDescSort.removeClass('active');
+                        $btnAscSort.removeClass('active');
+                    }
+                };
             };
 
             this.autoGenerate = function (columns, getContainer) {
@@ -2088,6 +2121,9 @@ var Griew = function () {
     
     var Order = function () {
         var _orders = [];
+        var _createCallbacks = [];
+        var _updateCallbacks = [];
+        var _removeCallbacks = [];
         
         var ASC = "ASC";
         var DESC = "DESC";
@@ -2101,16 +2137,18 @@ var Griew = function () {
                 order = find(name);
                 order.name = name;
                 order.type = type.toUpperCase();
+                fireUpdate(order);
             }
             else {
                 _orders.push(order);
+                fireCreate(order);
             }
         };
         
         var remove = function (name) {
             for (var i in _orders) {
                 if (_orders[i].name === name) {
-                    _orders.splice(i, 1);
+                    fireRemove(_orders.splice(i, 1)[0]);
                     return true;
                 }
             }
@@ -2132,15 +2170,36 @@ var Griew = function () {
                 return false;
             }
             if (order.type === ASC) {
-                order.type = DESC;
+                order.type = DESC;                
             }
             else {
                 order.type = ASC;
             }
+            fireUpdate(order);
         };
         
         var clear = function () {
-            _orders = [];
+            for (var index = 0; index < _orders.length; index++) {
+                remove(_orders[index].name);
+            } 
+        };
+
+        var fireCreate = function (order) {
+            for (var i = 0; i < _createCallbacks.length; i++) {
+                _createCallbacks[i](order);
+            }
+        };
+
+        var fireUpdate = function (order) {
+            for (var i = 0; i < _updateCallbacks.length; i++) {
+                _updateCallbacks[i](order);
+            }
+        };
+
+        var fireRemove = function (order) {
+            for (var i = 0; i < _removeCallbacks.length; i++) {
+                _removeCallbacks[i](order);
+            }
         };
         
         var toArray = function () {
@@ -2154,7 +2213,6 @@ var Griew = function () {
             }
             return false;
         };
-        
         this.addDescending = function (name) {
             if (name) {
                 add(name, DESC);
@@ -2162,12 +2220,26 @@ var Griew = function () {
             }
             return false;
         };
-        
         this.remove = remove;
         this.clear = clear;
         this.find = find;
         this.swap = swap;
         this.toArray = toArray;
+        Object.defineProperty(this, 'onCreate', {
+            set: function (callback) {
+                _createCallbacks.push(callback);
+            }
+        });
+        Object.defineProperty(this, 'onUpdate', {
+            set: function (callback) {
+                _updateCallbacks.push(callback);
+            }
+        });
+        Object.defineProperty(this, 'onRemove', {
+            set: function (callback) {
+                _removeCallbacks.push(callback);
+            }
+        });
     };
     
     var Pagination = function () {
