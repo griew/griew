@@ -471,13 +471,14 @@ var Griew = function () {
             };
 
             var processPagination = function (data, pagination) {
-                pagination.count = 10;
-                pagination.currentPage = 1;
-                pagination.from = 1;
-                pagination.lastPage = 50;
-                pagination.perPage = 10;
-                pagination.total = 500;
-                return data;
+                pagination.total = data.length;
+                pagination.perPage = pagination.perPage || 15;
+                pagination.currentPage = pagination.currentPage || 1;
+                pagination.from = ((pagination.currentPage - 1) * pagination.perPage) + 1 ;
+                pagination.count = data.length - pagination.from >= pagination.perPage ? pagination.perPage : data.length - pagination.from + 1;
+                pagination.lastPage = Math.ceil(pagination.total / pagination.perPage);
+
+                return data.slice(pagination.from - 1, pagination.from + pagination.count - 1);
             };
 
             var processColumns = function (data, columns) {
@@ -982,6 +983,7 @@ var Griew = function () {
                     if(filter.name == name) {
                         $operand.val(filter.operand1);
                         $operator.val(filter.operator).change();
+                        $(container).children('.griew-filter-button').addClass('active');
                     }
                 };
 
@@ -996,6 +998,7 @@ var Griew = function () {
                     if(filter.name == name) {
                         $operand.val('');
                         $operator.val('Contains').change();
+                        $(container).children('.griew-filter-button').removeClass('active');
                     }
                 };
             };
@@ -1062,6 +1065,7 @@ var Griew = function () {
                         $operand1.val(filter.operand1);
                         $operand2.val(filter.operand2);
                         $operator.val(filter.operator).change();
+                        $(container).children('.griew-filter-button').addClass('active');
                     }
                 };
 
@@ -1078,6 +1082,7 @@ var Griew = function () {
                         $operand1.val('');
                         $operand2.val('');
                         $operator.val('IsEqualTo').change();
+                        $(container).children('.griew-filter-button').removeClass('active');
                     }
                 };
             };
@@ -1295,6 +1300,7 @@ var Griew = function () {
                             $operand2Minute.val(filter.operand2.minute);
                         }
                         $operator.val(filter.operator).change();
+                        $(container).children('.griew-filter-button').addClass('active');
                     }
                 };
 
@@ -1332,6 +1338,7 @@ var Griew = function () {
                         $operand2Hour.val('');
                         $operand2Minute.val('');
                         $operator.val('IsEqualTo').change();
+                        $(container).children('.griew-filter-button').removeClass('active');
                     }
                 };
             };
@@ -1387,6 +1394,7 @@ var Griew = function () {
                         for(var i = 0; i < filter.operand1.length; i++) {
                             $operand.find('.griew-filter-enum-item-input[value=' + filter.operand1[i] + ']').attr('checked', 'checked').prop('checked', true);
                         }
+                        $(container).children('.griew-filter-button').addClass('active');
                     }
                 };
 
@@ -1402,6 +1410,7 @@ var Griew = function () {
                 _Filter.onRemove = function(filter) {
                     if(filter.name == name) {
                         $operand.find('.griew-filter-enum-item-input').removeAttr('checked').prop('checked', false);
+                        $(container).children('.griew-filter-button').removeClass('active');
                     }
                 };
             };
@@ -1646,14 +1655,21 @@ var Griew = function () {
                 }
 
                 _Order.onCreate = function(order) {
+
                     if(order.name == name) {
                         if(order.type == 'ASC') {
                             $btnAscSort.addClass('active');
                             $btnDescSort.removeClass('active');
+                            $(container).children('.griew-order-button')
+                                .removeClass('griew-order-desc')
+                                .addClass('griew-order-asc');
                         }
                         else if (order.type == 'DESC') {
                             $btnDescSort.addClass('active');
                             $btnAscSort.removeClass('active');
+                            $(container).children('.griew-order-button')
+                                .removeClass('griew-order-asc')
+                                .addClass('griew-order-desc');
                         }
                     }
                 };
@@ -1663,10 +1679,16 @@ var Griew = function () {
                         if(order.type == 'ASC') {
                             $btnAscSort.addClass('active');
                             $btnDescSort.removeClass('active');
+                            $(container).children('.griew-order-button')
+                                .removeClass('griew-order-desc')
+                                .addClass('griew-order-asc');
                         }
                         else if (order.type == 'DESC') {
                             $btnDescSort.addClass('active');
                             $btnAscSort.removeClass('active');
+                            $(container).children('.griew-order-button')
+                                .removeClass('griew-order-asc')
+                                .addClass('griew-order-desc');
                         }
                     }
                 };
@@ -1675,6 +1697,9 @@ var Griew = function () {
                     if(order.name == name) {
                         $btnDescSort.removeClass('active');
                         $btnAscSort.removeClass('active');
+                        $(container).children('.griew-order-button')
+                            .removeClass('griew-order-asc')
+                            .removeClass('griew-order-desc');
                     }
                 };
             };
@@ -1856,7 +1881,8 @@ var Griew = function () {
                             _Pagination.gotoFirstPage();
                         break;
                     }
-                    $(container).html(render(options));
+                    refresh();
+                    // $(container).html(render(options));
                 });
                 $(container).on('change', '.griew-pagination-manual-input', function () {
                     _Pagination.gotoPage($(this).val());                    
@@ -2375,10 +2401,12 @@ var Griew = function () {
     this.isLocale = _Localization.isLocale;
     this.trans = _Localization.trans;
 
-    this.refresh = function () {
+    var refresh = function () {
         var response = _DataProvider.run(new Request().collect());
         _View.render(response.getData());
     };
+
+    this.refresh = refresh;
 };
 //--------------------------------------------------------------------------------------------------------------------------
 Griew.langs = {};

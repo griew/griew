@@ -52,6 +52,7 @@ table.griew {
 	left: 0;
 	right: 0;	
 	margin: 0 auto;
+	z-index: 3;
 
 	&.active {
 		display: block;
@@ -271,6 +272,10 @@ table.griew {
 	&:after {
 		content: "F";
 	}
+
+	&.active:after {
+		color: red;
+	}
 }
 
 .griew-order-box {
@@ -284,6 +289,7 @@ table.griew {
 	left: 0;
 	right: 0;	
 	margin: 0 auto;
+	z-index: 3;
 
 	&.active {
 		display: block;
@@ -304,6 +310,10 @@ table.griew {
 			cursor: pointer;
 
 			&:hover {
+				background-color: #eee;
+			}
+
+			&.active {
 				background-color: #eee;
 			}
 		}
@@ -340,9 +350,20 @@ table.griew {
 	float: right;
 	outline: 0;
 
+	&.griew-order-asc:after {
+		color: red;
+		content: "A";
+	}
+
+	&.griew-order-desc:after {
+		color: blue;
+		content: "D";
+	}
+
 	&:after {
 		content: "O";
 	}
+
 }
 
 .griew-pagination {
