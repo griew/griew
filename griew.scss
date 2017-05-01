@@ -268,13 +268,14 @@ table.griew {
 	background-color: transparent;
 	float: right;
 	outline: 0;
+	font: normal normal normal 14px/1 FontAwesome;
 
 	&:after {
-		content: "F";
+		content: "\f0b0";
 	}
 
 	&.active:after {
-		color: red;
+		color: #ee5555;
 	}
 }
 
@@ -321,7 +322,8 @@ table.griew {
 		.griew-order-default-asc-sort {
 
 			&:before {
-				content: "-";
+				font: normal normal normal 14px/1 FontAwesome;
+				content: "\f160";
 				padding: .25rem;
 			}
 		}
@@ -329,15 +331,18 @@ table.griew {
 		.griew-order-default-desc-sort {
 
 			&:before {
-				content: "-";
+				font: normal normal normal 14px/1 FontAwesome;
+				content: "\f161";
 				padding: .25rem;
 			}
 		}
 		
 		.griew-order-default-clear-sort {
-			color: red;
+			color: #ee5555;
+
 			&:before {
-				content: "*";
+				font: normal normal normal 14px/1 FontAwesome;
+				content: "\f0dc";
 				padding: .25rem;
 			}
 		}
@@ -349,19 +354,20 @@ table.griew {
 	background-color: transparent;
 	float: right;
 	outline: 0;
+	font: normal normal normal 14px/1 FontAwesome;
 
 	&.griew-order-asc:after {
-		color: red;
-		content: "A";
+		color: #ee5555;
+		content: "\f160";
 	}
 
 	&.griew-order-desc:after {
-		color: blue;
-		content: "D";
+		color: #ee5555;;
+		content: "\f161";
 	}
 
 	&:after {
-		content: "O";
+		content: "\f0dc";
 	}
 
 }
@@ -383,6 +389,37 @@ table.griew {
 			border: 1px solid #ddd;
 			margin-left: -1px;
 			cursor: pointer;
+
+			&[data-action="previous"][data-page]:before {
+				font: normal normal normal 16px/1 FontAwesome;
+				content: "\f100";
+			}
+			
+			&[data-action="previous"][data-page="1"]:before {
+				font: normal normal normal 16px/1 FontAwesome;
+				content: "\f104";
+			}
+
+			&[data-action="first"]:before {
+				font: normal normal normal 16px/1 FontAwesome;
+				content: "\f100\f104";
+			}
+
+			&[data-action="next"][data-page]:before {
+				font: normal normal normal 16px/1 FontAwesome;
+				content: "\f101";
+			}
+			
+			&[data-action="next"][data-page="1"]:before {
+				font: normal normal normal 16px/1 FontAwesome;
+				content: "\f105";
+			}
+
+			&[data-action="last"]:before {
+				font: normal normal normal 16px/1 FontAwesome;
+				content: "\f105\f101";
+			}
+
 		}
 
 		&.active .griew-pagination-link {

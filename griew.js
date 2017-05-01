@@ -1784,14 +1784,14 @@ var Griew = function () {
                 items = items.concat(parse({
                     'pagination-page': 1, 
                     'pagination-action': 'first',
-                    'pagination-first': '|<<'
+                    'pagination-first': ''
                 }, firstButtonTemplate));
 
                 if(optionMultiPagesNavigation) {
                     items = items.concat(parse({
                         'pagination-page': optionJumpPagesCount, 
                         'pagination-action': 'previous',
-                        'pagination-jump-previous': '<<'
+                        'pagination-jump-previous': ''
                     }, jumpPreviousButtonTemplate));
                 }
 
@@ -1799,7 +1799,7 @@ var Griew = function () {
                     items = items.concat(parse({
                         'pagination-page': 1, 
                         'pagination-action': 'previous',
-                        'pagination-previous': '<'
+                        'pagination-previous': ''
                     }, previousButtonTemplate));
                 }
                 
@@ -1827,7 +1827,7 @@ var Griew = function () {
                     items = items.concat(parse({
                         'pagination-page': 1, 
                         'pagination-action': 'next',
-                        'pagination-next': '>'
+                        'pagination-next': ''
                     }, nextButtonTemplate));
                 }
 
@@ -1835,14 +1835,14 @@ var Griew = function () {
                     items = items.concat(parse({
                         'pagination-page': optionJumpPagesCount, 
                         'pagination-action': 'next',
-                        'pagination-jump-next': '>>'
+                        'pagination-jump-next': ''
                     }, jumpNextButtonTemplate));
                 }
 
                 items = items.concat(parse({
                     'pagination-page': page.lastPage, 
                     'pagination-action': 'last',
-                    'pagination-last': '>>|'
+                    'pagination-last': ''
                 }, lastButtonTemplate));
 
                 if(optionManualNavigation) {
