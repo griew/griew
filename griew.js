@@ -377,7 +377,7 @@ var Griew = function () {
 
         this.setData = setData;
         this.getData = getData;
-
+        
         this.addColumn = addColumn;
         this.getColumn = getColumn;
         this.addColumns = addColumns;
@@ -437,7 +437,7 @@ var Griew = function () {
         this.run = run;
 
         //--------------------------------------------------------------------------------------------------------------------------
-        Griew.setDataProvider('json', function (options) {
+        Griew.SetDataProvider('json', function (options) {
             var source;
             var data;
             var autoGenerateColumns;
@@ -2416,6 +2416,6 @@ Griew.setLang = function (name, trans) {
     Griew.langs[name] = trans;
 };
 
-Griew.setDataProvider = function (name, dataProvider) {
+Griew.SetDataProvider = function (name, dataProvider) {
     Griew.dataProviders[name] = dataProvider;
 };
