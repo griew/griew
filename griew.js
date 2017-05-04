@@ -521,7 +521,7 @@ var Griew = function () {
             var _className = 'griew-data-row';
             var _container = 'tbody';
             var _template = '<tr>{columns}</tr>';
-            var _beforRender = function (item, template) { return template; };
+            var _beforeRender = function (item, template) { return template; };
             var _afterRender = function (html) { return html; };
 
             var render = function (columns, data, rowNumber, renderColumn) {
@@ -531,7 +531,7 @@ var Griew = function () {
                 var index = 0;
                 var name = '';
 
-                _template = _beforRender(data, _template, rowNumber);
+                _template = _beforeRender(data, _template, rowNumber);
 
                 for (; index < columns.length; index++) {
                     name = columns[index];
@@ -546,10 +546,10 @@ var Griew = function () {
                 return renderedRow;
             };
 
-            Object.defineProperty(this, 'beforRender', {
+            Object.defineProperty(this, 'beforeRender', {
                 set: function (callback) {
                     if (typeof callback === 'function') {
-                        _beforRender = callback;
+                        _beforeRender = callback;
                     }
                 }
             });
@@ -596,7 +596,7 @@ var Griew = function () {
                 return (dot ? '.' : '') + 'griew-column-' + name;
             };
 
-            var add = function (name, caption, schema, type, order, visibility, sortable, filterable, template, options, beforRender, afterRender) {
+            var add = function (name, caption, schema, type, order, visibility, sortable, filterable, template, options, beforeRender, afterRender) {
                 _columns[name] = {
                     name: name,
                     caption: caption,
@@ -608,7 +608,7 @@ var Griew = function () {
                     sortable: sortable,
                     filterable: filterable,
                     options: options,
-                    beforRender: beforRender || function (name, data, template, rowNumber, colNumber) { return template; },
+                    beforeRender: beforeRender || function (name, data, template, rowNumber, colNumber) { return template; },
                     afterRender: afterRender || function (name, html, rowNumber, colNumber) { return html; }
                 };
             };
@@ -671,7 +671,7 @@ var Griew = function () {
                 var data = {};
                 data.value = rowData[name];
 
-                var template = column.beforRender(name, data, column.template, rowNumber, colNumber);
+                var template = column.beforeRender(name, data, column.template, rowNumber, colNumber);
 
                 rowData[name] = data.value;
                 renderedColumn = parse(rowData, template);
@@ -714,10 +714,10 @@ var Griew = function () {
                 column.sortable = column.sortable === undefined ? true : column.sortable;
                 column.filterable = column.filterable === undefined ? true : column.filterable;
                 column.options = column.options || null;
-                column.beforRender = column.beforRender || function (name, data, template, rowNumber, colNumber) { return template; };
+                column.beforeRender = column.beforeRender || function (name, data, template, rowNumber, colNumber) { return template; };
                 column.afterRender = column.afterRender || function (name, html, rowNumber, colNumber) { return html; } ;
 
-                add(column.name,column.caption,column.schema,column.type,column.order,column.visibility,column.sortable,column.filterable,column.template,column.options,column.beforRender,column.afterRender);
+                add(column.name,column.caption,column.schema,column.type,column.order,column.visibility,column.sortable,column.filterable,column.template,column.options,column.beforeRender,column.afterRender);
             };
 
             this.get = function (name) {

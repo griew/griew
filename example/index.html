@@ -1153,7 +1153,7 @@
             filterable: false,
             template: null,
             options: null,
-            beforRender: null,
+            beforeRender: null,
             afterRender: null
         });
         griew.view().columns().add({
@@ -1175,7 +1175,7 @@
                     type: 'single'
                 }
             },
-            beforRender: function (name,value,template,row,col) {
+            beforeRender: function (name,value,template,row,col) {
                 if(value.value == 'Male') {
                     return '<td><span class="fa fa-male"></span> {gender}</td>'
                 }
@@ -1197,7 +1197,7 @@
             filterable: true,
             template: null,
             options: null,
-            beforRender: null,
+            beforeRender: null,
             afterRender: null
         });
         griew.view().columns().add({
@@ -1211,7 +1211,7 @@
             filterable: true,
             template: null,
             options: null,
-            beforRender: null,
+            beforeRender: null,
             afterRender: null
         });
         griew.view().columns().add({
@@ -1225,7 +1225,7 @@
             filterable: false,
             template: null,
             options: null,
-            beforRender: null,
+            beforeRender: null,
             afterRender: null
         });
         griew.view().columns().add({
@@ -1241,7 +1241,7 @@
             options: {
                 type: 'date'
             },
-            beforRender: null,
+            beforeRender: null,
             afterRender: null
         });
         
