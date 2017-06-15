@@ -21,7 +21,9 @@
         <nav class="paginate"></nav>
     </div>
     <script>
-        Griew.setLang('fa', {
+        var griew = new Griew();
+
+        griew.setLang('fa', {
             accept: 'تایید',
             string: 'رشته',
             filter: {
@@ -77,7 +79,8 @@
                 'clear sort': 'حذف ترتیب'
             }
         });
-        Griew.setLang('en', {
+
+        griew.setLang('en', {
             filter: {
                 string: {
                     operators: {
@@ -139,8 +142,7 @@
                 'clear sort': 'Clear Sort'
             }
         });
-
-        var griew = new Griew();
+        
         griew.setLocale('en');
 
         var data = [
