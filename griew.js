@@ -1953,7 +1953,9 @@ var Griew = function () {
 
         this.render = function (data) {
             //clone of data
-            _data = Object.assign([], data);
+            if(data) {
+                _data = Object.assign([], data);
+            }
             render(_data);
         };
     };
@@ -2322,6 +2324,10 @@ var Griew = function () {
         return _Localization.trans(key, locale);
     };
 
+    var render = function () {
+        _View.render();
+    };
+
     var refresh = function () {
         var response = _DataProvider.run(new Request().collect());
         _View.render(response.getData());
@@ -2358,5 +2364,6 @@ var Griew = function () {
     this.trans = _Localization.trans;
 
     this.refresh = refresh;
+    this.render = render;
 };
 //--------------------------------------------------------------------------------------------------------------------------
