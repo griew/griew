@@ -401,6 +401,7 @@ var Griew = function () {
     };
 
     var DataProvider = function () {
+        var _dataProviders = {};
         var _default = '';
 
         var setDefault = function (name) {
@@ -412,11 +413,11 @@ var Griew = function () {
         };
 
         var exists = function (name) {
-            return Griew.dataProviders[name] !== undefined;
+            return _dataProviders[name] !== undefined;
         };
 
-        var getDefaultDataProvider = function () {
-            return getDataProvider(_default);
+        var setDataProvider = function (name, dataProvider) {
+            _dataProviders[name] = dataProvider;
         };
 
         var getDataProvider = function (name) {
@@ -424,7 +425,11 @@ var Griew = function () {
                 return null;
             }
 
-            return new Griew.dataProviders[name](_Options);
+            return new _dataProviders[name](_Options);
+        };
+
+        var getDefaultDataProvider = function () {
+            return getDataProvider(_default);
         };
 
         var run = function (request, name) {
@@ -432,12 +437,14 @@ var Griew = function () {
             return dataProvider === null ? dataProvider : dataProvider.run(request, new Response());
         };
 
+        this.set = setDataProvider;
+        this.get = getDataProvider;
         this.setDefault = setDefault;
         this.getDefault = getDefault;
         this.run = run;
 
         //--------------------------------------------------------------------------------------------------------------------------
-        Griew.SetDataProvider('json', function (options) {
+        setDataProvider('json', function (options) {
             var source;
             var data;
             var autoGenerateColumns;
@@ -2334,6 +2341,10 @@ var Griew = function () {
         return _Options; 
     };
 
+    this.dataProvider = function () {
+        return _DataProvider;
+    };
+
     this.setLocale = _Localization.setLocale;
     this.getLocale = _Localization.getLocale;
     this.isLocale = _Localization.isLocale;
@@ -2343,12 +2354,7 @@ var Griew = function () {
 };
 //--------------------------------------------------------------------------------------------------------------------------
 Griew.langs = {};
-Griew.dataProviders = {};
 
 Griew.setLang = function (name, trans) {
     Griew.langs[name] = trans;
-};
-
-Griew.SetDataProvider = function (name, dataProvider) {
-    Griew.dataProviders[name] = dataProvider;
 };
