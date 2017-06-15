@@ -2,7 +2,12 @@
 var Griew = function () {
 
     var Localization = function () {
+        var _langs = {};
         var _locale = 'fa';
+
+        var setLang = function (name, trans) {
+            _langs[name] = trans;
+        };
 
         var setLocale = function (locale) {
             _locale = locale || _locale;
@@ -18,8 +23,8 @@ var Griew = function () {
 
         var hasTransKey = function (key, locale) {
             var subKeys = key.split('.');
-            if (Griew.langs[locale] == undefined) return false;
-            var result = Griew.langs[locale];
+            if (_langs[locale] == undefined) return false;
+            var result = _langs[locale];
             for (var i = 0; i < subKeys.length; i++) {
                 if (subKeys[i] in result) {
                     result = result[subKeys[i]];
@@ -43,6 +48,7 @@ var Griew = function () {
             return getTrans(key, locale);
         };
 
+        this.setLang = setLang;
         this.setLocale = setLocale;
         this.getLocale = getLocale;
         this.isLocale = isLocale;
@@ -2281,7 +2287,7 @@ var Griew = function () {
         this.setPage = setPage;
         this.getPage = getPage;
     };
-
+     
     var Options = function () {
         var _options = {};
 
@@ -2345,6 +2351,7 @@ var Griew = function () {
         return _DataProvider;
     };
 
+    this.setLang = _Localization.setLang;
     this.setLocale = _Localization.setLocale;
     this.getLocale = _Localization.getLocale;
     this.isLocale = _Localization.isLocale;
@@ -2353,8 +2360,3 @@ var Griew = function () {
     this.refresh = refresh;
 };
 //--------------------------------------------------------------------------------------------------------------------------
-Griew.langs = {};
-
-Griew.setLang = function (name, trans) {
-    Griew.langs[name] = trans;
-};
