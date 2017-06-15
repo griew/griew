@@ -53,6 +53,133 @@ var Griew = function () {
         this.getLocale = getLocale;
         this.isLocale = isLocale;
         this.trans = trans;
+
+        //--------------------------------------------------------------------------------------------------------------------------
+        setLang('en', {
+            filter: {
+                string: {
+                    operators: {
+                        IsEqualTo: "Is Equal To",
+                        IsNotEqualTo: "Is Not Equal To",
+                        StartWith: "Start With",
+                        DoesNotContains: "Does Not Contains",
+                        EndsWith: "Ends With",
+                        Contains: "Contains"
+                    },
+                    operand: "Expression",
+                    accept: "Accept",
+                    clear: "Clear"
+                },
+                number: {
+                    operators: {
+                        IsEqualTo: "Is Equal To",
+                        IsNotEqualTo: "Is Not Equal To",
+                        Between: "Between",
+                        IsGreaterThanOrEqualTo: "Is Greater Than Or Equal To",
+                        IsGreaterThan: "Is Greater Than",
+                        IsLessThanOrEqualTo: "Is Less Than Or Equal To",
+                        IsLessThan: "Is Less Than",
+                    },
+                    operand: "Number",
+                    operand1: "From",
+                    operand2: "To",
+                    accept: "Accept",
+                    clear: "Clear"
+                },
+                datetime: {
+                    operators: {
+                        IsEqualTo: "Is Equal To",
+                        IsNotEqualTo: "Is Not Equal To",
+                        Between: "Between",
+                        IsAfterThanOrEqualTo: "Is After Than Or Equal To",
+                        IsAfterThan: "Is After Than",
+                        IsBeforeThanOrEqualTo: "Is Before Than Or Equal To",
+                        IsBeforeThan: "Is Before Than",
+                    },
+                    operand: {
+                        year: "Year",
+                        month: "Month",
+                        day: "Day",
+                        hour: "Hour",
+                        minute: "Minute",
+                    },
+                    accept: "Accept",
+                    clear: "Clear"
+                },
+                enum: {
+                    accept: "Accept",
+                    clear: "Clear"
+                }
+            },
+            order: {
+                ascending: 'Ascending',
+                descending: 'Descending',
+                'clear sort': 'Clear Sort'
+            }
+        });
+
+        setLang('fa', {
+            filter: {
+                string: {
+                    operators: {
+                        IsEqualTo: "برابر باشد با",
+                        IsNotEqualTo: "برابر نباشد با",
+                        StartWith: "شروع شود با",
+                        DoesNotContains: "شامل نشود",
+                        EndsWith: "خاتمه یابد با",
+                        Contains: "شامل شود"
+                    },
+                    operand: "عبارت",
+                    accept: "اعمال فیلتر",
+                    clear: "حذف فیلتر"
+                },
+                number: {
+                    operators: {
+                        IsEqualTo: "مساوی باشد با",
+                        IsNotEqualTo: "مساوی نباشد با",
+                        Between: "بین",
+                        IsGreaterThanOrEqualTo: "بزرگ‌تر یا مساوی ",
+                        IsGreaterThan: "بزرگ‌تر از",
+                        IsLessThanOrEqualTo: "کوچک‌تر یا مساوی",
+                        IsLessThan: "کوچک‌تر از",
+                    },
+                    operand: "عدد",
+                    operand1: "از",
+                    operand2: "تا",
+                    accept: "اعمال فیلتر",
+                    clear: "حذف فیلتر"
+                },
+                datetime: {
+                    operators: {
+                        IsEqualTo: "برابر باشد با",
+                        IsNotEqualTo: "برابر نباشد با",
+                        Between: "بین",
+                        IsAfterThanOrEqualTo: "پس از یا برابر باشد با",
+                        IsAfterThan: "پس از",
+                        IsBeforeThanOrEqualTo: "قبل از یا برابر باشد با",
+                        IsBeforeThan: "قبل از",
+                    },
+                    operand: {
+                        year: "سال",
+                        month: "ماه",
+                        day: "روز",
+                        hour: "ساعت",
+                        minute: "دقیقه",
+                    },
+                    accept: "اعمال فیلتر",
+                    clear: "حذف فیلتر"
+                },
+                enum: {
+                    accept: "اعمال فیلتر",
+                    clear: "حذف فیلتر"
+                }
+            },
+            order: {
+                ascending: 'ترتیب صعودی',
+                descending: 'ترتیب نزولی',
+                'clear sort': 'حذف ترتیب'
+            }
+        });
     };
 
     var Request = function () {
