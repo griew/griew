@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/griew.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="data/data.js" type="text/javascript"></script>
+    <script src="../griew.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div class="container">
+        <table class="griew table">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+        <nav class="paginate"></nav>
+    </div>
+    <script>
+        var griew = new Griew();
+
+        griew.setLocale('en');
+
+        griew.view().columns().add({
+            name: 'id',
+            caption: 'ID',
+            schema: null,
+            type: 'number',
+            order: 1,
+            visibility: true,
+            sortable: false,
+            filterable: false,
+            template: null,
+            options: null,
+            beforeRender: null,
+            afterRender: null
+        });
+        griew.view().columns().add({
+            name: 'gender',
+            caption: 'Gender',
+            schema: null,
+            type: 'enum',
+            order: 2,
+            visibility: true,
+            sortable: false,
+            filterable: true,
+            template: null,
+            options: {
+                filter: {
+                    items: {
+                        'Male': '<span class="fa fa-male"> Male</span>',
+                        'Female': '<span class="fa fa-female"> Female</span>',
+                    },
+                    type: 'single'
+                }
+            },
+            beforeRender: function (name,value,template,row,col) {
+                if(value.value == 'Male') {
+                    return '<td><span class="fa fa-male"></span> {gender}</td>'
+                }
+                else if((value.value == 'Female')) {
+                    return '<td><span class="fa fa-female"></span> {gender}</td>'
+                }
+                return template;
+            },
+            afterRender: null
+        });
+        griew.view().columns().add({
+            name: 'name',
+            caption: 'Name',
+            schema: null,
+            type: 'string',
+            order: 3,
+            visibility: true,
+            sortable: true,
+            filterable: true,
+            template: null,
+            options: null,
+            beforeRender: null,
+            afterRender: null
+        });
+        griew.view().columns().add({
+            name: 'email',
+            caption: 'Email',
+            schema: null,
+            type: 'string',
+            order: 4,
+            visibility: true,
+            sortable: false,
+            filterable: true,
+            template: null,
+            options: null,
+            beforeRender: null,
+            afterRender: null
+        });
+        griew.view().columns().add({
+            name: 'salary',
+            caption: 'Salary',
+            schema: null,
+            type: 'number',
+            order: 5,
+            visibility: true,
+            sortable: true,
+            filterable: false,
+            template: null,
+            options: null,
+            beforeRender: null,
+            afterRender: null
+        });
+        griew.view().columns().add({
+            name: 'created_at',
+            caption: 'Create Date',
+            schema: null,
+            type: 'datetime',
+            order: 6,
+            visibility: true,
+            sortable: true,
+            filterable: true,
+            template: null,
+            options: {
+                type: 'date'
+            },
+            beforeRender: null,
+            afterRender: null
+        });
+        
+        griew.options().set('dataSource', JSON.stringify(data));
+        griew.options().set('pagination', {
+            'container': 'nav.paginate',
+            'visibility': true,
+            'onePageNavigation': true,
+            'multiPagesNavigation': false,
+            'manualNavigation': false,
+            'jumpPagesCount': 10
+        });
+        
+        griew.refresh();
+    </script>
+</body>
+
+</html>

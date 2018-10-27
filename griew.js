@@ -629,6 +629,7 @@ var Griew = function () {
                 var tempData;
                 var requestObject = request.toObject();
 
+                console.log(request.toArray());
                 console.log(requestObject);
 
                 tempData = processFilters(data, requestObject.filters);
@@ -644,6 +645,51 @@ var Griew = function () {
                     response.addColumns(processColumns(tempData, requestObject.columns));
                 } else {
                     response.addColumns(requestObject.columns);
+                }
+
+                return response;
+            };
+
+            this.run = run;
+
+            constructor();
+        });
+
+        setDataProvider('ajax', function (options) {
+            var source;
+            var data;
+            var autoGenerateColumns;
+
+            var constructor = function () {
+                autoGenerateColumns = false;
+
+                if (options.exists('autoGenerateColumns')) {
+                    autoGenerateColumns = options.get('autoGenerateColumns');
+                }
+
+                if (options.exists('dataSource')) {
+                    source = options.get('dataSource');
+                }
+            };
+
+            var processColumns = function (data, columns) {
+                return columns;
+            };
+
+            var run = function (request, response) {
+                var requestJson = request.toJson();
+
+                var result = {};
+
+                response.setData(result.data);
+                response.addFilters(result.filters);
+                response.addOrders(result.orders);
+                response.setPagination(result.pagination);
+                response.setExtra(result.extra);
+                if (autoGenerateColumns) {
+                    response.addColumns(processColumns(data, result.columns));
+                } else {
+                    response.addColumns(result.columns);
                 }
 
                 return response;
