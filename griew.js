@@ -327,7 +327,7 @@ var Griew = function () {
             };
         };
         var toJson = function () {
-            return JSON.strigify(toObject());
+            return JSON.stringify(toObject());
         };
 
         /**
@@ -353,7 +353,10 @@ var Griew = function () {
             for (var i = 0; i < orders.length; i++) {
                 addOrder(orders[i]);
             }
-            // collecting extra data 
+            // collecting extra data
+            if(_Options.exists('extra')) {
+                setExtra(_Options.get('extra'));
+            }
 
             return {
                 toArray: toArray,
@@ -565,9 +568,16 @@ var Griew = function () {
             return getDataProvider(_default);
         };
 
-        var run = function (request, name) {
-            var dataProvider = name === undefined ? getDefaultDataProvider() : getDataProvider(name);
-            return dataProvider === null ? dataProvider : dataProvider.run(request, new Response());
+        var run = function (request, name, callback) {
+            var dataProvider = getDefaultDataProvider();
+
+            if(typeof name === 'function') {
+                callback = name;
+            } else if (name) {
+                dataProvider = getDataProvider(name);
+            }
+
+            return dataProvider === null ? dataProvider : dataProvider.run(request, new Response(), callback);
         };
 
         this.set = setDataProvider;
@@ -659,6 +669,7 @@ var Griew = function () {
             var source;
             var data;
             var autoGenerateColumns;
+            var token;
 
             var constructor = function () {
                 autoGenerateColumns = false;
@@ -670,29 +681,35 @@ var Griew = function () {
                 if (options.exists('dataSource')) {
                     source = options.get('dataSource');
                 }
+
+                if (options.exists('token')) {
+                    token = options.get('token');
+                }
             };
 
             var processColumns = function (data, columns) {
                 return columns;
             };
 
-            var run = function (request, response) {
+            var run = function (request, response, callback) {
                 var requestJson = request.toJson();
 
-                var result = {};
+                $.post(source, {griew: requestJson, _token: token}, function (result) {
+                    result = JSON.parse(result);
+                    
+                    response.setData(result.data);
+                    response.addFilters(result.filters);
+                    response.addOrders(result.orders);
+                    response.setPagination(result.pagination);
+                    response.setExtra(result.extra);
+                    if (autoGenerateColumns) {
+                        response.addColumns(processColumns(data, result.columns));
+                    } else {
+                        response.addColumns(result.columns);
+                    }
 
-                response.setData(result.data);
-                response.addFilters(result.filters);
-                response.addOrders(result.orders);
-                response.setPagination(result.pagination);
-                response.setExtra(result.extra);
-                if (autoGenerateColumns) {
-                    response.addColumns(processColumns(data, result.columns));
-                } else {
-                    response.addColumns(result.columns);
-                }
-
-                return response;
+                    callback(response);
+                });
             };
 
             this.run = run;
@@ -2491,7 +2508,7 @@ var Griew = function () {
     var _Pagination = new Pagination();
     var _Options = new Options();
     //--------------------------------------------------------------------------------------------------------------------------
-    _DataProvider.setDefault('json');
+    _DataProvider.setDefault('ajax');
     //--------------------------------------------------------------------------------------------------------------------------
     var trans = function (key, locale) {
         return _Localization.trans(key, locale);
@@ -2502,8 +2519,9 @@ var Griew = function () {
     };
 
     var refresh = function () {
-        var response = _DataProvider.run(new Request().collect());
-        _View.render(response.getData());
+        _DataProvider.run(new Request().collect(), function(response) {
+            _View.render(response.getData());
+        });
     };
     //--------------------------------------------------------------------------------------------------------------------------
     this.view = function () { 
