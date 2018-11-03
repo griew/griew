@@ -1151,10 +1151,12 @@ var Griew = function () {
                 $operand.attr('placeholder', trans('filter.string.operand'));
                 $btnAccept.text(trans('filter.string.accept')).click(function () {
                     _Filter.add(name, 'string', $operator.val(), $operand.val());
+                    refresh();
                     hide(name, container);
                 });
                 $btnClear.text(trans('filter.string.clear')).click(function () {
                     _Filter.remove(name);
+                    refresh();
                     hide(name, container);
                 });
 
@@ -1178,6 +1180,7 @@ var Griew = function () {
                     if (filter.name == name) {
                         $operand.val(filter.operand1);
                         $operator.val(filter.operator).change();
+                        $(container).children('.griew-filter-button').addClass('active');
                     }
                 };
 
@@ -1211,6 +1214,7 @@ var Griew = function () {
                 for (var i in operators) {
                     $operator.append($('<option>').text(trans('filter.number.operators.' + operators[i])).val(operators[i]));
                 }
+
                 $operator.change(function () {
                     if ($(this).val() === 'Between') {
                         $operand2.removeClass('hide');
@@ -1229,11 +1233,12 @@ var Griew = function () {
                     } else {
                         _Filter.add(name, 'number', $operator.val(), Number($operand1.val()));
                     }
-
+                    refresh();
                     hide(name, container);
                 });
                 $btnClear.text(trans('filter.number.clear')).click(function () {
                     _Filter.remove(name);
+                    refresh();
                     hide(name, container);
                 });
 
@@ -1261,6 +1266,7 @@ var Griew = function () {
                         $operand1.val(filter.operand1);
                         $operand2.val(filter.operand2);
                         $operator.val(filter.operator).change();
+                        $(container).children('.griew-filter-button').addClass('active');
                     }
                 };
 
@@ -1419,10 +1425,12 @@ var Griew = function () {
                         _Filter.add(name, 'datetime', $operator.val(), operand1);
                     }
 
+                    refresh();
                     hide(name, container);
                 });
                 $btnClear.text(trans('filter.datetime.clear')).click(function () {
                     _Filter.remove(name);
+                    refresh();
                     hide(name, container);
                 });
 
@@ -1509,6 +1517,7 @@ var Griew = function () {
                             $operand2Minute.val(filter.operand2.minute);
                         }
                         $operator.val(filter.operator).change();
+                        $(container).children('.griew-filter-button').addClass('active');
                     }
                 };
 
@@ -1560,10 +1569,12 @@ var Griew = function () {
                         operand.push(input.value);
                     });
                     _Filter.add(name, 'enum', operator, operand);
+                    refresh();
                     hide(name, container);
                 });
                 $btnClear.text(trans('filter.enum.clear')).click(function () {
                     _Filter.remove(name);
+                    refresh();
                     hide(name, container);
                 });
 
@@ -1591,6 +1602,7 @@ var Griew = function () {
                         for (var i = 0; i < filter.operand1.length; i++) {
                             $operand.find('.griew-filter-enum-item-input[value=' + filter.operand1[i] + ']').attr('checked', 'checked').prop('checked', true);
                         }
+                        $(container).children('.griew-filter-button').addClass('active');
                     }
                 };
 
@@ -1774,16 +1786,19 @@ var Griew = function () {
 
                 $btnAscSort.click(function () {
                     _Order.addAscending(name);
+                    refresh();
                     hide(name, container);
                 });
 
                 $btnDescSort.click(function () {
                     _Order.addDescending(name);
+                    refresh();
                     hide(name, container);
                 });
 
                 $btnClearSort.click(function () {
                     _Order.remove(name);
+                    refresh();
                     hide(name, container);
                 });
 
@@ -2521,6 +2536,22 @@ var Griew = function () {
     var refresh = function () {
         _DataProvider.run(new Request().collect(), function(response) {
             _View.render(response.getData());
+            
+            var filters = response.getFilters();
+            for(var i = 0; i < filters.length; i++) {
+                _Filter.add(filters[i].name, filters[i].type, filters[i].operator, filters[i].operand1, filters[i].operand2);
+            }
+
+            var orders = response.getOrders();
+            for(var i = 0; i < orders.length; i++) {
+                if(orders[i].type === 'DESC') {
+                    _Order.addDescending(orders[i].name);
+                } else {
+                    _Order.addAscending(orders[i].name);
+                }
+            }
+            
+            
         });
     };
     //--------------------------------------------------------------------------------------------------------------------------
