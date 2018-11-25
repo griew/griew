@@ -2022,6 +2022,7 @@ var Griew = function () {
                 var options = _Options.get('pagination');
                 initTemplateItems(options);
                 $(container).html(render(options));
+                $(container).off('click', '.griew-pagination-link');
                 $(container).on('click', '.griew-pagination-link', function () {
                     var page = $(this).data('page');
                     switch ($(this).data('action')) {
@@ -2535,6 +2536,9 @@ var Griew = function () {
 
     var refresh = function () {
         _DataProvider.run(new Request().collect(), function(response) {
+            var page = response.getPagination();
+            _Pagination.setPage(page.currentPage, page.lastPage, page.perPage, page.total, page.from, page.count);
+            
             _View.render(response.getData());
             
             var filters = response.getFilters();
@@ -2550,8 +2554,6 @@ var Griew = function () {
                     _Order.addAscending(orders[i].name);
                 }
             }
-            
-            
         });
     };
     //--------------------------------------------------------------------------------------------------------------------------
