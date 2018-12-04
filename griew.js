@@ -635,12 +635,9 @@ var Griew = function () {
                 return columns;
             };
 
-            var run = function (request, response) {
+            var run = function (request, response, callback) {
                 var tempData;
                 var requestObject = request.toObject();
-
-                console.log(request.toArray());
-                console.log(requestObject);
 
                 tempData = processFilters(data, requestObject.filters);
                 tempData = processOrders(tempData, requestObject.orders);
@@ -657,7 +654,7 @@ var Griew = function () {
                     response.addColumns(requestObject.columns);
                 }
 
-                return response;
+                callback(response);
             };
 
             this.run = run;
@@ -2523,6 +2520,7 @@ var Griew = function () {
     var _Order = new Order();
     var _Pagination = new Pagination();
     var _Options = new Options();
+    var _Response = new Response();
     //--------------------------------------------------------------------------------------------------------------------------
     _DataProvider.setDefault('ajax');
     //--------------------------------------------------------------------------------------------------------------------------
@@ -2536,6 +2534,8 @@ var Griew = function () {
 
     var refresh = function () {
         _DataProvider.run(new Request().collect(), function(response) {
+            _Response = response;
+            
             var page = response.getPagination();
             _Pagination.setPage(page.currentPage, page.lastPage, page.perPage, page.total, page.from, page.count);
             
@@ -2554,6 +2554,7 @@ var Griew = function () {
                     _Order.addAscending(orders[i].name);
                 }
             }
+
         });
     };
     //--------------------------------------------------------------------------------------------------------------------------
@@ -2576,6 +2577,10 @@ var Griew = function () {
     this.options = function () { 
         return _Options; 
     };
+
+    this.response = function () {
+        return _Response;
+    }
 
     this.dataProvider = function () {
         return _DataProvider;

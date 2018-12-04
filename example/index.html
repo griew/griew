@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="../dist/griew.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
     <script src="data/data.js" type="text/javascript"></script>
     <script src="../griew.js" type="text/javascript"></script>
 </head>
@@ -60,11 +60,18 @@
                 }
             },
             beforeRender: function (name,value,template,row,col) {
+                var text = '';
+                var data = griew.response().getData();
+                
+                if(data[row - 1].salary > 250000) {
+                    text = 'style="color: green"';
+                }
+
                 if(value.value == 'Male') {
-                    return '<td><span class="fa fa-male"></span> {gender}</td>'
+                    return '<td><span ' + text + '><span class="fa fa-male"></span> {gender}</span></td>'
                 }
                 else if((value.value == 'Female')) {
-                    return '<td><span class="fa fa-female"></span> {gender}</td>'
+                    return '<td><span ' + text + '><span class="fa fa-female"></span> {gender}</span></td>'
                 }
                 return template;
             },
@@ -129,6 +136,7 @@
             afterRender: null
         });
         
+        griew.dataProvider().setDefault('json');
         griew.options().set('dataSource', JSON.stringify(data));
         griew.options().set('pagination', {
             'container': 'nav.paginate',
