@@ -822,13 +822,21 @@ var Griew = function () {
             };
 
             var show = function (name) {
-                $(_row.getContainer() + ' ' + columnClassName(name, true)).removeClass('griew-column-hide');
+                // $(columnClassName(name, true)).removeClass('griew-column-hide');
+                get(name).visibility = true;
+                _View.render();
                 _onshow(name);
             }
 
             var hide = function (name) {
-                $(_row.getContainer() + ' ' + columnClassName(name, true)).addClass('griew-column-hide');
+                // $(columnClassName(name, true)).addClass('griew-column-hide');
+                get(name).visibility = false;
+                _View.render();
                 _onhide(name);
+            }
+
+            var isVisible = function (name) {
+                return get(name).visibility === true;
             }
 
             var visibles = function (unorder) {
@@ -935,6 +943,10 @@ var Griew = function () {
             this.hide = function (name) {
                 hide(name);
             };
+
+            this.isVisible = function (name) {
+                return isVisible(name);
+            }
 
             this.visibles = function () {
                 return visibles();
