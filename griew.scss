@@ -121,6 +121,7 @@ table.griew {
 			padding: 0;
 			border: 1px solid rgb(200,200,200);
 			position: relative;
+			overflow: hidden;
 
 			&.hide {
 				display: none;
