@@ -6,7 +6,18 @@ var Griew = function () {
         var _locale = 'fa';
 
         var setLang = function (name, trans) {
-            _langs[name] = trans;
+            var subNames = name.split('.');
+            var result = _langs;
+            for (var i = 0; i < subNames.length; i++) {
+                if (subNames[i] in result) {
+                    result = result[subNames[i]];
+                    continue;
+                }
+
+                break;
+            }
+
+            result[subNames[i]] = trans;
         };
 
         var setLocale = function (locale) {
@@ -1919,6 +1930,7 @@ var Griew = function () {
             var jumpNextButtonTemplate;
             var jumpPreviousButtonTemplate;
             var manualNavigationTemplate;
+            var perPageInputTemplate;
 
             var initTemplateItems = function (options) {
                 options = options || {};
@@ -1933,6 +1945,7 @@ var Griew = function () {
                 jumpNextButtonTemplate = options.jumpNextButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}" data-action="{pagination-action}">{pagination-jump-next}</a></li>';
                 jumpPreviousButtonTemplate = options.jumpPreviousButtonTemplate || '<li class="griew-pagination-item"><a class="griew-pagination-link" data-page="{pagination-page}" data-action="{pagination-action}">{pagination-jump-previous}</a></li>';
                 manualNavigationTemplate = options.manualNavigationTemplate || '<li class="griew-pagination-item griew-pagination-manual"><input type="number" class="griew-pagination-manual-input" value="{pagination-current}" min="1" max="{pagination-last}"><span class="griew-pagination-manual-separator"></span><span class="griew-pagination-manual-last">{pagination-last}</span></li>'
+                perPageInputTemplate = options.perPageInputTemplate || '<li class="griew-pagination-item griew-pagination-per-page"><input type="number" class="griew-pagination-per-page-input" value="{pagination-per-page}" min="1"></li>'
             };
 
             var render = function (options) {
@@ -1948,6 +1961,7 @@ var Griew = function () {
                 var optionOnePageNavigation = options.onePageNavigation == undefined ? true : options.onePageNavigation;
                 var optionMultiPagesNavigation = options.multiPagesNavigation == undefined ? true : options.multiPagesNavigation;
                 var optionManualNavigation = options.manualNavigation == undefined ? true : options.manualNavigation;
+                var optionPerPageInput = options.perPageInput == undefined ? true : options.perPageInput;
                 var optionJumpPagesCount = options.jumpPagesCount ? options.jumpPagesCount : 10;
 
                 items = items.concat(parse({
@@ -2021,6 +2035,12 @@ var Griew = function () {
                     }, manualNavigationTemplate));
                 }
 
+                if (optionPerPageInput) {
+                    items = items.concat(parse({
+                        'pagination-per-page': page.perPage,
+                    }, perPageInputTemplate));
+                }
+
                 var $group = $(parse('pagination-items', items, buttonGroupTemplate));
                 $group.find('.griew-pagination-link[data-action="page"][data-page="' + page.currentPage + '"]').parent().addClass('active');
 
@@ -2052,12 +2072,25 @@ var Griew = function () {
                             break;
                     }
                     refresh();
-                    // $(container).html(render(options));
                 });
                 $(container).on('change', '.griew-pagination-manual-input', function () {
                     _Pagination.gotoPage($(this).val());
-                    $(container).html(render(options));
-                    $(container).find('.griew-pagination-manual-input').focus();
+                    refresh();
+                });
+                $(container).on('keypress', '.griew-pagination-manual-input', function (event) {
+                    if(event.keyCode === 13) {
+                        $(this).change();
+                    }
+                });
+                $(container).on('change', '.griew-pagination-per-page-input', function () {
+                    _Pagination.setPerPage($(this).val());
+                    _Pagination.gotoFirstPage();
+                    refresh();
+                });
+                $(container).on('keypress', '.griew-pagination-per-page-input', function (event) {
+                    if(event.keyCode === 13) {
+                        $(this).change();
+                    }
                 });
             };
 

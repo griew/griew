@@ -164,7 +164,8 @@
             'onePageNavigation': true,
             'multiPagesNavigation': false,
             'manualNavigation': false,
-            'jumpPagesCount': 10
+            'jumpPagesCount': 10,
+            'perPageInput': false
         });
         
         griew.refresh();
@@ -192,8 +193,6 @@
         }
 
         $('#griewColumnsList .dropdown-menu').on('click', '.dropdown-item', function (event) {
-            event.preventDefault();
-
             var name = $(this).data('name');
             if(griew.view().columns().isVisible(name)) {
                 griew.view().columns().hide(name);
@@ -202,6 +201,8 @@
                 griew.view().columns().show(name);
                 $(this).removeClass('text-muted');
             }
+
+            return false;
         });
 
     </script>
