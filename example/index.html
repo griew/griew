@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="rtl">
+<html lang="en" dir="ltr">
 
 <head>
     <meta charset="UTF-8">
@@ -18,7 +18,7 @@
 
 <body>
     <div class="container">
-        <div class="row mt-3">
+        <div class="row my-3">
             <div class="col">
                 <nav class="paginate"></nav>
             </div>
@@ -39,7 +39,7 @@
             <thead></thead>
             <tbody></tbody>
         </table>
-        <nav class="paginate"></nav>
+        <nav class="paginate my-3"></nav>
     </div>
     <script>
         var griew = new Griew();
@@ -162,10 +162,10 @@
             'container': 'nav.paginate',
             'visibility': true,
             'onePageNavigation': true,
-            'multiPagesNavigation': false,
-            'manualNavigation': false,
+            'multiPagesNavigation': true,
+            'manualNavigation': true,
             'jumpPagesCount': 10,
-            'perPageInput': false
+            'perPageInput': true
         });
         
         griew.refresh();
