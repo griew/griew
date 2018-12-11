@@ -1,8 +1,27 @@
+@keyframes griew-progress-animate {
+	from {
+	  transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	} 
+}
+
 table.griew {
 	font-size: 0.9rem;
 
 	.griew-header-cell {
 		position: relative;
+	}
+}
+
+.griew-progress {
+	animation-duration: 1s;
+    animation-iteration-count: infinite;
+	animation-timing-function: linear;
+
+	&.griew-progress-animate {
+		animation-name: griew-progress-animate;
 	}
 }
 

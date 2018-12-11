@@ -2570,6 +2570,34 @@ var Griew = function () {
     var _Options = new Options();
     var _Response = new Response();
     //--------------------------------------------------------------------------------------------------------------------------
+    var _refreshListeners = [];
+    var _loadListeners = [];
+
+    Object.defineProperty(this, 'onRefresh', {
+        set: function (listener) {
+            _refreshListeners.push(listener);
+        }
+    });
+
+    Object.defineProperty(this, 'onLoad', {
+        set: function (listener) {
+            _loadListeners.push(listener);
+        }
+    });
+
+    var fireRefreshListeners = function () {
+        for (var i = 0; i < _refreshListeners.length; i++) {
+            _refreshListeners[i]();
+        }
+    };
+
+    var fireLoadListeners = function () {
+        for (var i = 0; i < _loadListeners.length; i++) {
+            _loadListeners[i]();
+        }
+    };
+
+    //--------------------------------------------------------------------------------------------------------------------------
     _DataProvider.setDefault('ajax');
     //--------------------------------------------------------------------------------------------------------------------------
     var trans = function (key, locale) {
@@ -2581,6 +2609,7 @@ var Griew = function () {
     };
 
     var refresh = function () {
+        fireRefreshListeners();
         _DataProvider.run(new Request().collect(), function(response) {
             _Response = response;
             
@@ -2603,6 +2632,7 @@ var Griew = function () {
                 }
             }
 
+            fireLoadListeners();
         });
     };
     //--------------------------------------------------------------------------------------------------------------------------
