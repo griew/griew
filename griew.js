@@ -2268,7 +2268,8 @@ var Griew = function () {
         var remove = function (name) {
             for (var i in _filters) {
                 if (_filters[i].name === name) {
-                    fireRemove(_filters.splice(i, 1)[0])
+                    var filters = _filters.splice(i, 1);
+                    fireRemove(filters[0])
                     return true;
                 }
             }
@@ -2285,8 +2286,8 @@ var Griew = function () {
         };
 
         var clear = function () {
-            for (var index = 0; index < _filters.length; index++) {
-                remove(_filters[index].name);
+            while(_filters.length) {
+                remove(_filters[0].name);
             }
         };
 
@@ -2363,7 +2364,8 @@ var Griew = function () {
         var remove = function (name) {
             for (var i in _orders) {
                 if (_orders[i].name === name) {
-                    fireRemove(_orders.splice(i, 1)[0]);
+                    var orders = _orders.splice(i, 1); 
+                    fireRemove(orders[0]);
                     return true;
                 }
             }
@@ -2394,8 +2396,8 @@ var Griew = function () {
         };
 
         var clear = function () {
-            for (var index = 0; index < _orders.length; index++) {
-                remove(_orders[index].name);
+            while(_orders.length) {            
+                remove(_orders[0].name);
             }
         };
 
