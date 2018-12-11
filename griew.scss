@@ -532,3 +532,31 @@ table.griew {
 		float: left;
 	}
 }
+
+@media (max-width: 991.98px) {
+	.griew-pagination-wrapper {
+		.griew-pagination-manual {
+			display: none;
+		}
+	}
+}
+
+@media (max-width: 575.98px) { 
+	.griew-pagination-wrapper {
+		.griew-pagination {
+			margin-right: auto;
+			margin-left: auto;
+		}
+
+		.griew-pagination-link {
+			&[data-action="next"][data-page],
+			&[data-action="previous"][data-page] {
+				display: none;
+			}
+		}
+		.griew-pagination-manual,
+		.griew-pagination-per-page {
+			display: none;
+		}
+	}
+ }
