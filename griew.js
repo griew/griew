@@ -1936,7 +1936,7 @@ var Griew = function () {
                 options = options || {};
 
                 container = options.container || '.pagination';
-                buttonGroupTemplate = options.buttonGroupTemplate || '<ul class="pagination mb-0 griew-pagination">{pagination-items}</ul>';
+                buttonGroupTemplate = options.buttonGroupTemplate || '<ul class="pagination griew-pagination">{pagination-items}</ul>';
                 numberButtonTemplate = options.numberButtonTemplate || '<li class="page-item griew-pagination-item"><a href="#" class="page-link griew-pagination-link" data-page="{pagination-page}" data-action="{pagination-action}">{pagination-number}</a></li>';
                 nextButtonTemplate = options.nextButtonTemplate || '<li class="page-item griew-pagination-item"><a href="#" class="page-link griew-pagination-link" data-page="{pagination-page}" data-action="{pagination-action}">{pagination-next}</a></li>';
                 previousButtonTemplate = options.previousButtonTemplate || '<li class="page-item griew-pagination-item"><a href="#" class="page-link griew-pagination-link" data-page="{pagination-page}" data-action="{pagination-action}">{pagination-previous}</a></li>';

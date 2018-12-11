@@ -343,6 +343,7 @@ table.griew {
 	display: flex;
 
 	.griew-pagination {
+		margin-bottom: 0;
 
 		.griew-pagination-item {
 			
@@ -387,6 +388,7 @@ table.griew {
 
 		.griew-pagination-manual-input {
 			max-width: 80px;
+			text-align: center;
 		}
 	}
 
@@ -396,6 +398,7 @@ table.griew {
 
 		.griew-pagination-per-page-input {
 			max-width: 80px;
+			text-align: center;
 		}
 	}
 }
@@ -406,43 +409,104 @@ table.griew {
 		text-align: right;
 	}
 
-	// .griew-pagination {
-	// 	.griew-pagination-item {
+	ul {
+		padding-right: 0;
+		padding-left: 0;
+	}
+
+	.page-item {
+		margin-right: -1px;
+		margin-left: 0;
+		
+		&:first-child .page-link {
+			margin-right: 0;
+			border-top-right-radius: .25rem;
+			border-bottom-right-radius: .25rem;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+
+		&:last-child .page-link {
+			border-top-left-radius: .25rem;
+			border-bottom-left-radius: .25rem;
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+	}
+
+	.input-group {
+
+		& > .custom-select:not(:last-child), 
+		  > .form-control:not(:last-child) {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+			border-top-right-radius: .25rem;
+			border-bottom-right-radius: .25rem;
+		}
+
+		& > .input-group-append > .btn, 
+		  > .input-group-append > .input-group-text, 
+		  > .input-group-prepend:first-child > .btn:not(:first-child), 
+		  > .input-group-prepend:first-child > .input-group-text:not(:first-child), 
+		  > .input-group-prepend:not(:first-child) > .btn,
+		  > .input-group-prepend:not(:first-child) > .input-group-text {
+			border-top-left-radius: .25rem;
+			border-bottom-left-radius: .25rem;
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+	}
+
+	.input-group-append {
+		margin-right: -1px;
+		margin-left: 0;
+	}
+
+	.griew-pagination-wrapper {
+	
+		.griew-pagination {
 			
-	// 		.griew-pagination-link {
-	// 			&[data-action="previous"][data-page]:before {
-	// 				font: normal normal normal 16px/1 FontAwesome;
-	// 				content: "\f101";
-	// 			}
+			.griew-pagination-item {
 				
-	// 			&[data-action="previous"][data-page="1"]:before {
-	// 				font: normal normal normal 16px/1 FontAwesome;
-	// 				content: "\f105";
-	// 			}
-	
-	// 			&[data-action="first"]:before {
-	// 				font: normal normal normal 16px/1 FontAwesome;
-	// 				content: "\f105\f101";
-	// 			}
-	
-	// 			&[data-action="next"][data-page]:before {
-	// 				font: normal normal normal 16px/1 FontAwesome;
-	// 				content: "\f100";
-	// 			}
-				
-	// 			&[data-action="next"][data-page="1"]:before {
-	// 				font: normal normal normal 16px/1 FontAwesome;
-	// 				content: "\f104";
-	// 			}
-	
-	// 			&[data-action="last"]:before {
-	// 				font: normal normal normal 16px/1 FontAwesome;
-	// 				content: "\f100\f104";
-	// 			}
-	
-	// 		}
-	// 	}
-	// }
+				.griew-pagination-link {
+					&[data-action="previous"][data-page]:before {
+						content: "\f101";
+					}
+					
+					&[data-action="previous"][data-page="1"]:before {
+						content: "\f105";
+					}
+		
+					&[data-action="first"]:before {
+						content: "\f105\f101";
+					}
+		
+					&[data-action="next"][data-page]:before {
+						content: "\f100";
+					}
+					
+					&[data-action="next"][data-page="1"]:before {
+						content: "\f104";
+					}
+		
+					&[data-action="last"]:before {
+						content: "\f100\f104";
+					}
+		
+				}
+			}
+		}
+
+		.griew-pagination-manual {
+			margin-right: .5rem; 
+			margin-left: 0; 
+		}
+
+		.griew-pagination-per-page {
+			margin-right: .5rem; 
+			margin-left: 0; 
+		}
+	}
 	
 	.griew-order-button,
 	.griew-filter-button { 
