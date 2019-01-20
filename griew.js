@@ -1,5 +1,5 @@
 "use strict"
-var Griew = function () {
+var Griew = function (container) {
 
     var Localization = function () {
         var _langs = {};
@@ -2137,19 +2137,20 @@ var Griew = function () {
             // TODO: validate data for array
             var index = 0;
             var columns = _columns.visibles();
-            var $rowContainer = $(_row.container);
-            var $headerContainer = $(_header.container);
+            var $griewContainer = $(_Options.get('container'));
+            var $rowContainer = $griewContainer.find(_row.container);
+            var $headerContainer = $griewContainer.find(_header.container);
 
             $rowContainer.html('');
 
             $headerContainer.html(_header.render(columns));
 
             _filters.autoGenerate(columns, function (name) {
-                return _header.getCellSelector(name);
+                return _Options.get('container') + ' ' + _header.getCellSelector(name);
             });
 
             _orders.autoGenerate(columns, function (name) {
-                return _header.getCellSelector(name);
+                return _Options.get('container') + ' ' + _header.getCellSelector(name);
             });
 
             var paginationOptions = _Options.get('pagination') || {};
@@ -2601,6 +2602,7 @@ var Griew = function () {
 
     //--------------------------------------------------------------------------------------------------------------------------
     _DataProvider.setDefault('ajax');
+    _Options.set('container', container || '.griew');
     //--------------------------------------------------------------------------------------------------------------------------
     var trans = function (key, locale) {
         return _Localization.trans(key, locale);

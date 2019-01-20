@@ -37,11 +37,16 @@
                 </button>
             </div>
         </div>
-        <table class="griew table table-striped">
+        <table class="griew table table-striped" id="myTable">
             <thead></thead>
             <tbody></tbody>
         </table>
         <nav class="paginate my-3"></nav>
+
+        <table class="griew table table-striped">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
     </div>
     <script>
         var griew = new Griew();
@@ -160,6 +165,7 @@
         
         griew.dataProvider().setDefault('json');
         griew.options().set('dataSource', JSON.stringify(data));
+        griew.options().set('container', '.griew#myTable');
         griew.options().set('pagination', {
             'container': 'nav.paginate',
             'visibility': true,
